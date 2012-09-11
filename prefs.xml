@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="LowCutOff">0.85</entry>
+<entry key="expFolder">D:\Scans\Barry\20080320\Cropped\</entry>
+<entry key="CALIBRATED">1</entry>
+<entry key="osLaF">2</entry>
+<entry key="BalonyVersion">http://balony.googlecode.com/files/Balony-latest-August 27 2012.jar</entry>
+<entry key="MaxSpotSize">100</entry>
+<entry key="analysisFolder">D:\Scans\Matt\20101112 hac1 Screen</entry>
+<entry key="scanFolder">D:\Scans\Matt\20101112 hac1 Screen\</entry>
+<entry key="ctrlFolder">D:\Scans\Barry\20080320\Cropped\</entry>
+<entry key="circ">0.8</entry>
+<entry key="caliibrated">1</entry>
+<entry key="LastKeyFile">C:\Users\Barry Young\Documents\NetBeansProjects\balony~subversion\Balony\.\UBC-1536.key</entry>
+<entry key="SickFilterComboBox">control spot</entry>
+<entry key="snap">0.25</entry>
+<entry key="imageFolder">D:\Scans\Matt\20101112 hac1 Screen\Cropped</entry>
+<entry key="rethresh">TRUE</entry>
+<entry key="MinSpotSize">0.05</entry>
+<entry key="SickCutOff">0.2</entry>
+<entry key="minPixels">2</entry>
+<entry key="HightCutOff">1.17</entry>
+<entry key="lastPreset">Loewen Lab 1536 RePad 300 dpi</entry>
+</properties>

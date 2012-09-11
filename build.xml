@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Balony" default="default" basedir=".">
+    <description>Builds, tests, and runs the project Balony.</description>
+    <import file="nbproject/build-impl.xml"/>
+<!--    <import file="nbproject/profiler-build-impl.xml"/>-->
+    <target name="-post-jar">
+        <jar jarfile="C:\Apps\Balony.jar">
+            <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+            <zipgroupfileset dir="dist/lib" includes="*.jar" excludes="META-INF/*" />
+<!--            <zipfileset src="dist/lib/commons-net-2.0.jar" excludes="META-INF/*" />-->
+<!--            <zipfileset src="dist/lib/commons-net-ftp-2.0.jar" excludes="META-INF/*" />-->
+            <manifest>
+                <attribute name="Main-Class" value="balony.main"/>
+            </manifest>
+        </jar>
+<!--        <exec executable = "C:\Program Files (x86)\Launch4j\launch4j.exe">-->
+<!--            <arg value = "- -l4j-no-splash"></arg>-->
+<!--            <arg value= "C:\Apps\Balony.xml"></arg>-->
+<!--        </exec>-->
+        <copy file="C:\Apps\Balony.jar" todir="C:\Apps\Balony\OSX\Balony.app\Contents\Resources\Java\" ></copy>
+        <copy file="C:\Apps\Balony.jar" todir="C:\Apps\Balony\Windows\"></copy>
+        <tstamp/><property name="current-date"  value="C:\Apps\Balony\Balony-latest-${TODAY}.jar" />
+        <copy file="C:\Apps\Balony.jar" tofile="${current-date}" ></copy>
+        <copy overwrite="true" file="C:\Apps\Balony.jar" tofile="D:\Dropbox\Dropbox\Balony\Balony.jar" ></copy>
+<!--        <exec executable = "C:\Apps\upload_balony.bat">
+            <arg value="${current-date}"></arg>
+        </exec>-->
+        <exec executable = "C:\Program Files\WinRar\winrar.exe">
+            <arg value = "u"></arg>
+            <arg value = "-ep1"></arg>
+            <arg value = "-ibck"></arg>
+            <arg value = "-sfx"></arg>
+            <arg value = "-ag{_}YYYYMMDDHHMM"></arg>
+            <arg value ="-zc:\Apps\Balony\balony-sfx.txt"></arg>
+            <arg value = "c:\Apps\Balony\Balony-Windows.exe"></arg>
+            <arg value= "c:\Apps\Balony\Windows\"></arg>
+        </exec>
+        <exec executable = "C:\Program Files\WinRar\winrar.exe">
+            <arg value = "u"></arg>
+            <arg value = "-ep1"></arg>
+            <arg value = "-ibck"></arg>
+            <arg value = "-ag{_}YYYYMMDDHHMM"></arg>
+            <arg value = "c:\Apps\Balony\Balony-MacOSX.zip"></arg>
+            <arg value= "C:\Apps\Balony\OSX\Balony.app"></arg>
+        </exec>
+    </target>
+
+</project>
