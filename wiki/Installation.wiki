@@ -1,0 +1,20 @@
+#summary How to install Balony
+
+ # Ensure your system meets the minimum requirements.
+ # If necessary, update to the latest version of the Java Runtime Environment (see http://www.java.com/en/download/index.jsp)
+ # Point your browser to https://code.google.com/p/balony/downloads/list
+ # Select the appropriate version. Currently there are specific installation packages for Windows and Mac OS X.
+
+= System-specific Instructions =
+
+== Windows ==
+
+Simply run the .exe installer file and Balony should extract to the appropriate folder and place an icon on the Desktop. If no icon is visible, the Balony program can be found under the "Program Files" or "Program Files (x86)" folders in the "Balony" subfolder. Balony can be run by double-clicking on the Balony.exe file.
+
+== Mac OS X ==
+
+Drag the .app file to your Applications folder in the Finder. Balony should now be available from the Applications folder.
+
+== Linux ==
+
+Extract the contents of the Balony.tgz file to an appropriate location. To run Balony, navigate to the installation folder and use the command <code>java -Xmx1024M -jar Balony.jar</code>
