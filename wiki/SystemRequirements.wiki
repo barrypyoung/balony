@@ -1,7 +1,7 @@
 #summary Minimum requirements for running Balony
 
  * A personal computer capable of running Java 1.6 or later
- * A Java Runtime Envinroment installation of 1.6 or later
+ * A Java Runtime Envinroment installation of 1.6 or later (for further information or to install, see [http://www.java.com/en/download/index.jsp here]
  * At least 100 MB of available hard drive space (plus more for storing image files).
 
 = Introduction =
