@@ -2,7 +2,7 @@
 
 Getting started
 
- [System Requirements SystemRequirements]
+ [SystemRequirements System Requirements]
 
  [Installation]
 
