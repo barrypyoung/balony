@@ -14,6 +14,7 @@ public class BalonyTools {
         float min = Float.MAX_VALUE;
         float max = -Float.MAX_VALUE;
         float value;
+        
         for (int i = 0; i < a.length; i++) {
             value = (Float)a[i];
             if (value < min) {
@@ -23,6 +24,7 @@ public class BalonyTools {
                 max = value;
             }
         }
+        
         Float[] minAndMax = new Float[2];
         minAndMax[0] = min;
         minAndMax[1] = max;
