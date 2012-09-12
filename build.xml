@@ -18,7 +18,7 @@
 <!--            <arg value = "- -l4j-no-splash"></arg>-->
 <!--            <arg value= "C:\Apps\Balony.xml"></arg>-->
 <!--        </exec>-->
-        <copy file="C:\Apps\Balony.jar" todir="C:\Apps\Balony\OSX\Balony.app\Contents\Resources\Java\" ></copy>
+        <copy file="C:\Apps\Balony.jar" todir="D:\Dropbox\Dropbox\Balony\Balony.app\Contents\Resources\Java\" ></copy>
         <copy file="C:\Apps\Balony.jar" todir="C:\Apps\Balony\Windows\"></copy>
         <tstamp/><property name="current-date"  value="C:\Apps\Balony\Balony-latest-${TODAY}.jar" />
         <copy file="C:\Apps\Balony.jar" tofile="${current-date}" ></copy>
@@ -36,14 +36,14 @@
             <arg value = "c:\Apps\Balony\Balony-Windows.exe"></arg>
             <arg value= "c:\Apps\Balony\Windows\"></arg>
         </exec>
-        <exec executable = "C:\Program Files\WinRar\winrar.exe">
+<!--        <exec executable = "C:\Program Files\WinRar\winrar.exe">
             <arg value = "u"></arg>
             <arg value = "-ep1"></arg>
             <arg value = "-ibck"></arg>
             <arg value = "-ag{_}YYYYMMDDHHMM"></arg>
             <arg value = "c:\Apps\Balony\Balony-MacOSX.zip"></arg>
             <arg value= "C:\Apps\Balony\OSX\Balony.app"></arg>
-        </exec>
+        </exec>-->
     </target>
 
 </project>
