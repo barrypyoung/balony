@@ -21,12 +21,13 @@
         <copy file="C:\Apps\Balony.jar" todir="D:\Dropbox\Dropbox\Balony\Balony.app\Contents\Resources\Java\" ></copy>
         <copy file="C:\Apps\Balony.jar" todir="C:\Apps\Balony\Windows\"></copy>
         <tstamp/><property name="current-date"  value="C:\Apps\Balony\Balony-latest-${TODAY}.jar" />
+        
         <copy file="C:\Apps\Balony.jar" tofile="${current-date}" ></copy>
         <copy overwrite="true" file="C:\Apps\Balony.jar" tofile="D:\Dropbox\Dropbox\Balony\Balony.jar" ></copy>
 <!--        <exec executable = "C:\Apps\upload_balony.bat">
             <arg value="${current-date}"></arg>
         </exec>-->
-        <exec executable = "C:\Program Files\WinRar\winrar.exe">
+<!--        <exec executable = "C:\Program Files\WinRar\winrar.exe">
             <arg value = "u"></arg>
             <arg value = "-ep1"></arg>
             <arg value = "-ibck"></arg>
@@ -35,7 +36,7 @@
             <arg value ="-zc:\Apps\Balony\balony-sfx.txt"></arg>
             <arg value = "c:\Apps\Balony\Balony-Windows.exe"></arg>
             <arg value= "c:\Apps\Balony\Windows\"></arg>
-        </exec>
+        </exec>-->
 <!--        <exec executable = "C:\Program Files\WinRar\winrar.exe">
             <arg value = "u"></arg>
             <arg value = "-ep1"></arg>

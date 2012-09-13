@@ -3482,7 +3482,7 @@
                       <Component id="updaterJPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="contactJPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="250" max="32767" attributes="0"/>
+                      <EmptySpace pref="225" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -3573,7 +3573,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
@@ -3587,7 +3587,13 @@
                                       <Component id="latestVersionJLabel" alignment="1" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Component id="updateCheckButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="updateCheckJCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="updateCheckButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -3596,6 +3602,8 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
+                          <Component id="updateCheckJCheckBox" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="currVersionJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -3615,7 +3623,7 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="updateCheckButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Check for updates"/>
+                    <Property name="text" type="java.lang.String" value="Check for updates now"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="updateCheckButtonActionPerformed"/>
@@ -3639,6 +3647,12 @@
                 <Component class="javax.swing.JLabel" name="latestVersionJLabel">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Unknown"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="updateCheckJCheckBox">
+                  <Properties>
+                    <Property name="selected" type="boolean" value="true"/>
+                    <Property name="text" type="java.lang.String" value="Automatically check for program updates on startup"/>
                   </Properties>
                 </Component>
               </SubComponents>
