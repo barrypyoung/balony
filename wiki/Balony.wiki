@@ -1,12 +1,12 @@
 [Introduction]
 
-Getting started
+*Getting started*
 
  [SystemRequirements System Requirements]
 
  [Installation]
 
-Using Balony
+*Using Balony*
 
  [ImagePreparation Image Preparation]
 
@@ -22,7 +22,7 @@ Using Balony
 
  [Options]
 
-Tutorial
+*Tutorial*
 
  [Tutorial1 Getting Started]
 
@@ -34,7 +34,7 @@ Tutorial
 
  [Tutorial5 Data Analysis]
 
-Further Information
+*Further Information*
 
  [Referencing Referencing Balony]
 
