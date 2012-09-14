@@ -1,9 +1,11 @@
 #summary How to install Balony
 
  # Ensure your system meets the minimum requirements.
- # If necessary, update to the latest version of the Java Runtime Environment (see http://www.java.com/en/download/index.jsp)
+ # If necessary, update to the latest version of the Java Runtime Environment 
+  * Mac OS X users should use the Apple Software Update facility to update Java to the latest version.
+  * All other users should downlaod the latest version of Java from [http://www.java.com/en/download/index.jsp Java.com]
  # Point your browser to https://code.google.com/p/balony/downloads/list
- # Select the appropriate version. Currently there are specific installation packages for Windows and Mac OS X.
+ # Select the appropriate version. Currently there are specific installation packages for Windows and Mac OS X. Linux users should download the generic distribution file.
 
 = System-specific Instructions =
 
