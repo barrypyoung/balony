@@ -826,8 +826,10 @@ public class spotInfo extends javax.swing.JFrame {
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
         // TODO add your handling code here:
         int i = sourceDT.convertRowIndexToView(currRow);
+        if(i>0 && i<sourceDT.getRowCount()) {
         sourceDT.setRowSelectionInterval(i, i);
         sourceDT.scrollRectToVisible(sourceDT.getCellRect(i, 0, true));
+        }
     }//GEN-LAST:event_formWindowGainedFocus
 
     private void jEditorPane1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jEditorPane1MouseEntered

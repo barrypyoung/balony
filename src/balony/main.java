@@ -25,10 +25,10 @@ public class main {
             System.out.println(e.getLocalizedMessage());
         }
 
-        if (prefs.containsKey(Balony.OSLAF)) {
+        if (prefs.containsKey(Balony.PREFS_OPTIONS_OS_LOOK_AND_FEEL)) {
             try {
 
-                String p = prefs.getProperty(Balony.OSLAF);
+                String p = prefs.getProperty(Balony.PREFS_OPTIONS_OS_LOOK_AND_FEEL);
 
                 if (p.equals("2")) {
                     try {
