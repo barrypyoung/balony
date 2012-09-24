@@ -4,6 +4,15 @@
 
 Balony can be used to take a composite image containing multiple plates and divide into into images containing single plates for quantitation. It is important that files are correctly named before segmenting; please see the [ImagePreparation Image Preparation] section for this.
 
+= Segmenting Images =
+
+ # Click the "Scan" tab to navigate to the Image Segmentation section.
+ # Click "Choose Folder" and navigate to the folder containing your scanned images.
+ # You may wish to confirm that you have selected the correct folder. Clicking a file will load a small version of it into the preview window.
+ # If the file looks correct, then double clicking will load the image in a separate window to the right. A yellow overlay will indicate how the image will be divided.
+ # To process the image, click "Process Selected". Balony will then divide the image, perform any necessary post-processing (see below), and saving the output image in the corresponding subfolder.
+ # To process all images in a folder, simply click "Select All" and then click "Process Selected."
+
 
 = Details =
 
