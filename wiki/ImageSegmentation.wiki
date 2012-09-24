@@ -1,8 +1,8 @@
-#summary One-sentence summary of this page.
+#summary Segmenting composite images using Balony
 
 = Introduction =
 
-Add your content here.
+Balony can be used to take a composite image containing multiple plates and divide into into images containing single plates for quantitation. It is important that files are correctly named before segmenting; please see the [ImagePreparation Image Preparation] section for this.
 
 
 = Details =
