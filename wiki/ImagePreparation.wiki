@@ -1,4 +1,24 @@
-#summary One-sentence summary of this page.
+#summary Preparing your images for Balony.
+
+Digital images should be prepared at a resolution of at least 300 dpi. This is most easily achieved using a flat-bed scanner or digital camera.
+
+Correct naming of files is important for automated processing of images. Ideally, plates from the same experiment should be identically named, with the appropriate set number indicated at the end of the file name. We recommend indicating the type of media used for selection to help with future identification of images.
+
+For example, for an experiment performed in triplicate with the query gene Yfg1, where double mutants are selected for using G418 and NAT, and control strains using G418:
+
+A single scan containing images of a complete set of control plates:
+
+<tt>
+Yfg1_G418_set-1.jpg<br>
+Yfg1_G418_set-2.jpg<br>
+Yfg1_G418_set-3.jpg
+
+and double mutant plates:
+
+Yfg1_G418_NAT_set-1.jpg<br>
+Yfg1_G418_NAT_set-2.jpg<br>
+Yfg1_G418_NAT_set-3.jpg<br>
+
 
 = Introduction =
 
