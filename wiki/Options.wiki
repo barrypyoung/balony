@@ -1,13 +1,7 @@
-#summary One-sentence summary of this page.
+The Options section gathers together different features related to the running of Balony.
 
-= Introduction =
+The user interface can be configured to run either using a look-and-feel appropriate to the operating system, or a generic Java interface. If you are noticing graphical glitches or interface problems with one interface, then try another. Also, certain interfaces may work better on lower resolution displays.
 
-Add your content here.
+If the user has closed the "Messages" window, it can be re-opened from this page.
 
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+Balony is periodically updated with new features and fixes. The user can select if they want to manually check or updates, or if the program should automatically check.
