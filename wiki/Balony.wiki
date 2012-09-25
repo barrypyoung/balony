@@ -7,19 +7,19 @@
 
 *Using Balony*
 
- * [Overview]
- * [ImagePreparation Image Preparation]
- * [ImageSegmentation Image Segmentation]
- * [ImageAnalysis Image Analysis]
-  * [Thresholding]
-  * [Gridding]
-  * [Quantiation]
- * [Scoring]
-  * [Keyfiles]
- * [Analysis Data Analysis]
-  * [Linkage Gene Linakge]
-  * [GeneInfo Gene Information]
- * [Options]
+  * [Overview]
+  * [ImagePreparation Image Preparation]
+  * [ImageSegmentation Image Segmentation]
+  * [ImageAnalysis Image Analysis]
+   * [Thresholding]
+   * [Gridding]
+   * [Quantiation]
+  * [Scoring]
+   * [Keyfiles]
+  * [Analysis Data Analysis]
+   * [Linkage Gene Linakge]
+   * [GeneInfo Gene Information]
+  * [Options]
 
 *Tutorial*
 
