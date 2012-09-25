@@ -11,9 +11,9 @@
 
 [ImagePreparation Image Preparation]
 
- * [ImageSegmentation Image Segmentation]
+[ImageSegmentation Image Segmentation]
 
-  [ImageAnalysis Image Analysis]
+[ImageAnalysis Image Analysis]
   * [Thresholding]
   * [Gridding]
   * [Quantiation]
