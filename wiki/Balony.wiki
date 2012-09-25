@@ -19,10 +19,10 @@
      * [Gridding]
      * [Quantiation]
 
- [Scoring]
+ * [Scoring]
   * [Keyfiles Array Key Files]
 
- [Analysis Data Analysis]
+ * [Analysis Data Analysis]
   * [Linkage Gene Linakge]
   * [GeneInfo Gene Information]
 
