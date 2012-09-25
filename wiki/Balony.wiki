@@ -15,7 +15,6 @@
  [ImageSegmentation Image Segmentation]
 
  * [ImageAnalysis Image Analysis]
-     * [Thresholding]
      * [Gridding]
      * [Quantiation]
 
