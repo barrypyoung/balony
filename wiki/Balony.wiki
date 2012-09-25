@@ -15,7 +15,7 @@
  [ImageSegmentation Image Segmentation]
 
  * [ImageAnalysis Image Analysis]
-     * [Thresholding]
+  * [Thresholding]
      * [Gridding]
      * [Quantiation]
 
@@ -23,9 +23,11 @@
  * [Scoring Scoring]
      * [Keyfiles Array Key Files]
 
+
  * [Analysis Data Analysis]
      * [Linkage Gene Linakge]
      * [GeneInfo Gene Information]
+
 
  [Options]
 
