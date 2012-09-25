@@ -18,8 +18,10 @@
      * [Thresholding]
      * [Gridding]
      * [Quantiation]
-     * [Analysis]
-     * [Options]
+
+[Analysis]
+
+[Options]
 
 *Tutorial*
 
