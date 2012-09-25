@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Balony can be used to take a composite image containing multiple plates and divide into into images containing single plates for quantitation. It is important that files are correctly named before segmenting; please see the [ImagePreparation Image Preparation] section for this.
+Balony can be used to take a composite image containing multiple plates and divide into into images containing single plates for quantitation. It is important that files are correctly named before segmenting; please see the [ImagePreparation Image Preparation] section for this. If each image only contains a single plate, then this step can be skipped, although it may be helpful to still use the post-processing options to change attributes such as plate orientation, resolution and colour.
 
 = Segmenting Images =
 
