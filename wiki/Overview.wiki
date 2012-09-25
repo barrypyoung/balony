@@ -10,4 +10,4 @@ Analysis of images using Balony is a multi-step process. Typically, the user wil
  * Analysis of the scored data to determine genes of interest.
  * Exporting the analyzed data to external programs or services to further interrogate data sets.
 
-[https://balony.googlecode.com/svn/wiki/overview-web.png]
+[https://balony.googlecode.com/svn/wiki/overview-web.png https://balony.googlecode.com/svn/wiki/overview-web.png]
