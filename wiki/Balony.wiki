@@ -1,4 +1,4 @@
-[Introduction]
+[GettingStarted Getting Started]
 
 *Getting started*
 
