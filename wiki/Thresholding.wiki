@@ -6,9 +6,8 @@ Add your content here.
 
 [https://balony.googlecode.com/svn/wiki/thresh-web.png]
 
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+A: Original input image (fragment).<br>
+B: Inverted image.<br>
+C: Threshold too high (170).<br>
+D: Threshold determined by Balony (154).<br>
+E&F: Threshold too low (135, 100).<br>
