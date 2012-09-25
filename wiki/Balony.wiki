@@ -26,7 +26,6 @@
  * [Linkage Gene Linakge]
  * [GeneInfo Gene Information]
 
-
 [Options]
 
 *Tutorial*
