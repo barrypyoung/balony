@@ -8,9 +8,9 @@
 
 *Using Balony*
 
- [Overview]<br>
- [ImagePreparation Image Preparation]<br>
- [ImageSegmentation Image Segmentation]<br>
+ * [Overview]
+ * [ImagePreparation Image Preparation]
+ * [ImageSegmentation Image Segmentation]
  * [ImageAnalysis Image Analysis]
   * [Thresholding]
   * [Gridding]
