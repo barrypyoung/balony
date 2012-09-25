@@ -19,7 +19,7 @@
    * [Gridding]
    * [Quantiation]
 
-  * [Scoring Scoring]
+ * [Scoring Scoring]
    * [Keyfiles]
    * [Keyfiles]
 
