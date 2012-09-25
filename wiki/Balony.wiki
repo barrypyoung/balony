@@ -20,7 +20,7 @@
   * [Quantiation]
 
 
- * [Scoring]
+ * Scoring
   * [Keyfiles]
 
 
