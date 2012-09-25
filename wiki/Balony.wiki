@@ -19,9 +19,9 @@
      * [Gridding]
      * [Quantiation]
 
-[Analysis]
+ [Analysis]
 
-[Options]
+ [Options]
 
 *Tutorial*
 
