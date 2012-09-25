@@ -2,41 +2,47 @@
 
 *Getting started*
 
- * [SystemRequirements System Requirements]
- * [Installation]
+ [SystemRequirements System Requirements]
+
+ [Installation]
 
 *Using Balony*
 
-  [Overview]
+[Overview]
 
 [ImagePreparation Image Preparation]
 
 [ImageSegmentation Image Segmentation]
 
-[ImageAnalysis Image Analysis]
+ * [ImageAnalysis Image Analysis]
   * [Thresholding]
   * [Gridding]
   * [Quantiation]
 
-[Scoring Scoring]
-  * [Keyfiles]
+ * [Scoring]
   * [Keyfiles]
 
-[Analysis Data Analysis]
+ * [Analysis Data Analysis]
   * [Linkage Gene Linakge]
   * [GeneInfo Gene Information]
 
-[Options]
+
+ [Options]
 
 *Tutorial*
 
- * [Tutorial1 Getting Started]
- * [Tutorial2 Image Segmentation]
- * [Tutorial3 Image Analysis]
- * [Tutorial4 Data Scoring]
- * [Tutorial5 Data Analysis]
+ [Tutorial1 Getting Started]
+
+ [Tutorial2 Image Segmentation]
+
+ [Tutorial3 Image Analysis]
+
+ [Tutorial4 Data Scoring]
+
+ [Tutorial5 Data Analysis]
 
 *Further Information*
 
- * [Referencing Referencing Balony]
- * [Contact Contact the author]
+ [Referencing Referencing Balony]
+
+ [Contact Contact the author]
