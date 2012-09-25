@@ -2,8 +2,8 @@
 
 *Getting started*
 
- * [SystemRequirements System Requirements]
- * [Installation]
+[SystemRequirements System Requirements]
+[Installation]
 
 *Using Balony*
 
