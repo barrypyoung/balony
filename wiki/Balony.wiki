@@ -5,7 +5,7 @@
  * [SystemRequirements System Requirements]
  * [Installation]
 
-*Using Balony*
+Using Balony
 
  * [Overview]
  * [ImagePreparation Image Preparation]
