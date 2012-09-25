@@ -18,9 +18,7 @@
    * [Thresholding]
    * [Gridding]
    * [Quantiation]
-
-<p>
-
+----
   * [Scoring Scoring]
    * [Keyfiles]
 
