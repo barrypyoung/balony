@@ -18,10 +18,8 @@
   * [Thresholding]
   * [Gridding]
   * [Quantiation]
-
  * [Scoring]
   * [Keyfiles]
-
  * [Analysis Data Analysis]
   * [Linkage Gene Linakge]
   * [GeneInfo Gene Information]
