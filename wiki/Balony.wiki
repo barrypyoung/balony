@@ -23,12 +23,12 @@
   * [Quantiation]
 
 
- * [Scoring]
+[Scoring]
 
   * [Keyfiles]
 
 
- * [Analysis Data Analysis]
+[Analysis Data Analysis]
   * [Linkage Gene Linakge]
   * [GeneInfo Gene Information]
 
