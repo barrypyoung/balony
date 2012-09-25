@@ -24,6 +24,7 @@
 
  [Analysis Data Analysis]
   * [Linkage Gene Linakge]
+  * [GeneInfo Gene Information]
 
  [Options]
 
