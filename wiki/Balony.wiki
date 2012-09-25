@@ -2,9 +2,8 @@
 
 *Getting started*
 
- [SystemRequirements System Requirements]
-
- [Installation]
+ * [SystemRequirements System Requirements]
+ * [Installation]
 
 *Using Balony*
 
@@ -24,11 +23,9 @@
 
 *Tutorial*
 
- [Tutorial1 Getting Started]
-
- [Tutorial2 Image Segmentation]
-
- [Tutorial3 Image Analysis]
+ * [Tutorial1 Getting Started]
+ * [Tutorial2 Image Segmentation]
+ * [Tutorial3 Image Analysis]
 
  [Tutorial4 Data Scoring]
 
