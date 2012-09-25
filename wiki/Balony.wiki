@@ -14,12 +14,14 @@
 
  [ImageSegmentation Image Segmentation]
 
-   [Imaging]
+   [Image Analysis]
      * [Thresholding]
      * [Gridding]
      * [Quantiation]
 
- [Analysis]
+ [Scoring]
+
+ [Data Analysis]
 
  [Options]
 
