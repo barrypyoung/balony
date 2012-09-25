@@ -23,6 +23,6 @@
   * [Tutorial3 Image Analysis]
   * [Tutorial4 Data Scoring]
   * [Tutorial5 Data Analysis]
- *Further Information*
+ * *Further Information*
   * [Referencing Referencing Balony]
   * [Contact Contact the author]
