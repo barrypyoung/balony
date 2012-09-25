@@ -16,17 +16,17 @@
 
  * [ImageAnalysis Image Analysis]
   * [Thresholding]
-     * [Gridding]
-     * [Quantiation]
+  * [Gridding]
+  * [Quantiation]
 
 
  * [Scoring Scoring]
-     * [Keyfiles Array Key Files]
+  * [Keyfiles Array Key Files]
 
 
  * [Analysis Data Analysis]
-     * [Linkage Gene Linakge]
-     * [GeneInfo Gene Information]
+  * [Linkage Gene Linakge]
+  * [GeneInfo Gene Information]
 
 
  [Options]
