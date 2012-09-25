@@ -17,13 +17,16 @@
   * [Thresholding]
   * [Gridding]
   * [Quantiation]
- * [Scoring Scoring]
+
+[Scoring Scoring]
   * [Keyfiles]
   * [Keyfiles]
- * [Analysis Data Analysis]
+
+[Analysis Data Analysis]
   * [Linkage Gene Linakge]
   * [GeneInfo Gene Information]
- * [Options]
+
+[Options]
 
 *Tutorial*
 
