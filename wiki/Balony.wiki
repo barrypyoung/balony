@@ -15,11 +15,11 @@
  [ImageSegmentation Image Segmentation]
 
    [Imaging]
-     [Thresholding]<br>
-     [Gridding]<br>
-     [Quantiation]<br>
-     [Analysis]<br>
-     [Options]<br>
+     * [Thresholding]
+     * [Gridding]
+     * [Quantiation]
+     * [Analysis]
+     * [Options]
 
 *Tutorial*
 
