@@ -1,13 +1,15 @@
-#summary One-sentence summary of this page.
+#summary Analysis of individual plate images.
 
 = Introduction =
 
-Add your content here.
+The quantiation of colony sizes in Balony is a multi-step process. Essentially, the image is converted to monochrome, and colonies are identified as ellipses. Each colony is then mapped to a grid position and the size of the colony determined.
 
+Varying degrees of automation are available depending on the quality of the imported images and how much control the user wishes to have. It is entirely possible that an entire experiment's worth of images can be analyzed with a single click.
 
-= Details =
+The steps involved are:
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+ * [Thresholding] - conversion of the image from colour/grayscale to black and white.
+
+ * [Gridding] - determining the position of each colony within the array.
+
+ * [Quantiation] - assigning pixel are values to each position.
