@@ -8,8 +8,7 @@
 
 *Using Balony*
 
-[Overview]
-
+ * [Overview]
  * [ImagePreparation Image Preparation]
  * [ImageSegmentation Image Segmentation]
  * [ImageAnalysis Image Analysis]
