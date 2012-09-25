@@ -2,7 +2,7 @@
  * *Getting started*
   * [SystemRequirements System Requirements]
   * [Installation]
- *Using Balony*
+ * *Using Balony*
   * [Overview]
  * [ImagePreparation Image Preparation]
  * [ImageSegmentation Image Segmentation]
