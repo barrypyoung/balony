@@ -1,7 +1,5 @@
 #summary Overview of the Balony program.
 
-= Introduction =
-
 Analysis of images using Balony is a multi-step process. Typically, the user will start with scanned images, each containing multiple plates. The process is then:
 
  * Segmentation of the starting image into images of individual plates, and saving of these images as separate files with appropritae file names. The images may be processed to correct orientation, resolution and colour.
