@@ -25,7 +25,7 @@
   * [GeneInfo Gene Information]
 
 
- [Options]
+[Options]
 
 *Tutorial*
 
