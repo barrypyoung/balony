@@ -15,10 +15,11 @@
  [ImageSegmentation Image Segmentation]
 
  * [ImageAnalysis Image Analysis]
+     * [Thresholding]
      * [Gridding]
      * [Quantiation]
 
- * [Scoring]
+ * [Scoring Scoring]
      * [Keyfiles Array Key Files]
 
  * [Analysis Data Analysis]
