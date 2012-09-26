@@ -1,5 +1,5 @@
- * [About About Balony]
  * *Getting started*
+  * [About About Balony]
   * [SystemRequirements System Requirements]
   * [Installation]
  * *Using Balony*
