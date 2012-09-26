@@ -3,15 +3,3 @@
  * A personal computer capable of with a screen resolution of at least 1024 x 768 (higher preferred)
  * A Java Runtime Envinroment installation of 1.6 or later (for further information or to install, see [http://www.java.com/en/download/index.jsp here]
  * At least 100 MB of available hard drive space (plus more for storing image files).
-
-= Introduction =
-
-Add your content here.
-
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
