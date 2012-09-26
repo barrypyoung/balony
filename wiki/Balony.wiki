@@ -1,4 +1,4 @@
- * *Getting started*
+ * Getting Started
   * [About About Balony]
   * [SystemRequirements System Requirements]
   * [Installation]
