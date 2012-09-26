@@ -2,7 +2,7 @@
 
   # Click on the "Image" tab to go to the image analysis section.
   # The file list should contain the individual images. If not, click "Chose Folder..." and navigate to the folder containing the individual images. This should be a folder called "Cropped" under the folder where the original image files were extracted.
-  # Select "Loewen Lab 1536 `RePad` 300 dpi" from the "Grid Presets" drop-down menu.
+  # Select "Loewen Lab 1536 RePad 300 dpi" from the "Grid Presets" drop-down menu.
   # _De-select_ the "Threshold", "Grid", "Quant" and "Save" checkboxes in order to see the separate stages of analysis.
   # Double-click the first file in the file list. It should open to the right.
   # If a window pops up asking you to calibrate your imaging device, simply click "Use existing preset" and then select "Loewen Lab 1536 RePad 300 dpi" from the drop-down menu and click "Use this preset".
