@@ -1,5 +1,5 @@
 #summary Minimum requirements for running Balony
 
- * A personal computer capable of with a screen resolution of at least 1024 x 768 (higher preferred)
- * A Java Runtime Envinroment installation of version 6 or later (for further information or to install, see [http://www.java.com/en/download/index.jsp here]
+ * A personal computer capable of with a screen resolution of at least 1024 x 768 (higher preferred).
+ * A Java Runtime Envinroment version 6 or later (for further information or to install, see [http://www.java.com/en/download/index.jsp here]
  * At least 100 MB of available hard drive space (plus more for storing image files).
