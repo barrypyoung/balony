@@ -1,13 +1,4 @@
-#summary One-sentence summary of this page.
-
-= Introduction =
-
-Add your content here.
-
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+  # Download, install and, if necessary, update Balony following the instructions above.
+  # Download the sample images from this location.
+  # Extract the folder containing the sample images to somewhere appropriate.
+  # Start Balony.
