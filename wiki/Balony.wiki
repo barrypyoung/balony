@@ -8,6 +8,7 @@
   * [ImageSegmentation Image Segmentation]
   * [ImageAnalysis Image Analysis]
    * [Thresholding]
+   * [GridPresets Grid Presets]
    * [Gridding]
    * [Quantiation]
   * [Scoring Scoring]
