@@ -13,4 +13,4 @@
   # Now process the remaining images:
   # Make sure the "Threshold", "Grid", "Quant" and "Save" checkboxes are selected, as below.<br><br>[https://balony.googlecode.com/svn/wiki/image-web.png]<br><br>
   # Click "Select All" followed by "Analyze Selected".
-  # One of the plates might require a second pass to be analyzed correctly. You can click "Yes" to the dialog that asks about doing a second pass.
+  # One of the files might require a second pass to be analyzed correctly (<tt>SCS2_G418_set-1_plate-3.jpg</tt>). You can click "Yes" to the dialog that asks about doing a second pass.
