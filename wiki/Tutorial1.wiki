@@ -1,3 +1,5 @@
+[Tutorial2 Next >]
+
   # Download, install and, if necessary, update Balony following [Installation the instructions above].
   # Download the sample images from [https://balony.googlecode.com/files/Sample%20Images.zip this location].
   # Extract the folder containing the sample images to an appropriate location.
