@@ -1,5 +1,7 @@
 #summary Analyzing individual plate images.
 
+[Tutorial2 < Prev] [Tutorial4 Next >]
+
   # Click on the "Image" tab to go to the image analysis section.
   # The file list should contain the individual images. If not, click "Chose Folder..." and navigate to the folder containing the individual images. This should be a folder called "Cropped" under the folder where the original image files were extracted.
   # Select "Loewen Lab 1536 RePad 300 dpi" from the "Grid Presets" drop-down menu.
