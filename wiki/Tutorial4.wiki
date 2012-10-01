@@ -1,4 +1,4 @@
-[Tutorial3 &lt Prev] [Tutorial5 Next &gt]
+[Tutorial3 < Prev] [Tutorial5 Next >]
 
  # Navigate to the "Scoring Panel".
  # The "Control Plates" and "Experimental Plates" should both display the path where your individual plate images were stored. If not, click the "..." button and navigate to that folder.
