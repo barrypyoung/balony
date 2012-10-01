@@ -1,5 +1,7 @@
 #summary Segmenting composite images.
 
+[Tutorial1 < Prev] [Tutorial3 Next >]
+
   # If you are not already there, click on the "Scan" tab.
   # Click "Select Folder..." and navigate to the folder where you extracted the sample images.
   # The file list should show a list of image files. Click the first file and check that it appears in the preview panel.
