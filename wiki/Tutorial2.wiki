@@ -6,7 +6,7 @@
   # Click "Select Folder..." and navigate to the folder where you extracted the sample images.
   # The file list should show a list of image files. Click the first file and check that it appears in the preview panel.
   # Now double click the file and it should open in the window to the right.
-  # Ensure that the plate numbers are correctly mapped on to each plate as shown below.
+  # Ensure that the plate numbers are correctly mapped on to each plate as shown below.<br><br>https://balony.googlecode.com/svn/wiki/scan-tut.png<br><br>
   # If everything looks correct, click "Select All", then click "Process Selected"
   # Once the files have finished processing, check that a subfolder has been created in the same folder as the original images and that it contains images of the individual plates.
   # If the folder contains the 24 separate plate images, continue to the next section.
