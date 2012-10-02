@@ -1,15 +1,15 @@
-#summary One-sentence summary of this page.
+#summary Analyzing the results of a screen
 
 [Tutorial4 < Prev]
 
-= Introduction =
-
-Add your content here.
-
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+ # If you the data hasn't already loaded from the previous section, follow the following steps:
+  # Click the "Analysis" tab.
+  # Ensure that the "Open data tables after loading" check-box is selected.
+  # Click "Load Data". When the open file dialog appears, ensure that the "Auto-select all sets" check-box is selected, navigate to the folder in which the scored data from the previous step was saved, and click the first text file. The other three text files should be automatically selected. If they are not, hold down the shift key and select the bottom file so that all three are selected. Click "Open".
+ # In the data table, locate the "Filtering" panel. In the "Query gene" box, type "SCS2" (without quotes), then click the "Linkage" button. This should open the linkage panel.
+ # The vertical bars indicate the growth of double mutants in genes flanking the SCS2 gene (indicated in blue). These mutants should be excluded from the analysis as the reduced growth rate is due to the low frequency of...
+ # Adjust the positions of the two sliders so that the grayed out section encompasses the "V"-shaped portion of the histogram <p>[https://balony.googlecode.com/svn/wiki/linkage-tut.png]</p>
+ # Click "Apply". The linked genes will now be excluded from the analysis.
+ # Click the "Ratio Plot" button to bring up the overview of the screen. We will use Balony's auto-estimate to define cut-off values for hits in the screen. Click "Auto-estimate ratio cut-offs". The data will be sorted by ascending ratio of (experimental/control) colony size.<p>[https://balony.googlecode.com/svn/wiki/ratio-tut.png]</p>
+ # The dashed green and red lines indicate the lower and upper limits for "hits". Close this window.
+ # To see the most signifcant hits in the screen, return to the data table and click "Show" in the "Low cut-off hits" panel. The data table should now sort the data showing the strongest hits first. Specifically, these are the hits where the ratio of experimental colony size to control colony size is the lowest. This must have occurred in all three replicates and be statistically significant with a p-value < 0.05. You can adjust these criteria in the "Low cut-off hits" panel.
