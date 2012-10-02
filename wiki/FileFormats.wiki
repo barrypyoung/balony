@@ -1,5 +1,10 @@
 = Input Files =
 
+== Composite plate images ==
+
+== Array Key Files ==
+
+
 = Output Files =
 
 
