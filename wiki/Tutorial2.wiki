@@ -9,4 +9,4 @@
   # Ensure that the plate numbers are correctly mapped on to each plate as shown below.<br><br>https://balony.googlecode.com/svn/wiki/scan-tut.png<br><br>
   # If everything looks correct, click "Select All", then click "Process Selected"
   # Once the files have finished processing, check that a subfolder has been created in the same folder as the original images and that it contains images of the individual plates.
-  # If the folder contains the 24 separate plate images, continue to the next section.
+  # If the folder contains the 24 separate plate images, continue to the [Tutorial3 next section].
