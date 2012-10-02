@@ -118,8 +118,8 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
         genesJMenuItem = new javax.swing.JMenuItem();
         allJMenuItem = new javax.swing.JMenuItem();
         allheadersJMenuItem = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
         compareJMenu = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         tableJScrollPane = new javax.swing.JScrollPane(analysisTable,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         analysisTable = new javax.swing.JTable() {
             public TableCellRenderer getCellRenderer(int row, int column) {
@@ -246,28 +246,27 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
         });
         clipCopyJMenu.add(allheadersJMenuItem);
 
+        dataTablePopupMenu.add(clipCopyJMenu);
+
+        compareJMenu.setText("Compare with");
+        compareJMenu.setEnabled(false);
+        compareJMenu.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                compareJMenuMenuSelected(evt);
+            }
+        });
+        dataTablePopupMenu.add(compareJMenu);
+
         jMenuItem1.setText("ToneMatrix of ratios (32 rows)");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
             }
         });
-        clipCopyJMenu.add(jMenuItem1);
-
-        dataTablePopupMenu.add(clipCopyJMenu);
-
-        compareJMenu.setText("Compare with");
-        compareJMenu.setEnabled(false);
-        compareJMenu.addMenuListener(new javax.swing.event.MenuListener() {
-            public void menuCanceled(javax.swing.event.MenuEvent evt) {
-            }
-            public void menuSelected(javax.swing.event.MenuEvent evt) {
-                compareJMenuMenuSelected(evt);
-            }
-            public void menuDeselected(javax.swing.event.MenuEvent evt) {
-            }
-        });
-        dataTablePopupMenu.add(compareJMenu);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -1188,6 +1187,16 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
             }
 
             saveFile = fname;
+            
+            if(new File(saveFile).exists()) {
+                int n = JOptionPane.showOptionDialog(null,
+                        "File already exists. Overwrite?", "Warning!",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
+                        null, null, null);
+                if (n == JOptionPane.NO_OPTION) {
+                    return;
+                }
+            }
 
             System.out.println("Saving...");
             ObjectOutputStream oos;

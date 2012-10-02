@@ -45,7 +45,7 @@ public class main {
 
                 else if (p.equals("1")) {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                    System.out.println("Using System Look-and-Feel");
+                    System.out.println("Using Operating System Look-and-Feel");
 
                 } else {
                     UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
