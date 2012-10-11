@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Add your content here.
+[https://balony.googlecode.com/svn/wiki/linkage-tut.png]
 
 
 = Details =
