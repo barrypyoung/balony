@@ -4,13 +4,15 @@
 <entry key="scanLayout">2x2</entry>
 <entry key="expFolder">C:\Apps\Balony\Sample Images\Cropped\</entry>
 <entry key="LowCutOff">0.85</entry>
+<entry key="rethresh">TRUE</entry>
 <entry key="imageAutoName">1</entry>
 <entry key="SickFilterComboBox">control spot</entry>
-<entry key="imageAutoQuant">0</entry>
+<entry key="imageAutoQuant">1</entry>
 <entry key="imageThreshValue">128</entry>
 <entry key="HightCutOff">1.17</entry>
+<entry key="circ">0.8</entry>
 <entry key="MaxSpotSize">100</entry>
-<entry key="imageAutoSave">0</entry>
+<entry key="imageAutoSave">1</entry>
 <entry key="analysisFolder">C:\Users\Barry Young\Documents</entry>
 <entry key="scanFolder">C:\Apps\Balony\Sample Images\</entry>
 <entry key="scanClose">1</entry>
@@ -25,7 +27,9 @@
 <entry key="imageFolder">C:\Apps\Balony\Sample Images\Cropped</entry>
 <entry key="ctrlFolder">C:\Apps\Balony\Sample Images\Cropped\</entry>
 <entry key="tableFolder">C:\Users\Barry Young\Documents</entry>
+<entry key="minPixels">8</entry>
 <entry key="caliibrated">1</entry>
+<entry key="snap">0.25</entry>
 <entry key="scanGrayscale">1</entry>
 <entry key="osLaF">1</entry>
 <entry key="SickCutOff">0.2</entry>
@@ -38,8 +42,8 @@
 <entry key="LastKeyFile">C:\Users\Barry Young\Documents\NetBeansProjects\Balony\.\UBC-1536.key</entry>
 <entry key="scoreNormalization">Median</entry>
 <entry key="scanShrink">None</entry>
-<entry key="imageAutoInvert">1</entry>
 <entry key="scoreScoreBy">scoreByArrayPos</entry>
-<entry key="imgaeAutoGrid">0</entry>
+<entry key="imageAutoInvert">1</entry>
+<entry key="imgaeAutoGrid">1</entry>
 <entry key="scoreAutoAnalyze">1</entry>
 </properties>
