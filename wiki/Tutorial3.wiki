@@ -5,7 +5,7 @@
   # Click on the "Image" tab to go to the image analysis section.
   # The file list should contain the individual images. If not, click "Chose Folder..." and navigate to the folder containing the individual images. This should be a folder called "Cropped" under the folder where the original image files were extracted.
   # Select "Loewen Lab 1536 RePad 300 dpi" from the "Grid Presets" drop-down menu.
-  # _De-select_ the "Threshold", "Grid", "Quant" and "Save" checkboxes in order to see the separate stages of analysis.
+  # _De-select_ the "Threshold", "Grid", "Quant" and "Save" checkboxes in order to see the separate stages of analysis:<p>https://balony.googlecode.com/svn/wiki/autosettings-tut.png</p>
   # Double-click the first file in the file list. It should open to the right.
   # If a window pops up asking you to calibrate your imaging device, simply click "Use existing preset" and then select "Loewen Lab 1536 RePad 300 dpi" from the drop-down menu and click "Use this preset".
   # To threshold the image, make sure "Auto" is selected in the "Threshold Method" panel, then click the "Threshold" button near the top of the window. To see the effects of different threshold values, try selecting "Manual" then user the slider to change the threshold value and click the "Threshold" button again.
