@@ -9,7 +9,8 @@
   # Double-click the first file in the file list. It should open to the right.
   # If a window pops up asking you to calibrate your imaging device, simply click "Use existing preset" and then select "Loewen Lab 1536 RePad 300 dpi" from the drop-down menu and click "Use this preset".
   # To threshold the image, make sure "Auto" is selected in the "Threshold Method" panel, then click the "Threshold" button near the top of the window. To see the effects of different threshold values, try selecting "Manual" then user the slider to change the threshold value and click the "Threshold" button again.
-  # After using the automatic thresholding, click "AutoGrid". A green grid should be superimposed over the image.<br><br>[https://balony.googlecode.com/svn/wiki/image-quant-web.png]<br><br>
+  # After using the automatic thresholding, click "AutoGrid". A green grid should be superimposed over the image.<p>https://balony.googlecode.com/svn/wiki/gridded-tut.png</p>
+  # Click the "Quantify" button. After a brief pause, the program should draw green circles around each colony on the plate.<br><br>[https://balony.googlecode.com/svn/wiki/image-quant-web.png]<br><br>
   # Click "Save" to save the quantified image.
   # Click "Show Quant" on the left to see the raw quantified pixel data for each position in the array.
   # Now process the remaining images:
