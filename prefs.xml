@@ -2,7 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <entry key="scanLayout">2x2</entry>
-<entry key="expFolder">C:\Apps\Balony\Sample Images\Cropped\</entry>
+<entry key="expFolder">D:\Scans\Barry\20080320\Cropped\</entry>
 <entry key="LowCutOff">0.85</entry>
 <entry key="rethresh">TRUE</entry>
 <entry key="imageAutoName">1</entry>
@@ -14,7 +14,7 @@
 <entry key="MaxSpotSize">100</entry>
 <entry key="imageAutoSave">1</entry>
 <entry key="analysisFolder">C:\Users\Barry Young\Documents</entry>
-<entry key="scanFolder">C:\Apps\Balony\Sample Images\</entry>
+<entry key="scanFolder">D:\Scans\ScreenMill test plates\</entry>
 <entry key="scanClose">1</entry>
 <entry key="scanRotate">90° CW</entry>
 <entry key="scanPlateD">3</entry>
@@ -24,8 +24,8 @@
 <entry key="imageAutoThresh">1</entry>
 <entry key="scanPlateA">2</entry>
 <entry key="analysisKeyFileOverride">1</entry>
-<entry key="imageFolder">C:\Apps\Balony\Sample Images\Cropped</entry>
-<entry key="ctrlFolder">C:\Apps\Balony\Sample Images\Cropped\</entry>
+<entry key="imageFolder">D:\Scans\Mark\090130\Cropped</entry>
+<entry key="ctrlFolder">D:\Scans\Barry\20080320\Cropped\</entry>
 <entry key="tableFolder">C:\Users\Barry Young\Documents</entry>
 <entry key="minPixels">8</entry>
 <entry key="caliibrated">1</entry>
@@ -38,12 +38,12 @@
 <entry key="analysisOpenTables">1</entry>
 <entry key="imageThreshMethod">threshAuto</entry>
 <entry key="optionsUpdateCheck">1</entry>
-<entry key="BalonyVersion">http://balony.googlecode.com/files/Balony-latest-September 21 2012.jar</entry>
+<entry key="BalonyVersion">http://balony.googlecode.com/files/Balony-latest-October 17 2012.jar</entry>
 <entry key="LastKeyFile">C:\Users\Barry Young\Documents\NetBeansProjects\Balony\.\UBC-1536.key</entry>
 <entry key="scoreNormalization">Median</entry>
 <entry key="scanShrink">None</entry>
 <entry key="scoreScoreBy">scoreByArrayPos</entry>
 <entry key="imageAutoInvert">1</entry>
-<entry key="imgaeAutoGrid">1</entry>
+<entry key="imgaeAutoGrid">0</entry>
 <entry key="scoreAutoAnalyze">1</entry>
 </properties>

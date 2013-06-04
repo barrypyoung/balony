@@ -49,6 +49,8 @@ import javax.swing.*;
 import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import org.apache.commons.math3.analysis.interpolation.LoessInterpolator;
+import org.apache.commons.math3.stat.descriptive.rank.Median;
 
 /**
  *
@@ -676,6 +678,7 @@ public final class Balony extends javax.swing.JFrame {
         analysisArrayComboBox = new javax.swing.JComboBox();
         buttonGroup2 = new javax.swing.ButtonGroup();
         scanprocessButton = new javax.swing.JButton();
+        scoreRCComboBox = new javax.swing.JComboBox();
         tabPane = new javax.swing.JTabbedPane();
         scanPanel = new javax.swing.JPanel();
         scanPlateNamingPanel = new javax.swing.JPanel();
@@ -792,8 +795,9 @@ public final class Balony extends javax.swing.JFrame {
         removeButton = new javax.swing.JButton();
         scoringtabaPanel = new javax.swing.JPanel();
         normalPanel = new javax.swing.JPanel();
-        normrelLabel = new javax.swing.JLabel();
-        scoreRCComboBox = new javax.swing.JComboBox();
+        scoreRCJCheckBox = new javax.swing.JCheckBox();
+        scoreSpatialJCheckBox = new javax.swing.JCheckBox();
+        scoreCompetitionJCheckBox = new javax.swing.JCheckBox();
         ctrlPanel = new javax.swing.JPanel();
         ctrldirTextField = new javax.swing.JTextField(40);
         ctrldirButton = new javax.swing.JButton();
@@ -885,6 +889,13 @@ public final class Balony extends javax.swing.JFrame {
         scanprocessButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 scanprocessButtonActionPerformed(evt);
+            }
+        });
+
+        scoreRCComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Row / Column", "Row / Column + Spatial", "Spatial", "Off" }));
+        scoreRCComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                scoreRCComboBoxActionPerformed(evt);
             }
         });
 
@@ -1430,7 +1441,7 @@ public final class Balony extends javax.swing.JFrame {
         );
         scanPreviewPanelLayout.setVerticalGroup(
             scanPreviewPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 136, Short.MAX_VALUE)
+            .add(0, 140, Short.MAX_VALUE)
         );
 
         scanPreviewJCheckBox.setSelected(true);
@@ -1494,7 +1505,7 @@ public final class Balony extends javax.swing.JFrame {
                         .add(scanPreviewJCheckBox)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(scanPreviewPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         tabPane.addTab("Scan", scanPanel);
@@ -2240,15 +2251,12 @@ public final class Balony extends javax.swing.JFrame {
 
         normalPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Normalization"));
 
-        normrelLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        normrelLabel.setText("Row/Column correction:");
+        scoreRCJCheckBox.setSelected(true);
+        scoreRCJCheckBox.setText("Row / Column");
 
-        scoreRCComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Median", "Off" }));
-        scoreRCComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                scoreRCComboBoxActionPerformed(evt);
-            }
-        });
+        scoreSpatialJCheckBox.setText("Spatial");
+
+        scoreCompetitionJCheckBox.setText("Competition");
 
         org.jdesktop.layout.GroupLayout normalPanelLayout = new org.jdesktop.layout.GroupLayout(normalPanel);
         normalPanel.setLayout(normalPanelLayout);
@@ -2257,17 +2265,20 @@ public final class Balony extends javax.swing.JFrame {
             .add(normalPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(normalPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(normrelLabel)
-                    .add(scoreRCComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 145, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                    .add(scoreRCJCheckBox)
+                    .add(scoreSpatialJCheckBox)
+                    .add(scoreCompetitionJCheckBox))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         normalPanelLayout.setVerticalGroup(
             normalPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(normalPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(normrelLabel)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(scoreRCComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(scoreRCJCheckBox)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(scoreSpatialJCheckBox)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(scoreCompetitionJCheckBox)
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -2409,7 +2420,7 @@ public final class Balony extends javax.swing.JFrame {
                     .add(autoAnalyzeJCheckBox)
                     .add(scoreByOrfRadioButton)
                     .add(scoreByArrayPosRadioButton)
-                    .add(scorenameTextField)
+                    .add(scorenameTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
                     .add(savescorePanelLayout.createSequentialGroup()
                         .add(saveScoreButton)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
@@ -2455,23 +2466,26 @@ public final class Balony extends javax.swing.JFrame {
         scoreKeyfilePanelLayout.setHorizontalGroup(
             scoreKeyfilePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(scoreKeyfilePanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .add(scoreKeyfilePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(scoreKeysComboBox, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(scoreKeyfilePanelLayout.createSequentialGroup()
                         .add(scoreArraykeyLabel)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(keyFileLoadButton))
-                    .add(scoreKeysComboBox, 0, 209, Short.MAX_VALUE))
+                        .add(keyFileLoadButton)
+                        .add(0, 74, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         scoreKeyfilePanelLayout.setVerticalGroup(
             scoreKeyfilePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(scoreKeyfilePanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .add(scoreKeyfilePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(scoreArraykeyLabel)
                     .add(keyFileLoadButton))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(scoreKeysComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         scoringRefreshButton.setText("Refresh Data");
@@ -2492,7 +2506,7 @@ public final class Balony extends javax.swing.JFrame {
                     .add(scoringtabaPanelLayout.createSequentialGroup()
                         .add(normalPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(scoreKeyfilePanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .add(scoreKeyfilePanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(expPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(ctrlPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(scoringRefreshButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -2510,10 +2524,10 @@ public final class Balony extends javax.swing.JFrame {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(scoringtabaPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                     .add(normalPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(scoreKeyfilePanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(scoreKeyfilePanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(savescorePanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(46, 46, 46))
+                .add(57, 57, 57))
         );
 
         tabPane.addTab("Scoring", scoringtabaPanel);
@@ -2576,7 +2590,7 @@ public final class Balony extends javax.swing.JFrame {
                     .add(restoreTableButton))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(dataTablesComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         sgdFeaturesJPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("SGD Features"));
@@ -2972,7 +2986,7 @@ public final class Balony extends javax.swing.JFrame {
                 .add(updaterJPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(contactJPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(191, Short.MAX_VALUE))
+                .addContainerGap(200, Short.MAX_VALUE))
         );
 
         tabPane.addTab("Options", optionsPanel);
@@ -3930,13 +3944,13 @@ public final class Balony extends javax.swing.JFrame {
         if (loaded == false) {
             return;
         }
-        
+
 //        if (loaded == true && threshed == false) {
-            doThresh();
-            if (autoGridJCheckBox.isSelected()) {
-                gw = new gridWorker();
-                gw.execute();
-            }
+        doThresh();
+        if (autoGridJCheckBox.isSelected()) {
+            gw = new gridWorker();
+            gw.execute();
+        }
 //        } else if (loaded == true && threshed == true) {
 //            new imageLoader().execute();
 //        }
@@ -5098,6 +5112,7 @@ public final class Balony extends javax.swing.JFrame {
             autoNameJCheckBox.setSelected(true);
             autoQuantJCheckBox.setSelected(true);
             autoThreshJCheckBox.setSelected(true);
+            autoSaveJCheckBox.setSelected(true);
         }
 
         fullAutoFail = 0;
@@ -7397,7 +7412,11 @@ public final class Balony extends javax.swing.JFrame {
                 }
             }
         }
-        if (!scoreRCComboBox.getSelectedItem().toString().equals("Off")) {
+
+
+        if (scoreRCJCheckBox.isSelected()) {
+            // Row/column correction
+
             for (int s = minCtrlSet; s <= maxCtrlSet; s++) {
                 for (int p = minCtrlPlate; p <= maxCtrlPlate; p++) {
                     double normFactor[][] = new double[ctrlData.getRows() + 1][ctrlData.getCols() + 1];
@@ -7437,11 +7456,16 @@ public final class Balony extends javax.swing.JFrame {
                             }
                         }
                     }
+
+
                     for (int i = 1; i <= ctrlData.getRows(); i++) {
                         for (int j = 1; j <= ctrlData.getCols(); j++) {
                             ctrlData.getNormArea()[s][p][i][j] /= normFactor[i][j];
                         }
                     }
+
+
+                    // Re-normalize
                     ArrayList<Double> tmpSpots = new ArrayList<Double>();
                     double median;
                     for (int i = 1; i <= ctrlData.getRows(); i++) {
@@ -7462,6 +7486,90 @@ public final class Balony extends javax.swing.JFrame {
                 }
             }
         }
+
+        if (scoreSpatialJCheckBox.isSelected()) {
+            // Spatial corection
+
+            for (int s = minCtrlSet; s <= maxCtrlSet; s++) {
+                for (int p = minCtrlPlate; p <= maxCtrlPlate; p++) {
+
+                    double[] xval = new double[ctrlData.getCols()];
+                    double[] yval = new double[ctrlData.getCols()];
+
+                    // LOESS for horizontal direction
+
+                    for (int n = 0; n < ctrlData.getCols(); n++) {
+                        xval[n] = n;
+                        double[] cval = new double[ctrlData.getRows()];
+                        for (int nn = 0; nn < ctrlData.getRows(); nn++) {
+                            cval[nn] = ctrlData.getNormArea()[s][p][nn + 1][n + 1];
+                        }
+
+                        Arrays.sort(cval);
+
+                        yval[n] = cval[(cval.length - 1) / 2];
+
+                    }
+
+                    LoessInterpolator lin = new LoessInterpolator();
+                    double[] xloess = lin.smooth(xval, yval);
+
+                    StringBuilder outstring = new StringBuilder();
+                    for (int n = 0; n < xval.length; n++) {
+                        outstring.append(xloess[n]).append("\n");
+                    }
+
+
+//                    System.out.println("Horiz Loess for 1,1,3,4:\n " + outstring);
+
+
+                    // LOESS for vert direction
+
+                    xval = new double[ctrlData.getRows()];
+                    yval = new double[ctrlData.getRows()];
+
+                    for (int n = 0; n < ctrlData.getRows(); n++) {
+                        xval[n] = n;
+
+                        double[] cval = new double[ctrlData.getCols()];
+                        for (int nn = 0; nn < ctrlData.getCols(); nn++) {
+                            cval[nn] = ctrlData.getNormArea()[s][p][n + 1][nn + 1];
+                        }
+
+                        Arrays.sort(cval);
+
+                        yval[n] = cval[(cval.length - 1) / 2];
+
+                    }
+
+                    lin = new LoessInterpolator();
+                    double[] yloess = lin.smooth(xval, yval);
+
+                    outstring = new StringBuilder();
+                    for (int n = 0; n < xval.length; n++) {
+                        outstring.append(yloess[n]).append("\n");
+                    }
+
+//                    System.out.println("Vert Loess for 1,1,3,4:\n " + outstring);
+
+                    for (int i = 1; i <= ctrlData.getRows(); i++) {
+                        for (int j = 1; j <= ctrlData.getCols(); j++) {
+                            ctrlData.getNormArea()[s][p][i][j] =
+                                    ctrlData.getNormArea()[s][p][i][j] / (yloess[i - 1] * xloess[j - 1]);
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+        if (scoreCompetitionJCheckBox.isSelected()) {
+            // Competition correction
+        }
+
+
+
         messageText.append("\nControl data normalized.");
         if (ctrlData != null && expData != null) {
             scorenameTextField.setText(ctrlData.getName() + "--" + expData.getName());
@@ -7498,7 +7606,10 @@ public final class Balony extends javax.swing.JFrame {
                 }
             }
         }
-        if (!scoreRCComboBox.getSelectedItem().toString().equals("Off")) {
+
+        if (scoreRCJCheckBox.isSelected()) {
+            // Do R/C correction
+
             for (int s = minExpSet; s <= maxExpSet; s++) {
                 for (int p = minExpPlate; p <= maxExpPlate; p++) {
                     double normFactor[][] = new double[expData.getRows() + 1][expData.getCols() + 1];
@@ -7562,6 +7673,88 @@ public final class Balony extends javax.swing.JFrame {
                 }
             }
         }
+
+        if (scoreSpatialJCheckBox.isSelected()) {
+            // Spatial corection
+
+            for (int s = minExpSet; s <= maxExpSet; s++) {
+                for (int p = minExpPlate; p <= maxExpPlate; p++) {
+
+                    double[] xval = new double[expData.getCols()];
+                    double[] yval = new double[expData.getCols()];
+
+                    // LOESS for horizontal direction
+
+                    for (int n = 0; n < expData.getCols(); n++) {
+                        xval[n] = n;
+                        double[] cval = new double[expData.getRows()];
+                        for (int nn = 0; nn < expData.getRows(); nn++) {
+                            cval[nn] = expData.getNormArea()[s][p][nn + 1][n + 1];
+                        }
+
+                        Arrays.sort(cval);
+
+                        yval[n] = cval[(cval.length - 1) / 2];
+
+                    }
+
+                    LoessInterpolator lin = new LoessInterpolator();
+                    double[] xloess = lin.smooth(xval, yval);
+
+                    StringBuilder outstring = new StringBuilder();
+                    for (int n = 0; n < xval.length; n++) {
+                        outstring.append(xloess[n]).append("\n");
+                    }
+
+
+//                    System.out.println("Horiz Loess for 1,1,3,4:\n " + outstring);
+
+
+                    // LOESS for vert direction
+
+                    xval = new double[expData.getRows()];
+                    yval = new double[expData.getRows()];
+
+                    for (int n = 0; n < expData.getRows(); n++) {
+                        xval[n] = n;
+
+                        double[] cval = new double[expData.getCols()];
+                        for (int nn = 0; nn < expData.getCols(); nn++) {
+                            cval[nn] = expData.getNormArea()[s][p][n + 1][nn + 1];
+                        }
+
+                        Arrays.sort(cval);
+
+                        yval[n] = cval[(cval.length - 1) / 2];
+
+                    }
+
+                    lin = new LoessInterpolator();
+                    double[] yloess = lin.smooth(xval, yval);
+
+                    outstring = new StringBuilder();
+                    for (int n = 0; n < xval.length; n++) {
+                        outstring.append(yloess[n]).append("\n");
+                    }
+
+//                    System.out.println("Vert Loess for 1,1,3,4:\n " + outstring);
+
+                    for (int i = 1; i <= expData.getRows(); i++) {
+                        for (int j = 1; j <= expData.getCols(); j++) {
+                            expData.getNormArea()[s][p][i][j] =
+                                    expData.getNormArea()[s][p][i][j] / (yloess[i - 1] * xloess[j - 1]);
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+        if (scoreCompetitionJCheckBox.isSelected()) {
+            // Competition correction
+        }
+
         messageText.append("\nExperiment data normalized.");
         if (ctrlData != null && expData != null) {
             scorenameTextField.setText(ctrlData.getName() + "--" + expData.getName());
@@ -7574,12 +7767,12 @@ public final class Balony extends javax.swing.JFrame {
             return;
         }
         if (threshed == true) {
-            loadedIm.changes=false;
+            loadedIm.changes = false;
             loadedIm.close();
-            imageLoad(currFile, false);            
-                    if(!autoThreshJCheckBox.isSelected()) {
-                    doThresh();
-                }
+            imageLoad(currFile, false);
+            if (!autoThreshJCheckBox.isSelected()) {
+                doThresh();
+            }
         }
         ImageProcessor ip;
         int l = loadedIm.getHeight() / 16;
@@ -7882,7 +8075,7 @@ public final class Balony extends javax.swing.JFrame {
                 mwl = new myWindowListener();
                 oIm.getWindow().addWindowListener(mwl);
             }
-            
+
             for (MouseListener m : ic.getMouseListeners()) {
                 ic.removeMouseListener(m);
             }
@@ -7895,14 +8088,14 @@ public final class Balony extends javax.swing.JFrame {
             ic.addMouseMotionListener(this);
             ic.addMouseWheelListener(this);
             ic.addMouseListener(this);
-            
-            for(KeyListener k : ic.getKeyListeners()) {
+
+            for (KeyListener k : ic.getKeyListeners()) {
                 ic.removeKeyListener(k);
             }
-            
+
             ic.addKeyListener(this);
-            
-            
+
+
             i = ic;
             cnt = 0;
             path = new GeneralPath();
@@ -8614,7 +8807,6 @@ public final class Balony extends javax.swing.JFrame {
     private javax.swing.JTextField minSpotSizeJTextField;
     private javax.swing.JRadioButton nimbusLAFJRadioButton;
     private javax.swing.JPanel normalPanel;
-    private javax.swing.JLabel normrelLabel;
     private javax.swing.JPanel optionsPanel;
     private javax.swing.JRadioButton osLAFJRadioButton;
     private javax.swing.JTextField plateNameJTextField;
@@ -8680,10 +8872,13 @@ public final class Balony extends javax.swing.JFrame {
     private javax.swing.JLabel scoreArraykeyLabel;
     private javax.swing.JRadioButton scoreByArrayPosRadioButton;
     private javax.swing.JRadioButton scoreByOrfRadioButton;
+    private javax.swing.JCheckBox scoreCompetitionJCheckBox;
     private javax.swing.JPanel scoreKeyfilePanel;
     private javax.swing.JComboBox scoreKeysComboBox;
     private javax.swing.JComboBox scoreRCComboBox;
+    private javax.swing.JCheckBox scoreRCJCheckBox;
     private javax.swing.ButtonGroup scoreSaveButtonGroup;
+    private javax.swing.JCheckBox scoreSpatialJCheckBox;
     private javax.swing.JTextField scorenameTextField;
     private javax.swing.JButton scoringRefreshButton;
     private javax.swing.JPanel scoringtabaPanel;
