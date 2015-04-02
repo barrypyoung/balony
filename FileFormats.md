@@ -1,0 +1,17 @@
+# Input Files #
+
+## Composite plate images ##
+
+## Array Key Files ##
+
+
+# Output Files #
+
+
+## Segmented Plates ##
+
+
+## Raw pixel area data ##
+
+
+## Scored colony data ##

@@ -1,0 +1,5 @@
+Balony is a software package for the analysis of images of plates containing arrays of yeast. It is maintained by Barry Young at the University of British Columbia, Vancouver, Canada.
+
+![http://img442.imageshack.us/img442/5303/fig3web.png](http://img442.imageshack.us/img442/5303/fig3web.png)
+
+Please follow the links to the left for further information.

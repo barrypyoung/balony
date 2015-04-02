@@ -1,0 +1,11 @@
+The thresholding step is necessary to convert the input image into a black and white image in order to identify colonies as discrete objects. This is achieved by selecting a particular grey level (where 0 = black and 255 = white) and assigning all pixels that fall above that value as white, and below it as black.
+
+Under most circumstances the program can carry out this thresholding procedure automatically. However, in certain cases it may be necessary to manually determine the correct grey level. To do this, simply select the "Manual" option in the "Threshold Method" panel and
+
+![https://balony.googlecode.com/svn/wiki/thresh-web.png](https://balony.googlecode.com/svn/wiki/thresh-web.png)
+
+A: Original input image (fragment).<br>
+B: Inverted image.<br>
+C: Threshold too high (170).<br>
+D: Threshold determined by Balony (154).<br>
+E&F: Threshold too low (135, 100).<br>

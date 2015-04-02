@@ -1,0 +1,35 @@
+
+
+# Introduction #
+
+Balony can be used to take a composite image containing multiple plates and divide into into images containing single plates for quantitation. It is important that files are correctly named before segmenting; please see the [Image Preparation](ImagePreparation.md) section for this. If each image only contains a single plate, then this step can be skipped, although it may be helpful to still use the image processing options to change attributes such as plate orientation, resolution and colour.
+
+![https://balony.googlecode.com/svn/wiki/imageseg-web.png](https://balony.googlecode.com/svn/wiki/imageseg-web.png)
+
+# Segmenting Images #
+
+  1. Click the "Scan" tab to navigate to the Image Segmentation section.
+  1. Click "Choose Folder" and navigate to the folder containing your scanned images.
+  1. You may wish to confirm that you have selected the correct folder. Clicking a file will load a small version of it into the preview window.
+  1. If the file looks correct, then double clicking will load the image in a separate window to the right. A yellow overlay will indicate how the image will be divided.
+  1. To process the image, click "Process Selected". Balony will then divide the image, perform any necessary post-processing (see below), and saving the output image in the corresponding subfolder.
+  1. To process all images in a folder, simply click "Select All" and then click "Process Selected."
+
+# Image Processing Options #
+
+The following options can be used to influence how the image is processed:
+
+  * The "Set Plate Numbers" panel shows how the individual plate file names will be created.
+    * The number selected from the drop-down box indicates which plate number will be appended to each file name. This will be displayed on the image to the right.
+    * The "Layout" drop-down box allows the user to specify the layout of plates in the input image. Options are 1x1, 1x2, 2x1 and 2x2.
+    * The "Set" drop-down box specified which set of plates is being analyzed. This is usually determined from the input file name, but can be overridden if necessary.
+    * The "Offset" drop-down box allows the user to specify an optional offset to add to the plate numbers shown . This can be useful if the array being dealt with has more than four plates per set. Again, this can be automatically inferred from the input file name if the offset value is enclosed in square brackets. For example, `YFG1_G418_set-1[4].jpg` would produce output files where 4 was added to the value of each plate number.
+
+  * The "Image processing options" panel affects the attributes of the saved file. These options are largely self-explanatory.
+    * "Plate rotation" can be useful if the orientation of the plates in the scanner is different to the orientation that an array is indexed in.
+    * If the resolution of the input image is higher than 300 dpi, then the "Shrink plates" option may be used to reduce the resolution of the output plates. Using images of an excessively high resolution in the subsequent stages of analysis can slow the process somewhat.
+    * "Convert to grayscale" - this step is optional as the image analysis section will convert plates to grayscale, but it will save a step if the output plates are to be analyzed multiple times.
+    * "Close cropped images" - if this is not selected, then each output image will be displayed after processing.
+    * "Auto-name plates" - using this option, Balony will automatically attempt to create file names for each output image.
+
+  * The "Plate naming" section shows how output file names will be created. The base name is automatically determined from the input file name. Each output image is suffixed with set and plate number information determined elsewhere in this section. If the "Save?" box is deselected, the plate in the corresponding position in the input image is not saved.

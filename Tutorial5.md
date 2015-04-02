@@ -1,0 +1,17 @@
+[< Prev](Tutorial4.md)
+
+  1. If you the data hasn't already loaded from the previous section, follow the following steps:
+    1. Click the "Analysis" tab.
+    1. Ensure that the "Open data tables after loading" check-box is selected.
+    1. Click "Load Data". When the open file dialog appears, ensure that the "Auto-select all sets" check-box is selected, navigate to the folder in which the scored data from the previous step was saved, and click the first text file. The other three text files should be automatically selected. If they are not, hold down the shift key and select the bottom file so that all three are selected. Click "Open".
+  1. In the data table, locate the "Filtering" panel. In the "Query gene" box, type "SCS2" (without quotes), then click the "Linkage" button. This should open the linkage panel.
+  1. The vertical bars indicate the growth of double mutants in genes flanking the SCS2 gene (indicated in blue). These mutants should be excluded from the analysis as the reduced growth rate is due to the low frequency of...
+  1. Adjust the positions of the two sliders so that the grayed out section encompasses the "V"-shaped portion of the histogram <p><img src='https://balony.googlecode.com/svn/wiki/linkage-tut.png' /></p>
+  1. Click "Apply". The linked genes will now be excluded from the analysis.
+  1. Click the "Ratio Plot" button to bring up the overview of the screen. This should look like the image below:<p><img src='https://balony.googlecode.com/svn/wiki/ratio-tut.png' /></p>We will use Balony's auto-estimate to define cut-off values for hits in the screen. Click "Auto-estimate ratio cut-offs". The data will be sorted by ascending ratio of (experimental/control) colony size:<p><img src='https://balony.googlecode.com/svn/wiki/ratio2-tut.png' /></p>
+  1. The dashed green and red lines indicate the lower and upper limits for "hits". Close this window.
+  1. To see the most signifcant hits in the screen, return to the data table and click "Show" in the "Low cut-off hits" panel. The data table should now sort the data showing the strongest hits first. Specifically, these are the hits where the ratio of experimental colony size to control colony size is the lowest. This must have occurred in all three replicates and be statistically significant with a p-value < 0.05. You can adjust these criteria in the "Low cut-off hits" panel.
+  1. Exclude the _URA1_, _URA2_ and _URA5_ genes from the analysis by clicking each gene in turn, right-clicking (on a Mac, ctrl-click), then selecting "Manually Exclude Spot".
+  1. Double-click on any row in the table and a window will pop up showing information on that gene.<p><img src='https://balony.googlecode.com/svn/wiki/spotinfo-tut.png' /></p>
+  1. To filter the table based on a string in the description of each gene, type something into the "Desc Filter" box. For examplem typing "microtubule" (without quotes) will list multiple components of the nuclear migration pathway that are hits in this screen.
+  1. To save the current analysis session to be reloaded at a later date, click "Save..." on the data table. The .bdt can be reloaded at any time from the "Restore Table..." button on the Analysis tab of the main Balony window.

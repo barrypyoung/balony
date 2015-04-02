@@ -1,0 +1,9 @@
+Analysis of images using Balony is a multi-step process. Typically, the user will start with scanned images, each containing multiple plates. The process is then:
+
+  * Segmentation of the starting image into images of individual plates, and saving of these images as separate files with appropritae file names. The images may be processed to correct orientation, resolution and colour.
+  * Quantitation of colony sizes on plates to provide data files containing raw pixel sizes.
+  * Scoring of the raw data to normalize and map on to an array index.
+  * Analysis of the scored data to determine genes of interest.
+  * Exporting the analyzed data to external programs or services to further interrogate data sets.
+
+![![](https://balony.googlecode.com/svn/wiki/overview-web.png)](https://balony.googlecode.com/svn/wiki/overview-web.png)

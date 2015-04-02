@@ -1,0 +1,17 @@
+This is the analysis module:
+
+![https://balony.googlecode.com/svn/wiki/analysis-tut.png](https://balony.googlecode.com/svn/wiki/analysis-tut.png)
+
+The "Load Data..." button is used to load saved data from the [Scoring](Scoring.md) module. One or more tab-delimited text files are imported and the collated data is displayed in a data table.
+
+Alternatively, a previous analysis session can be restored using the "Restore Table..." button. This loads files with a ".bdt" suffix and in addition to the scored data, it also includes information such as gene linkage, cut-off values and excluded genes. Compared to repeatedly loading the scored data, it saves time as these parameters do not need to be set each time.
+
+The "Default Table Settings" panel contains a list of default values for parameters used to analyse each screen.
+
+After loading screen data, a data table will be displayed showing information for each position in the array:
+
+![https://balony.googlecode.com/svn/wiki/datatable-web.png](https://balony.googlecode.com/svn/wiki/datatable-web.png)
+
+The "Screen Info" panel provides some basic information on the data being displayed.
+
+The "Filtering" panel is used to set-up [Linkage](Linkage.md) information and has an option to hide or display genes that are to be excluded from the analysis.

@@ -1,0 +1,9 @@
+The Options section gathers together different features related to the running of Balony.
+
+The user interface can be configured to run either using a look-and-feel appropriate to the operating system, or a generic Java interface. If you are noticing graphical glitches or interface problems with one interface, then try another. Also, certain interfaces may work better on lower resolution displays. The different interfaces are shown below:
+
+[![](https://balony.googlecode.com/svn/wiki/lafs-web.png)](https://balony.googlecode.com/svn/wiki/lafs-web.png?test)
+
+If the user has closed the "Messages" window, it can be re-opened from this page.
+
+Balony is periodically updated with new features and fixes. The user can select if they want to manually check or updates, or if the program should automatically check.
