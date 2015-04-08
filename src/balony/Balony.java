@@ -7017,6 +7017,7 @@ public final class Balony extends javax.swing.JFrame {
                     mostrecent = release.getPublished_at().getTime();
                 }   List<GHAsset> assets = release.getAssets();
                 for(GHAsset asset :assets) {
+                    System.out.println(asset.getId());
                     System.out.println(asset.getName());
                     System.out.println(asset.getBrowserDownloadUrl());
                 }
