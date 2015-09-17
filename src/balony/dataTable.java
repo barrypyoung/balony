@@ -15,6 +15,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.net.URI;
@@ -26,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.RowFilter.Entry;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.event.ListSelectionEvent;
@@ -88,6 +90,8 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
     public final int COL_EXCLUDE = COL_HIT + 1;
     public final int COL_GINDEX = COL_EXCLUDE + 1;
     public long lastRefresh;
+    public long lastFilter;
+    public boolean filterPending;
     public String saveFile;
     public HashSet<spotInfo> spotInfos;
 
@@ -98,6 +102,21 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
         initComponents();
         rPs = new HashSet<ratioPlot>();
         spotInfos = new HashSet<spotInfo>();
+
+        Action updateFilters = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (lastFilter < System.currentTimeMillis() && filterPending) {
+                    updateFilters();
+                    filterPending = false;
+                }
+
+            }
+        };
+
+        Timer t = new javax.swing.Timer(10, updateFilters);
+        t.start();
     }
 
     /**
@@ -253,10 +272,10 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
         compareJMenu.addMenuListener(new javax.swing.event.MenuListener() {
             public void menuCanceled(javax.swing.event.MenuEvent evt) {
             }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
             public void menuSelected(javax.swing.event.MenuEvent evt) {
                 compareJMenuMenuSelected(evt);
-            }
-            public void menuDeselected(javax.swing.event.MenuEvent evt) {
             }
         });
         dataTablePopupMenu.add(compareJMenu);
@@ -275,6 +294,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
             }
         });
 
+        analysisTable.setFont(analysisTable.getFont());
         analysisTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -283,7 +303,6 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
 
             }
         ));
-        analysisTable.setIntercellSpacing(new java.awt.Dimension(4, 1));
         analysisTable.setShowHorizontalLines(false);
         analysisTable.setShowVerticalLines(false);
         analysisTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -798,10 +817,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
     public boolean isHCHit(int row) {
         Hit h;
         h = (Hit) analysisTable.getValueAt(row, COL_HIT);
-        if (h.i == 2) {
-            return true;
-        }
-        return false;
+        return h.i == 2;
     }
 
     public void updateFilters() {
@@ -844,8 +860,6 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                     }
                 }
 
-
-
                 return false;
             }
         };
@@ -874,15 +888,15 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
 
     public void updateSpotInfo(spotInfo sI, int row) {
 
-        int p=0;
-        int r=0;
-        int c=0;
-        
+        int p = 0;
+        int r = 0;
+        int c = 0;
+
         try {
-         p = Integer.parseInt(analysisTable.getValueAt(row, COL_PLATE).toString());
-         r = Integer.parseInt(analysisTable.getValueAt(row, COL_ROW).toString());
-         c = Integer.parseInt(analysisTable.getValueAt(row, COL_COL).toString());
-        } catch(Exception e) {
+            p = Integer.parseInt(analysisTable.getValueAt(row, COL_PLATE).toString());
+            r = Integer.parseInt(analysisTable.getValueAt(row, COL_ROW).toString());
+            c = Integer.parseInt(analysisTable.getValueAt(row, COL_COL).toString());
+        } catch (Exception e) {
             return;
         }
 
@@ -1170,8 +1184,6 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
         // Exclude column
         // Properties containing variables:
         // High cut-off, low cut-off, screen name, linked gene box
-
-
         JFileChooser jfc = new JFileChooser();
         jfc.setFileFilter(new FileNameExtensionFilter("Balony Datatable Files (.bdt)", "bdt"));
         if (saveFile != null && !saveFile.isEmpty()) {
@@ -1187,8 +1199,8 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
             }
 
             saveFile = fname;
-            
-            if(new File(saveFile).exists()) {
+
+            if (new File(saveFile).exists()) {
                 int n = JOptionPane.showOptionDialog(null,
                         "File already exists. Overwrite?", "Warning!",
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
@@ -1234,9 +1246,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                 oos.writeObject(minSpotSizeTextField1.getText());
                 oos.writeObject(maxSpotSizeTextField1.getText());
 
-
 //                oos.writeObject(tableData);
-
                 // Exclude column
                 excl = new HashMap<Integer, TreeSet<String>>();
                 for (int i = 0; i < tableData.length; i++) {
@@ -1252,7 +1262,6 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                 excl = null;
 
                 // Table Properties
-
                 oos.close();
             } catch (Exception ex) {
                 System.out.println(ex.getLocalizedMessage());
@@ -1323,8 +1332,6 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
     private void maxSpotSizeTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxSpotSizeTextField1KeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
 
-
-
             double tmpmax;
             try {
                 tmpmax = Double.parseDouble(maxSpotSizeTextField1.getText());
@@ -1387,8 +1394,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
     }//GEN-LAST:event_lcHitsJComboBoxActionPerformed
 
     private void exportTableJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportTableJButtonActionPerformed
-        String opts[] = {"Tab-delimited text (raw)", "Excel .xls"
-            ,"Excel 2007+ .xlsx"
+        String opts[] = {"Tab-delimited text (raw)", "Excel .xls", "Excel 2007+ .xlsx"
         };
         int i = JOptionPane.showOptionDialog(this, "Choose output format:",
                 "Export Table", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
@@ -1688,7 +1694,9 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
     }//GEN-LAST:event_jTextField1KeyReleased
 
     private void descFilterJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descFilterJTextFieldKeyReleased
-        updateFilters();
+
+        lastFilter = System.currentTimeMillis() + 500;
+        filterPending = true;
     }//GEN-LAST:event_descFilterJTextFieldKeyReleased
 
     public void updatePlots() {
@@ -2221,7 +2229,6 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                 } catch (Exception e) {
                     System.out.println(e.getLocalizedMessage());
                 }
-
 
             } catch (Exception e) {
                 System.out.println(e.getLocalizedMessage());

@@ -10,12 +10,6 @@
  */
 package balony;
 
-import com.sun.syndication.feed.synd.SyndContentImpl;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.io.FeedException;
-import com.sun.syndication.io.SyndFeedInput;
-import com.sun.syndication.io.XmlReader;
 import ij.ImagePlus;
 import ij.gui.*;
 import ij.io.FileSaver;
@@ -50,10 +44,8 @@ import javax.swing.*;
 import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.math3.analysis.interpolation.LoessInterpolator;
-import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.service.RepositoryService;
 import org.kohsuke.github.GHAsset;
 import org.kohsuke.github.GHRelease;
 import org.kohsuke.github.GHRepository;
@@ -115,6 +107,7 @@ public final class Balony extends javax.swing.JFrame {
     public static final String PREFS_OPTIONS_OS_LOOK_AND_FEEL = "osLaF";
     public static final String PREFS_OPTIONS_UPDATE_CHECK = "optionsUpdateCheck";
     public static final String PREFS_BALONYVERSION = "BalonyVersion";
+    public static final String PREFS_BALONYLATESTVERSION = "BalonyLatestVersion";
     public static final String PREFS_XML = "prefs.xml";
     public static final String AREA_COL = "Area";
     public static final String HEIGHT_COL = "Height";
@@ -213,7 +206,7 @@ public final class Balony extends javax.swing.JFrame {
         cSize = new colonySize();
         prefs = new Properties();
         try {
-            File f = new File("prefs.xml");
+            File f = new File(get_prefsfile_name());
             prefs.loadFromXML(new FileInputStream(f));
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
@@ -308,27 +301,33 @@ public final class Balony extends javax.swing.JFrame {
         analysisSickFliterJComboBox.setSelectedItem(prefs.getProperty(PREFS_ANALYSIS_SICKFILTER,
                 "control spot"));
 
-        if (prefs.containsKey(PREFS_OPTIONS_OS_LOOK_AND_FEEL)) {
-            ps = prefs.getProperty(PREFS_OPTIONS_OS_LOOK_AND_FEEL);
-            if (ps.equals("1")) {
-                osLAFJRadioButton.setSelected(true);
-            } else if (ps.equals("2")) {
-                nimbusLAFJRadioButton.setSelected(true);
-
-            } else {
-                javaLAFJRadioButton.setSelected(true);
-            }
-        }
+//        if (prefs.containsKey(PREFS_OPTIONS_OS_LOOK_AND_FEEL)) {
+//            ps = prefs.getProperty(PREFS_OPTIONS_OS_LOOK_AND_FEEL);
+//            if (ps.equals("1")) {
+//                osLAFJRadioButton.setSelected(true);
+//            } else if (ps.equals("2")) {
+//                nimbusLAFJRadioButton.setSelected(true);
+//
+//            } else {
+//                javaLAFJRadioButton.setSelected(true);
+//            }
+//        }       
 
         updateCheckJCheckBox.setSelected(prefs.getProperty(PREFS_OPTIONS_UPDATE_CHECK,
                 "1").equals("1"));
 
         if (prefs.containsKey(PREFS_BALONYVERSION)) {
             BalonyVersion = prefs.getProperty(PREFS_BALONYVERSION);
-            currVersionJLabel.setText(BalonyVersion.substring(35, BalonyVersion.length() - 4));
+            if (BalonyVersion.length() > 35) {
+                currVersionJLabel.setText(BalonyVersion.substring(35, BalonyVersion.length() - 4));
+            } else {
+                currVersionJLabel.setText(BalonyVersion);
+            }
         } else {
             BalonyVersion = "Unknown";
         }
+
+        latestVersionJLabel.setText(prefs.getProperty(PREFS_BALONYLATESTVERSION, "Unknown"));
 
         if (prefs.containsKey(PREFS_IMAGE_PRESET)) {
             ps = prefs.getProperty(PREFS_IMAGE_PRESET);
@@ -457,8 +456,30 @@ public final class Balony extends javax.swing.JFrame {
     }
     // Read in gene info from SGD_feaures.tab
 
+    public String get_appdata_folder() {
+        String roam = "";
+        
+        if (SystemUtils.IS_OS_WINDOWS) {
+            roam = System.getenv("APPDATA") + "\\Balony\\";
+            File af = new File(roam);
+            if(!af.exists()){
+            af.mkdir();
+            }
+        }
+            return roam;
+    }
+    
+    public String get_sgdfile_name() {
+            return SGD_FEATURES_FILE;
+    }
+    
+    public static String get_prefsfile_name() {
+            return PREFS_XML;
+    }
+    
     private void loadSGDInfo() {
-        File f = new File(SGD_FEATURES_FILE);
+        File f=new File(get_sgdfile_name());
+
         if (f.exists()) {
             Long l = f.lastModified();
             if (System.currentTimeMillis() - l > 8640000000l) {
@@ -497,10 +518,10 @@ public final class Balony extends javax.swing.JFrame {
                         int gI = sgdi.chr * 10000000 + sgdi.startCoord;
                         if (sgdi.aliases != null && sgdi.aliases.size() > 0) {
                             for (String s : sgdi.aliases) {
-                                genomeIndex.put(s, new Integer(gI));
+                                genomeIndex.put(s, gI);
                             }
                         }
-                        genomeIndex.put(sg[3], new Integer(gI));
+                        genomeIndex.put(sg[3], gI);
                         allSGDInfo.put(sg[3], sgdi);
                     }
                 }
@@ -529,7 +550,7 @@ public final class Balony extends javax.swing.JFrame {
                 buf = new BufferedInputStream(sgdURL.openStream());
                 int size = sgdURL.openConnection().getContentLength();
 
-                final String filename = SGD_FEATURES_FILE;
+                final String filename = get_sgdfile_name();
                 fos = new FileOutputStream(filename);
                 int r;
                 int cnt = 0;
@@ -678,6 +699,7 @@ public final class Balony extends javax.swing.JFrame {
         buttonGroup2 = new javax.swing.ButtonGroup();
         scanprocessButton = new javax.swing.JButton();
         scoreRCComboBox = new javax.swing.JComboBox();
+        updateCheckButton = new javax.swing.JButton();
         tabPane = new javax.swing.JTabbedPane();
         scanPanel = new javax.swing.JPanel();
         scanPlateNamingPanel = new javax.swing.JPanel();
@@ -846,7 +868,6 @@ public final class Balony extends javax.swing.JFrame {
         nimbusLAFJRadioButton = new javax.swing.JRadioButton();
         jButton1 = new javax.swing.JButton();
         updaterJPanel = new javax.swing.JPanel();
-        updateCheckButton = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         currVersionJLabel = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -896,6 +917,14 @@ public final class Balony extends javax.swing.JFrame {
         scoreRCComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 scoreRCComboBoxActionPerformed(evt);
+            }
+        });
+
+        updateCheckButton.setText("Check for updates now");
+        updateCheckButton.setEnabled(false);
+        updateCheckButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateCheckButtonActionPerformed(evt);
             }
         });
 
@@ -1628,6 +1657,7 @@ public final class Balony extends javax.swing.JFrame {
 
         autoQuantJCheckBox.setSelected(true);
         autoQuantJCheckBox.setText("Quant");
+        autoQuantJCheckBox.setToolTipText("Automaticaly quantify image after gridding");
         autoQuantJCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 autoQuantJCheckBoxActionPerformed(evt);
@@ -1636,6 +1666,7 @@ public final class Balony extends javax.swing.JFrame {
 
         autoGridJCheckBox.setSelected(true);
         autoGridJCheckBox.setText("Grid");
+        autoGridJCheckBox.setToolTipText("Automatically grid image after thresholding");
         autoGridJCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 autoGridJCheckBoxActionPerformed(evt);
@@ -1644,6 +1675,7 @@ public final class Balony extends javax.swing.JFrame {
 
         autoNameJCheckBox.setSelected(true);
         autoNameJCheckBox.setText("Name");
+        autoNameJCheckBox.setToolTipText("Automatically name data file from input file");
         autoNameJCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 autoNameJCheckBoxActionPerformed(evt);
@@ -1652,6 +1684,7 @@ public final class Balony extends javax.swing.JFrame {
 
         autoInvertJCheckBox.setSelected(true);
         autoInvertJCheckBox.setText("Invert");
+        autoInvertJCheckBox.setToolTipText("Automatically invert image upon opening");
         autoInvertJCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 autoInvertJCheckBoxActionPerformed(evt);
@@ -1660,6 +1693,7 @@ public final class Balony extends javax.swing.JFrame {
 
         autoThreshJCheckBox.setSelected(true);
         autoThreshJCheckBox.setText("Threshold");
+        autoThreshJCheckBox.setToolTipText("Automatically threshold image upon opening");
         autoThreshJCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 autoThreshJCheckBoxActionPerformed(evt);
@@ -1668,6 +1702,7 @@ public final class Balony extends javax.swing.JFrame {
 
         autoSaveJCheckBox.setSelected(true);
         autoSaveJCheckBox.setText("Save");
+        autoSaveJCheckBox.setToolTipText("Automatically save data file upon quantification");
         autoSaveJCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 autoSaveJCheckBoxActionPerformed(evt);
@@ -1761,8 +1796,10 @@ public final class Balony extends javax.swing.JFrame {
         threshPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Threshold Method", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 255))); // NOI18N
 
         buttonGroup1.add(threshRadioAuto);
+        threshRadioAuto.setFont(threshRadioAuto.getFont());
         threshRadioAuto.setSelected(true);
         threshRadioAuto.setText("Auto");
+        threshRadioAuto.setToolTipText("Auto");
         threshRadioAuto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 threshRadioAutoActionPerformed(evt);
@@ -1771,6 +1808,7 @@ public final class Balony extends javax.swing.JFrame {
 
         buttonGroup1.add(threshRadioManual);
         threshRadioManual.setText("Manual:");
+        threshRadioManual.setToolTipText("Manual");
         threshRadioManual.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 threshRadioManualActionPerformed(evt);
@@ -2807,6 +2845,7 @@ public final class Balony extends javax.swing.JFrame {
         });
 
         buttonGroup2.add(osLAFJRadioButton);
+        osLAFJRadioButton.setSelected(true);
         osLAFJRadioButton.setText("Operating System Look-and-Feel (recommended for Windows)");
         osLAFJRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2815,7 +2854,6 @@ public final class Balony extends javax.swing.JFrame {
         });
 
         buttonGroup2.add(nimbusLAFJRadioButton);
-        nimbusLAFJRadioButton.setSelected(true);
         nimbusLAFJRadioButton.setText("Nimbus Look-and-Feel (recommended for Mac OS X and Linux)");
         nimbusLAFJRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2858,13 +2896,6 @@ public final class Balony extends javax.swing.JFrame {
 
         updaterJPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Updater"));
 
-        updateCheckButton.setText("Check for updates now");
-        updateCheckButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateCheckButtonActionPerformed(evt);
-            }
-        });
-
         jLabel3.setText("Current Version:");
 
         currVersionJLabel.setText("Unknown");
@@ -2881,7 +2912,7 @@ public final class Balony extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("GitHub");
+        jButton2.setText("Check for updates now");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -2906,10 +2937,7 @@ public final class Balony extends javax.swing.JFrame {
                     .add(updaterJPanelLayout.createSequentialGroup()
                         .add(updaterJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(updateCheckJCheckBox)
-                            .add(updaterJPanelLayout.createSequentialGroup()
-                                .add(updateCheckButton)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(jButton2)))
+                            .add(jButton2))
                         .add(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -2926,9 +2954,7 @@ public final class Balony extends javax.swing.JFrame {
                     .add(jLabel5)
                     .add(latestVersionJLabel))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(updaterJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(updateCheckButton)
-                    .add(jButton2))
+                .add(jButton2)
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -3476,6 +3502,8 @@ public final class Balony extends javax.swing.JFrame {
                 }
 
                 doQuant();
+            } else {
+                drawShapes();
             }
         }
 
@@ -4023,7 +4051,7 @@ public final class Balony extends javax.swing.JFrame {
 
     public void savePrefs() {
         try {
-            String outFile = PREFS_XML;
+            String outFile = get_prefsfile_name();
             BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(new File(outFile)));
             prefs.storeToXML(out, null);
         } catch (IOException e) {
@@ -5590,7 +5618,11 @@ public final class Balony extends javax.swing.JFrame {
                 }
                 arrayDefs.add(ardef);
                 analysisArrayComboBox.addItem(ardef.getName());
-            } catch (Exception e) {
+            } catch (HeadlessException e) {
+                System.out.println(e.getLocalizedMessage());
+            } catch (IOException e) {
+                System.out.println(e.getLocalizedMessage());
+            } catch (NumberFormatException e) {
                 System.out.println(e.getLocalizedMessage());
             }
         }
@@ -6287,7 +6319,6 @@ public final class Balony extends javax.swing.JFrame {
             if (scanPreviewJCheckBox.isSelected()) {
 
                 BufferedImage img = null;
-                
 
                 if ((File) scanFileJList.getSelectedValue() != scanPreview) {
                     messageText.append("\nLoading preview...");
@@ -7006,124 +7037,164 @@ public final class Balony extends javax.swing.JFrame {
     }//GEN-LAST:event_scanFileJListMouseReleased
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        updateWorker uwo = new updateWorker();
+        uwo.execute();
 
-        long mostrecent=0l;
-        try {
-            GitHub github = GitHub.connectAnonymously();
-            GHRepository repo = github.getRepository("barrypyoung/balony");
-            PagedIterable<GHRelease> releases = repo.listReleases();
-            for (GHRelease release : releases) {
-                if(release.getPublished_at().getTime()>mostrecent && !release.isDraft() && !release.isPrerelease()) {
-                    mostrecent = release.getPublished_at().getTime();
-                }   List<GHAsset> assets = release.getAssets();
-                for(GHAsset asset :assets) {
-                    System.out.println(asset.getId());
-                    System.out.println(asset.getName());
-                    System.out.println(asset.getBrowserDownloadUrl());
-                }
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Balony.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-        
 
-        
-//            RepositoryService  service = new RepositoryService();
-//        try {
-//            for (Repository repo : service.getRepositories("barrypyoung"))
-//                if(repo.getName().equals("balony")) {
-//                    RepositoryService reposervice = new RepositoryService();
-//                    reposervice.
-//                }
-//                System.out.println(repo.getName() + " Watchers: " + repo.getWatchers());
-        
-        
-            
-// TODO add your handling code here:
-//        } catch (IOException ex) {
-//            Logger.getLogger(Balony.class.getName()).log(Level.SEVERE, null, ex);
-//        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     public class updateWorker extends SwingWorker<String, Void> {
 
-        public String newjar, newfile;
+        public String newjar, newfile, newversion;
         public boolean background;
 
         @Override
         protected String doInBackground() throws Exception {
 
-            newjar = null;
-            newfile = null;
-
+            long mostrecent = 0l;
+            String mostrecentname = "";
+            GHRelease recent = new GHRelease();
+            String recenturl = "";
             try {
-                URL feedSource = new URL(BALONY_GOOGLECODE_FEED);
-                SyndFeedInput input = new SyndFeedInput();
-                SyndFeed feed = input.build(new XmlReader(feedSource));
-                @SuppressWarnings("unchecked")
-                List<SyndEntryImpl> entries = feed.getEntries();
-                boolean found = false;
-                for (SyndEntryImpl e : entries) {
-                    @SuppressWarnings("unchecked")
-                    ArrayList<SyndContentImpl> content = (ArrayList<SyndContentImpl>) e.getContents();
+                System.out.println("Starting update check");
+                GitHub github = GitHub.connectAnonymously();
+                System.out.println("Connected");
+                GHRepository repo = github.getRepository("barrypyoung/balony");
+                System.out.println("Repo:" + repo.toString());
+                PagedIterable<GHRelease> releases = repo.listReleases();
+                for (GHRelease release : releases) {
+                    System.out.println("Release: " + release.getName() + " version: "
+                            + release.getTagName() + " "
+                            + release.getPublished_at().toString());
 
-                    for (SyndContentImpl co : content) {
-                        String s = co.getValue();
-                        if (s.contains("Balony-latest") && !found) {
-                            found = true;
-                            int i = s.lastIndexOf("a href=");
-                            int j = s.lastIndexOf("Download");
-                            if (i != -1 && j != -1) {
-                                newjar = s.substring(i + 8, j - 2);
-                                latestVersionJLabel.setText(newjar.substring(35, newjar.length() - 4));
-                                int n = JOptionPane.NO_OPTION;
-                                if (BalonyVersion.equals(newjar)) {
-                                    if (!background) {
+                    if (release.getPublished_at().getTime() > mostrecent && !release.isDraft() && !release.isPrerelease()
+                            && !release.getAssets().isEmpty()) {
 
-                                        JOptionPane.showMessageDialog(getParent(),
-                                                "You are already using the latest version of Balony.");
-                                    }
-//                                    n = JOptionPane.showOptionDialog(null,
-//                                            "You are already using latest version of Balony. Update anyway?",
-//                                            "Warning", JOptionPane.YES_NO_OPTION,
-//                                            JOptionPane.QUESTION_MESSAGE, null,
-//                                            null, null);
-                                } else {
-                                    n = JOptionPane.showOptionDialog(null,
-                                            "A newer version of Balony is available. Update?",
-                                            "Warning", JOptionPane.YES_NO_OPTION,
-                                            JOptionPane.QUESTION_MESSAGE, null,
-                                            null, null);
-                                }
+                        mostrecent = release.getPublished_at().getTime();
+                        mostrecentname = release.getTagName();
 
-                                if (n == JOptionPane.YES_OPTION) {
+                        recent = release;
+                        System.out.println("Most recent with assets: " + release.getPublished_at().toString());
+                    }
+                    List<GHAsset> assets = release.getAssets();
+                    for (GHAsset asset : assets) {
+                        System.out.println(asset.getId());
+                        System.out.println(asset.getName());
+                        System.out.println(asset.getBrowserDownloadUrl());
+                    }
+                }
 
-                                    newfile = e.getTitle();
-                                    System.out.println("New jar file: " + newjar);
-
-                                    BalonyVersion = newjar;
-                                    prefs.setProperty(PREFS_BALONYVERSION, BalonyVersion);
-                                    savePrefs();
-                                }
-                            }
+                if (mostrecent > 0) {
+                    for (GHAsset asset : recent.getAssets()) {
+                        if (asset.getName().endsWith(".jar")) {
+                            recenturl = asset.getBrowserDownloadUrl();
                         }
                     }
                 }
 
-            } catch (IOException e) {
-                System.out.println(e.getLocalizedMessage());
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getLocalizedMessage());
-            } catch (FeedException e) {
-                System.out.println(e.getLocalizedMessage());
-            } catch (HeadlessException e) {
-                System.out.println(e.getLocalizedMessage());
+                prefs.setProperty(PREFS_BALONYLATESTVERSION, mostrecentname);
+                latestVersionJLabel.setText(mostrecentname);
+                savePrefs();
+
+                int n = JOptionPane.NO_OPTION;
+
+                if (!recenturl.isEmpty() && mostrecentname.equals(BalonyVersion) && !background) {
+                    n = JOptionPane.showOptionDialog(null,
+                            "You are already using latest version of Balony. Update anyway?",
+                            "Warning", JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE, null,
+                            null, null);
+                }
+
+                if (!recenturl.isEmpty() && !mostrecentname.equals(BalonyVersion)) {
+
+                    n = JOptionPane.showOptionDialog(null,
+                            "A newer version of Balony is available. Update?",
+                            "Warning", JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE, null,
+                            null, null);
+                }
+
+                if (n == JOptionPane.YES_OPTION) {
+
+                    System.out.println("File to download: " + recenturl);
+
+                    newjar = recenturl;
+                    newversion = mostrecentname;
+
+                }
+
+            } catch (IOException ex) {
+                System.out.println(ex.getLocalizedMessage());;
+            } catch (HeadlessException ex) {
+                System.out.println(ex.getLocalizedMessage());;
             }
 
-            if (newfile != null && newjar != null) {
-
+//            try {
+//                URL feedSource = new URL(BALONY_GOOGLECODE_FEED);
+//                SyndFeedInput input = new SyndFeedInput();
+//                SyndFeed feed = input.build(new XmlReader(feedSource));
+//                @SuppressWarnings("unchecked")
+//                List<SyndEntryImpl> entries = feed.getEntries();
+//                boolean found = false;
+//                for (SyndEntryImpl e : entries) {
+//                    @SuppressWarnings("unchecked")
+//                    ArrayList<SyndContentImpl> content = (ArrayList<SyndContentImpl>) e.getContents();
+//
+//                    for (SyndContentImpl co : content) {
+//                        String s = co.getValue();
+//                        if (s.contains("Balony-latest") && !found) {
+//                            found = true;
+//                            int i = s.lastIndexOf("a href=");
+//                            int j = s.lastIndexOf("Download");
+//                            if (i != -1 && j != -1) {
+//                                newjar = s.substring(i + 8, j - 2);
+//                                latestVersionJLabel.setText(newjar.substring(35, newjar.length() - 4));
+//                                int n = JOptionPane.NO_OPTION;
+//                                if (BalonyVersion.equals(newjar)) {
+//                                    if (!background) {
+//
+//                                        JOptionPane.showMessageDialog(getParent(),
+//                                                "You are already using the latest version of Balony.");
+//                                    }
+////                                    n = JOptionPane.showOptionDialog(null,
+////                                            "You are already using latest version of Balony. Update anyway?",
+////                                            "Warning", JOptionPane.YES_NO_OPTION,
+////                                            JOptionPane.QUESTION_MESSAGE, null,
+////                                            null, null);
+//                                } else {
+//                                    n = JOptionPane.showOptionDialog(null,
+//                                            "A newer version of Balony is available. Update?",
+//                                            "Warning", JOptionPane.YES_NO_OPTION,
+//                                            JOptionPane.QUESTION_MESSAGE, null,
+//                                            null, null);
+//                                }
+//
+//                                if (n == JOptionPane.YES_OPTION) {
+//
+//                                    newfile = e.getTitle();
+//                                    System.out.println("New jar file: " + newjar);
+//
+//                                    BalonyVersion = newjar;
+//                                    prefs.setProperty(PREFS_BALONYVERSION, BalonyVersion);
+//                                    savePrefs();
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//
+//            } catch (IOException e) {
+//                System.out.println(e.getLocalizedMessage());
+//            } catch (IllegalArgumentException e) {
+//                System.out.println(e.getLocalizedMessage());
+//            } catch (FeedException e) {
+//                System.out.println(e.getLocalizedMessage());
+//            } catch (HeadlessException e) {
+//                System.out.println(e.getLocalizedMessage());
+//            }
+            if (newjar != null) {
+                System.out.println("Starting update process");
                 try {
 
                     URL balonyURL = new URL(newjar.replace(" ", "%20"));
@@ -7158,8 +7229,17 @@ public final class Balony extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(getParent(), "Restart Balony to use the new version.");
                     currVersionJLabel.setText("Update complete; restart required.");
                     messageText.append("\nDone.");
+                    BalonyVersion = newversion;
+                    prefs.setProperty(PREFS_BALONYVERSION, BalonyVersion);
+                    savePrefs();
 
-                } catch (Exception e) {
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(getParent(),
+                            "Update failed - check your internet connection and "
+                            + "that you have write permission to the installation "
+                            + "folder.");
+                    System.out.println(e.getLocalizedMessage());
+                } catch (HeadlessException e) {
                     JOptionPane.showMessageDialog(getParent(),
                             "Update failed - check your internet connection and "
                             + "that you have write permission to the installation "
@@ -7887,13 +7967,22 @@ public final class Balony extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(final String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
                 Balony b = new Balony();
                 b.pack();
                 b.setVisible(true);
+                if(args[0].equals("1")) {
+                    b.osLAFJRadioButton.setSelected(true);
+                                 }
+                else if(args[0].equals("2")) {
+                    b.nimbusLAFJRadioButton.setSelected(true);
+                }
+                else {
+                    b.javaLAFJRadioButton.setSelected(true);
+                }
             }
         });
     }
@@ -8848,7 +8937,7 @@ public final class Balony extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JRadioButton javaLAFJRadioButton;
+    public javax.swing.JRadioButton javaLAFJRadioButton;
     private javax.swing.JButton keyFileLoadButton;
     private javax.swing.JLabel latestVersionJLabel;
     private javax.swing.JTextField lowCutOffJTextField;
@@ -8857,10 +8946,10 @@ public final class Balony extends javax.swing.JFrame {
     private javax.swing.JButton manualspotdefineButton;
     private javax.swing.JTextField maxSpotSizeJTextField;
     private javax.swing.JTextField minSpotSizeJTextField;
-    private javax.swing.JRadioButton nimbusLAFJRadioButton;
+    public javax.swing.JRadioButton nimbusLAFJRadioButton;
     private javax.swing.JPanel normalPanel;
     private javax.swing.JPanel optionsPanel;
-    private javax.swing.JRadioButton osLAFJRadioButton;
+    public javax.swing.JRadioButton osLAFJRadioButton;
     private javax.swing.JTextField plateNameJTextField;
     private javax.swing.JTextField plateNumberJTextField;
     private javax.swing.JPanel platePanel;

@@ -35,7 +35,7 @@ public class messageJFrame extends javax.swing.JFrame {
 
         messageJTextArea.setEditable(false);
         messageJTextArea.setColumns(20);
-        messageJTextArea.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        messageJTextArea.setFont(messageJTextArea.getFont().deriveFont(messageJTextArea.getFont().getSize()-2f));
         messageJTextArea.setForeground(java.awt.Color.blue);
         messageJTextArea.setRows(5);
         messageJScrollPane.setViewportView(messageJTextArea);

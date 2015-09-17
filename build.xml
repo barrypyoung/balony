@@ -3,48 +3,54 @@
 <project name="Balony" default="default" basedir=".">
     <description>Builds, tests, and runs the project Balony.</description>
     <import file="nbproject/build-impl.xml"/>
-<!--    <import file="nbproject/profiler-build-impl.xml"/>-->
+    <!--    <import file="nbproject/profiler-build-impl.xml"/>-->
     <target name="-post-jar">
         <jar jarfile="C:\Apps\Balony.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <zipgroupfileset dir="dist/lib" includes="*.jar" excludes="META-INF/*" />
-<!--            <zipfileset src="dist/lib/commons-net-2.0.jar" excludes="META-INF/*" />-->
-<!--            <zipfileset src="dist/lib/commons-net-ftp-2.0.jar" excludes="META-INF/*" />-->
+            <!--            <zipfileset src="dist/lib/commons-net-2.0.jar" excludes="META-INF/*" />-->
+            <!--            <zipfileset src="dist/lib/commons-net-ftp-2.0.jar" excludes="META-INF/*" />-->
             <manifest>
                 <attribute name="Main-Class" value="balony.main"/>
             </manifest>
         </jar>
-<!--        <exec executable = "C:\Program Files (x86)\Launch4j\launch4j.exe">-->
-<!--            <arg value = "- -l4j-no-splash"></arg>-->
-<!--            <arg value= "C:\Apps\Balony.xml"></arg>-->
-<!--        </exec>-->
-        <copy file="C:\Apps\Balony.jar" todir="D:\Dropbox\Dropbox\Balony\Balony.app\Contents\Resources\Java\" ></copy>
+        <!--        <exec executable = "C:\Program Files (x86)\Launch4j\launch4j.exe">-->
+        <!--            <arg value = "- -l4j-no-splash"></arg>-->
+        <!--            <arg value= "C:\Apps\Balony.xml"></arg>-->
+        <!--        </exec>-->
+        <copy file="C:\Apps\Balony.jar" todir="C:\Users\Barry Young\Documents\NetBeansProjects\Balony\Balony.app\Contents\Resources\Java\" ></copy>
         <copy file="C:\Apps\Balony.jar" todir="C:\Apps\Balony\Windows\"></copy>
-        <tstamp/><property name="current-date"  value="C:\Apps\Balony\Balony-latest-${TODAY}.jar" />
+        <tstamp/>
+        <property name="current-date"  value="C:\Apps\Balony\Balony-latest-${TODAY}.jar" />
         
         <copy file="C:\Apps\Balony.jar" tofile="${current-date}" ></copy>
-        <copy overwrite="true" file="C:\Apps\Balony.jar" tofile="D:\Dropbox\Dropbox\Balony\Balony.jar" ></copy>
-<!--        <exec executable = "C:\Apps\upload_balony.bat">
-            <arg value="${current-date}"></arg>
-        </exec>-->
-<!--        <exec executable = "C:\Program Files\WinRar\winrar.exe">
-            <arg value = "u"></arg>
-            <arg value = "-ep1"></arg>
-            <arg value = "-ibck"></arg>
-            <arg value = "-sfx"></arg>
-            <arg value = "-ag{_}YYYYMMDDHHMM"></arg>
-            <arg value ="-zc:\Apps\Balony\balony-sfx.txt"></arg>
-            <arg value = "c:\Apps\Balony\Balony-Windows.exe"></arg>
-            <arg value= "c:\Apps\Balony\Windows\"></arg>
-        </exec>-->
-<!--        <exec executable = "C:\Program Files\WinRar\winrar.exe">
-            <arg value = "u"></arg>
-            <arg value = "-ep1"></arg>
-            <arg value = "-ibck"></arg>
-            <arg value = "-ag{_}YYYYMMDDHHMM"></arg>
-            <arg value = "c:\Apps\Balony\Balony-MacOSX.zip"></arg>
-            <arg value= "C:\Apps\Balony\OSX\Balony.app"></arg>
-        </exec>-->
-    </target>
+        
+        <taskdef name="jar-bundler" classpath="lib/jarbundler-2.4.0.jar"  classname="net.sourceforge.jarbundler.JarBundler"></taskdef>
+        <jar-bundler name="Balony"
+                     dir="${basedir}"
+                     icon="build/classes/resources/balloon.icns"
+                     usejavaxkey="true"
+                     mainclass="balony.main"
+                     shortname="Balony"
+                     workingdirectory="$APP_PACKAGE/Contents/Resources/Java/"
+                     stubfile="build/classes/resources/universalJavaApplicationStub"
+                     verbose="true"
+                     vmoptions="-Xmx1024M">
+            <jarfileset dir = "resources">
+                <include name="*.*"></include>
+            </jarfileset>
+            <jarfileset dir = "C:\Apps\\">
+                <include name="Balony.jar"></include>
+            </jarfileset>
+            
+        </jar-bundler>
+        <chmod file="Balony.app/Contents/MacOS/universalJavaApplicationStub" perm="ugo+rx"></chmod>
+
+        <exec executable="C:\Program Files (x86)\Caphyon\Advanced Installer 12.3.1\bin\x86\AdvancedInstaller.com">
+            <arg line="/build C:\Apps\Balony\Balony-simple.aip"/>
+        </exec>
+
+ 
+    </target>  
 
 </project>
