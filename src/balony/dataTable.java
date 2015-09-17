@@ -796,7 +796,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        // TODO add your handling code here:
+        // TODO add your  code here:
     }//GEN-LAST:event_formWindowClosed
 
     private void analysisTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_analysisTableMouseClicked
