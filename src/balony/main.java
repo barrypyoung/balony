@@ -43,15 +43,13 @@ public class main {
                     } catch (Exception e) {
                         System.out.println("Nimbus not available");
                     }
-                }
-
-                else if (p.equals("1")) {
+                } else if (p.equals("1")) {
                     os[0] = "1";
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                     System.out.println("Using Operating System Look-and-Feel");
 
                 } else {
-                    os[0] ="3";
+                    os[0] = "3";
                     UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                     System.out.println("Using default look-and-feel");
                 }
@@ -68,7 +66,7 @@ public class main {
                     try {
                         for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                             if ("Nimbus".equals(info.getName())) {
-                                os[0] ="2";
+                                os[0] = "2";
                                 UIManager.setLookAndFeel(info.getClassName());
                                 break;
                             }
@@ -77,14 +75,14 @@ public class main {
                         UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                         System.out.println("Nimbus not available");
                     }
-                    
+
                 }
             } catch (Exception e) {
                 System.out.println(e.getLocalizedMessage());
             }
         }
-        
-        Balony.main(os );
+
+        Balony.main(os);
 
     }
 }

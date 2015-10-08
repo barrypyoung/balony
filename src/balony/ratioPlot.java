@@ -638,39 +638,7 @@ public class ratioPlot extends javax.swing.JFrame {
     }//GEN-LAST:event_xtickJTextFieldKeyReleased
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        dt.setSortRatioAscending();
-
-        int max = -1;
-        int i = 0;
-
-        while (i < dt.analysisTable.getRowCount() && max == -1) {
-            Object o = dt.analysisTable.getValueAt(i, dt.COL_RATIO);
-            if (o.equals("")) {
-                max = i;
-            }
-            i++;
-        }
-
-        int x1 = max * 4 / 10;
-        int x2 = max * 6 / 10;
-        Double y1 = (Double) dt.analysisTable.getValueAt(x1, dt.COL_RATIO);
-        Double y2 = (Double) dt.analysisTable.getValueAt(x2, dt.COL_RATIO);
-
-        Double m = (y2 - y1) / (x2 - x1);
-        Double x0 = y1 - x1 * m;
-        Double xmax = x0 + m * max;
-
-        System.out.println("low: " + x0);
-        System.out.println("high: " + xmax);
-
-        dt.setLowCutOff(x0);
-        dt.lowCutOffJTextField.setText(x0.toString());
-        dt.lowCutOffJTextField.setCaretPosition(0);
-        dt.setHighCutOff(xmax);
-        dt.highCutOffJTextField.setText(xmax.toString());
-        dt.highCutOffJTextField.setCaretPosition(0);
-        dt.reSetupData();
-
+       dt.autoEstimateCutOffs();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed

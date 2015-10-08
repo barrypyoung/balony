@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -36,6 +37,11 @@ import javax.swing.event.RowSorterEvent;
 import javax.swing.event.RowSorterListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.*;
+import org.apache.commons.math3.exception.DimensionMismatchException;
+import org.apache.commons.math3.exception.MaxCountExceededException;
+import org.apache.commons.math3.exception.NoDataException;
+import org.apache.commons.math3.exception.NullArgumentException;
+import org.apache.commons.math3.exception.NumberIsTooSmallException;
 import org.apache.commons.math3.stat.inference.TestUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -150,14 +156,6 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
         }
         ;
         tableSettingsJPanel = new javax.swing.JPanel();
-        highCutOffPanel = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        highCutOffJTextField = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        hcHitsJComboBox = new javax.swing.JComboBox();
-        jLabel9 = new javax.swing.JLabel();
-        hcpvalJTextField = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
         screenInfoPanel = new javax.swing.JPanel();
         dtNoSets = new javax.swing.JLabel();
         dtScreenName = new javax.swing.JLabel();
@@ -173,10 +171,19 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
         jLabel8 = new javax.swing.JLabel();
         lcpvalJTextField = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        highCutOffJTextField = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        hcHitsJComboBox = new javax.swing.JComboBox();
+        jLabel9 = new javax.swing.JLabel();
+        hcpvalJTextField = new javax.swing.JTextField();
+        jButton4 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        showPlotJButton = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
         commandsPanel = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
         refreshTableJButton = new javax.swing.JButton();
-        showPlotJButton = new javax.swing.JButton();
         exportTableJButton = new javax.swing.JButton();
         filteringPanel = new javax.swing.JPanel();
         linkageJButton = new javax.swing.JButton();
@@ -312,59 +319,6 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
         });
         tableJScrollPane.setViewportView(analysisTable);
 
-        highCutOffPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("High cut-off hits"));
-
-        jLabel4.setText("Ratio high cut-off (q):");
-
-        highCutOffJTextField.setText("1.2");
-
-        jLabel7.setText("in sets:");
-
-        hcHitsJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jLabel9.setText("p<");
-
-        hcpvalJTextField.setText("0.05");
-
-        jButton4.setText("Show");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout highCutOffPanelLayout = new javax.swing.GroupLayout(highCutOffPanel);
-        highCutOffPanel.setLayout(highCutOffPanelLayout);
-        highCutOffPanelLayout.setHorizontalGroup(
-            highCutOffPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(highCutOffPanelLayout.createSequentialGroup()
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(highCutOffJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(hcHitsJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(hcpvalJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton4)
-                .addContainerGap(50, Short.MAX_VALUE))
-        );
-        highCutOffPanelLayout.setVerticalGroup(
-            highCutOffPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(highCutOffPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jLabel4)
-                .addComponent(highCutOffJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jLabel7)
-                .addComponent(hcHitsJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jLabel9)
-                .addComponent(hcpvalJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jButton4))
-        );
-
         screenInfoPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Screen Info"));
 
         dtNoSets.setText("3");
@@ -417,7 +371,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        lowCutOffPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Low cut-off hits"));
+        lowCutOffPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hit Parameters"));
 
         jLabel3.setText("Ratio low cut-off (p):");
 
@@ -444,37 +398,116 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
             }
         });
 
+        jLabel4.setText("Ratio high cut-off (q):");
+
+        highCutOffJTextField.setText("1.2");
+
+        jLabel7.setText("in sets:");
+
+        hcHitsJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel9.setText("p<");
+
+        hcpvalJTextField.setText("0.05");
+
+        jButton4.setText("Show");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Auto-estimate cut-offs");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        showPlotJButton.setText("Show plot");
+        showPlotJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showPlotJButtonActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("Restore default cut-offs");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout lowCutOffPanelLayout = new javax.swing.GroupLayout(lowCutOffPanel);
         lowCutOffPanel.setLayout(lowCutOffPanelLayout);
         lowCutOffPanelLayout.setHorizontalGroup(
             lowCutOffPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(lowCutOffPanelLayout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lowCutOffJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lcHitsJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lcpvalJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton3)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(lowCutOffPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(lowCutOffPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(lowCutOffPanelLayout.createSequentialGroup()
+                            .addComponent(jLabel4)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(highCutOffJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel7)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(hcHitsJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jLabel9)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(hcpvalJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jButton4))
+                        .addGroup(lowCutOffPanelLayout.createSequentialGroup()
+                            .addComponent(jLabel3)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lowCutOffJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel6)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lcHitsJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jLabel8)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lcpvalJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jButton3)))
+                    .addGroup(lowCutOffPanelLayout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addGap(14, 14, 14)
+                        .addComponent(showPlotJButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton5)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         lowCutOffPanelLayout.setVerticalGroup(
             lowCutOffPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(lowCutOffPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jLabel3)
-                .addComponent(lowCutOffJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jLabel6)
-                .addComponent(lcHitsJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jLabel8)
-                .addComponent(lcpvalJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jButton3))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lowCutOffPanelLayout.createSequentialGroup()
+                .addGroup(lowCutOffPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(showPlotJButton)
+                    .addComponent(jButton5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(lowCutOffPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(lowCutOffJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6)
+                    .addComponent(lcHitsJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(lcpvalJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(lowCutOffPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(highCutOffJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(hcHitsJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)
+                    .addComponent(hcpvalJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         commandsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Misc"));
@@ -493,13 +526,6 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
             }
         });
 
-        showPlotJButton.setText("Show plot");
-        showPlotJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showPlotJButtonActionPerformed(evt);
-            }
-        });
-
         exportTableJButton.setText("Export Table...");
         exportTableJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -513,22 +539,17 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
             commandsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(commandsPanelLayout.createSequentialGroup()
                 .addGroup(commandsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(commandsPanelLayout.createSequentialGroup()
-                        .addComponent(refreshTableJButton)
-                        .addGap(6, 6, 6)
-                        .addComponent(showPlotJButton))
+                    .addComponent(refreshTableJButton)
                     .addGroup(commandsPanelLayout.createSequentialGroup()
                         .addComponent(saveButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(exportTableJButton)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         commandsPanelLayout.setVerticalGroup(
             commandsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(commandsPanelLayout.createSequentialGroup()
-                .addGroup(commandsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(refreshTableJButton)
-                    .addComponent(showPlotJButton))
+                .addComponent(refreshTableJButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(commandsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
@@ -730,10 +751,8 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(commandsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(tableSettingsJPanelLayout.createSequentialGroup()
-                        .addGroup(tableSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lowCutOffPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(highCutOffPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(12, 12, 12)
+                        .addComponent(lowCutOffPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(50, 50, 50)
                         .addGroup(tableSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(tableSettingsJPanelLayout.createSequentialGroup()
                                 .addComponent(jButton1)
@@ -755,11 +774,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                     .addComponent(commandsPanel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(screenInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(9, 9, 9)
-                .addGroup(tableSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(tableSettingsJPanelLayout.createSequentialGroup()
-                        .addComponent(lowCutOffPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(highCutOffPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(tableSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(tableSettingsJPanelLayout.createSequentialGroup()
                         .addComponent(spotParamsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -767,7 +782,8 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                             .addComponent(jButton1)
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel12)
-                            .addComponent(descFilterJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(descFilterJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lowCutOffPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -778,9 +794,12 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tableJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 932, Short.MAX_VALUE)
-                    .addComponent(tableSettingsJPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(tableJScrollPane))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(tableSettingsJPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(92, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -788,7 +807,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                 .addContainerGap()
                 .addComponent(tableSettingsJPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tableJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+                .addComponent(tableJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -808,10 +827,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
     public boolean isLCHit(int row) {
         Hit h;
         h = (Hit) analysisTable.getValueAt(row, COL_HIT);
-        if (h.i == 1) {
-            return true;
-        }
-        return false;
+        return h.i == 1;
     }
 
     public boolean isHCHit(int row) {
@@ -850,11 +866,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
 
                     String dfilt = descFilterJTextField.getText();
                     if (dfilt != null && !dfilt.isEmpty()) {
-                        if (desc.toLowerCase().contains(dfilt.toLowerCase())) {
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        return desc.toLowerCase().contains(dfilt.toLowerCase());
                     } else {
                         return true;
                     }
@@ -896,8 +908,8 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
             p = Integer.parseInt(analysisTable.getValueAt(row, COL_PLATE).toString());
             r = Integer.parseInt(analysisTable.getValueAt(row, COL_ROW).toString());
             c = Integer.parseInt(analysisTable.getValueAt(row, COL_COL).toString());
-        } catch (Exception e) {
-            return;
+        } catch (NumberFormatException e) {
+            System.out.println(e.getLocalizedMessage());
         }
 
         sI.currRow = analysisTable.convertRowIndexToModel(row);
@@ -909,8 +921,8 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
         sI.setPosition(p, r, c);
 
         int cnt = 0;
-        for (int i = 0; i < tableData.length; i++) {
-            if (tableData[i][COL_ORF].equals(orf)) {
+        for (Object[] tableData1 : tableData) {
+            if (tableData1[COL_ORF].equals(orf)) {
                 cnt++;
             }
         }
@@ -1044,21 +1056,19 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
             return;
         }
 
-        for (int i = 0; i < tableData.length; i++) {
-
-            String orf = tableData[i][COL_ORF].toString();
+        for (Object[] tableData1 : tableData) {
+            String orf = tableData1[COL_ORF].toString();
             if (linkedGenes.contains(orf)) {
                 System.out.println("Linked gene: " + orf);
                 TreeSet<String> ex;
-                if (tableData[i][COL_EXCLUDE] == null) {
+                if (tableData1[COL_EXCLUDE] == null) {
                     ex = new TreeSet<String>();
                 } else {
-                    ex = (TreeSet<String>) tableData[i][COL_EXCLUDE];
+                    ex = (TreeSet<String>) tableData1[COL_EXCLUDE];
                 }
                 ex.add("Linked");
-                tableData[i][COL_EXCLUDE] = ex;
+                tableData1[COL_EXCLUDE] = ex;
             }
-
         }
 
         updateFilters();
@@ -1069,19 +1079,16 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
 
         ArrayList<Double> d = new ArrayList<Double>();
 
-        for (int i = 0; i < tableData.length; i++) {
-
+        for (Object[] tableData1 : tableData) {
             try {
-                if (tableData[i][COL_ORF].toString().equals(orf)) {
-
-                    if (!tableData[i][COL_RATIO].equals("") && tableData[i][COL_RATIO] != null) {
-                        d.add((Double) tableData[i][COL_RATIO]);
+                if (tableData1[COL_ORF].toString().equals(orf)) {
+                    if (!tableData1[COL_RATIO].equals("") && tableData1[COL_RATIO] != null) {
+                        d.add((Double) tableData1[COL_RATIO]);
                     }
                 }
             } catch (Exception e) {
                 System.out.println(e.getLocalizedMessage());
             }
-
         }
 
         if (d.size() > 0) {
@@ -1430,15 +1437,15 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
 
                 if (i == 0) {
                     BufferedWriter out = new BufferedWriter(new FileWriter(f));
-                    for (int k = 0; k < model.columnNames.length; k++) {
-                        out.write(model.columnNames[k]);
+                    for (String columnName : model.columnNames) {
+                        out.write(columnName);
                         out.write("\t");
                     }
                     out.newLine();
-                    for (int j = 0; j < tableData.length; j++) {
+                    for (Object[] tableData1 : tableData) {
                         for (int k = 0; k < model.columnNames.length; k++) {
-                            if (tableData[j][k] != null) {
-                                out.write(tableData[j][k].toString());
+                            if (tableData1[k] != null) {
+                                out.write(tableData1[k].toString());
                             }
                             out.write("\t");
                         }
@@ -1471,12 +1478,12 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
 
                                 if (tableData[j][k] instanceof Integer) {
                                     c.setCellType(Cell.CELL_TYPE_NUMERIC);
-                                    int v = ((Integer) tableData[j][k]).intValue();
+                                    int v = ((Integer) tableData[j][k]);
                                     c.setCellValue(v);
                                 } else {
                                     if (tableData[j][k] instanceof Double) {
                                         c.setCellType(Cell.CELL_TYPE_NUMERIC);
-                                        double v = ((Double) tableData[j][k]).doubleValue();
+                                        double v = ((Double) tableData[j][k]);
                                         c.setCellValue(v);
                                     } else {
 
@@ -1677,7 +1684,9 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
         Desktop d = Desktop.getDesktop();
         try {
             d.browse(new URI("http://lab.andre-michelle.com/tonematrix"));
-        } catch (Exception e) {
+        } catch (URISyntaxException e) {
+            System.out.println(e.getLocalizedMessage());
+        } catch (IOException e) {
             System.out.println(e.getLocalizedMessage());
         }
 
@@ -1698,6 +1707,58 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
         lastFilter = System.currentTimeMillis() + 500;
         filterPending = true;
     }//GEN-LAST:event_descFilterJTextFieldKeyReleased
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        autoEstimateCutOffs();
+    }
+    
+    public void autoEstimateCutOffs() {
+        
+        setSortRatioAscending();
+
+        int max = -1;
+        int i = 0;
+
+        while (i < analysisTable.getRowCount() && max == -1) {
+            Object o = analysisTable.getValueAt(i, COL_RATIO);
+            if (o.equals("")) {
+                max = i;
+            }
+            i++;
+        }
+
+        int x1 = max * 4 / 10;
+        int x2 = max * 6 / 10;
+        Double y1 = (Double) analysisTable.getValueAt(x1, COL_RATIO);
+        Double y2 = (Double) analysisTable.getValueAt(x2, COL_RATIO);
+
+        Double m = (y2 - y1) / (x2 - x1);
+        Double x0 = y1 - x1 * m;
+        Double xmax = x0 + m * max;
+
+        System.out.println("low: " + x0);
+        System.out.println("high: " + xmax);
+
+        setLowCutOff(x0);
+        lowCutOffJTextField.setText(x0.toString());
+        lowCutOffJTextField.setCaretPosition(0);
+        setHighCutOff(xmax);
+        highCutOffJTextField.setText(xmax.toString());
+        highCutOffJTextField.setCaretPosition(0);
+        reSetupData();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+            setLowCutOff(0.85d);
+            lowCutOffJTextField.setText(lowCutOff.toString());
+            lowCutOffJTextField.setCaretPosition(0);
+            setHighCutOff(1.17d);
+            highCutOffJTextField.setText(highCutOff.toString());
+            highCutOffJTextField.setCaretPosition(0);
+        reSetupData();
+        
+// TODO add your handling code here:
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     public void updatePlots() {
         for (ratioPlot rp : rPs) {
@@ -1768,17 +1829,6 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
 
     }
 
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new dataTable().setVisible(true);
-//            }
-//        });
-//    }
-    // Use this to recalculate the table if we change a parameter
     public void reSetupData() {
         @SuppressWarnings("unchecked")
         List<? extends SortKey> arl;
@@ -1838,7 +1888,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                     Double[] ear = new Double[s + 1];
                     Double[] rar = new Double[s + 1];
 
-                    tableData[cnt][COL_INDEX] = new Integer(cnt + 1);
+                    tableData[cnt][COL_INDEX] = cnt + 1;
 
                     // Filter out sick spots
                     for (int i = 1; i <= s; i++) {
@@ -1951,20 +2001,28 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                     double[] sample1;
                     double[] sample2;
 
-                    Double pval = new Double(2d);
+                    Double pval = 2d;
 
                     if (Dsample1.size() > 1) {
                         sample1 = new double[Dsample1.size()];
                         sample2 = new double[Dsample1.size()];
 
                         for (int ii = 0; ii < sample1.length; ii++) {
-                            sample1[ii] = Dsample1.get(ii).doubleValue();
-                            sample2[ii] = Dsample2.get(ii).doubleValue();
+                            sample1[ii] = Dsample1.get(ii);
+                            sample2[ii] = Dsample2.get(ii);
                         }
 
                         try {
-                            pval = new Double(TestUtils.pairedTTest(sample1, sample2));
-                        } catch (Exception ex) {
+                            pval = TestUtils.pairedTTest(sample1, sample2);
+                        } catch (NullArgumentException ex) {
+                            System.out.println(ex.getLocalizedMessage());
+                        } catch (NoDataException ex) {
+                            System.out.println(ex.getLocalizedMessage());
+                        } catch (DimensionMismatchException ex) {
+                            System.out.println(ex.getLocalizedMessage());
+                        } catch (NumberIsTooSmallException ex) {
+                            System.out.println(ex.getLocalizedMessage());
+                        } catch (MaxCountExceededException ex) {
                             System.out.println(ex.getLocalizedMessage());
                         }
 
@@ -1993,10 +2051,10 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                     Integer hchits = (Integer) hcHitsJComboBox.getSelectedItem();
 
                     Hit hit = new Hit();
-                    if (sl >= lchits.intValue() && pval < lcpval) {
+                    if (sl >= lchits && pval < lcpval) {
                         hit.i = 1;
                     } else {
-                        if (sr >= hchits.intValue() && pval < hcpval) {
+                        if (sr >= hchits && pval < hcpval) {
                             hit.i = 2;
                         } else {
                             hit.i = 0;
@@ -2064,7 +2122,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
 
         if (excl != null) {
             for (Integer I : excl.keySet()) {
-                tableData[I.intValue()][COL_EXCLUDE] = excl.get(I);
+                tableData[I][COL_EXCLUDE] = excl.get(I);
             }
 
         }
@@ -2083,11 +2141,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
             @Override
             public boolean include(Entry<? extends MyTableModel, ? extends Object> entry) {
                 TreeSet t = (TreeSet) entry.getValue(COL_EXCLUDE);
-                if (t == null || t.isEmpty() || !hideExcludedJCheckBox.isSelected()) {
-                    return true;
-                }
-
-                return false;
+                return t == null || t.isEmpty() || !hideExcludedJCheckBox.isSelected();
             }
         };
 
@@ -2133,12 +2187,8 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
 
         int opt = analysisSickFliterComboBox1.getSelectedIndex();
 
-        if ((opt == 0 && car > sickCutOff) || (opt == 1 && ear > sickCutOff)
-                || opt == 2 && car > sickCutOff && ear > sickCutOff) {
-            return true;
-        }
-
-        return false;
+        return (opt == 0 && car > sickCutOff) || (opt == 1 && ear > sickCutOff)
+                || opt == 2 && car > sickCutOff && ear > sickCutOff;
 
     }
 
@@ -2299,7 +2349,8 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
             if (o1.getClass().equals(new HitPair().getClass())) {
                 o1 = ((HitPair) o1).a;
                 o2 = ((HitPair) o2).a;
-                if (((Integer) o1).intValue() == ((Integer) o2).intValue()) {
+                if (((Integer) o1) != ((Integer) o2).intValue()) {
+                } else {
                     o1 = ((HitPair) orig1).b;
                     o2 = ((HitPair) orig2).b;
                 }
@@ -2309,13 +2360,13 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                 Integer i1 = ((Hit) o1).i;
                 Integer i2 = ((Hit) o2).i;
 
-                if (i1.intValue() == 0) {
+                if (i1 == 0) {
                     o1 = EMPTY_ROW;
                 } else {
                     o1 = i1;
                 }
 
-                if (i2.intValue() == 0) {
+                if (i2 == 0) {
                     o2 = EMPTY_ROW;
                 } else {
                     o2 = i2;
@@ -2705,11 +2756,12 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
     public javax.swing.JTextField hcpvalJTextField;
     public javax.swing.JCheckBox hideExcludedJCheckBox;
     public javax.swing.JTextField highCutOffJTextField;
-    private javax.swing.JPanel highCutOffPanel;
     private javax.swing.JMenuItem includeJMenuItem;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

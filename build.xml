@@ -3,37 +3,32 @@
 <project name="Balony" default="default" basedir=".">
     <description>Builds, tests, and runs the project Balony.</description>
     <import file="nbproject/build-impl.xml"/>
-    <!--    <import file="nbproject/profiler-build-impl.xml"/>-->
     <target name="-post-jar">
         <jar jarfile="C:\Apps\Balony.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <zipgroupfileset dir="dist/lib" includes="*.jar" excludes="META-INF/*" />
-            <!--            <zipfileset src="dist/lib/commons-net-2.0.jar" excludes="META-INF/*" />-->
-            <!--            <zipfileset src="dist/lib/commons-net-ftp-2.0.jar" excludes="META-INF/*" />-->
             <manifest>
                 <attribute name="Main-Class" value="balony.main"/>
             </manifest>
         </jar>
-        <!--        <exec executable = "C:\Program Files (x86)\Launch4j\launch4j.exe">-->
-        <!--            <arg value = "- -l4j-no-splash"></arg>-->
-        <!--            <arg value= "C:\Apps\Balony.xml"></arg>-->
-        <!--        </exec>-->
+
+
         <copy file="C:\Apps\Balony.jar" todir="C:\Users\Barry Young\Documents\NetBeansProjects\Balony\Balony.app\Contents\Resources\Java\" ></copy>
-        <copy file="C:\Apps\Balony.jar" todir="C:\Apps\Balony\Windows\"></copy>
-        <tstamp/>
-        <property name="current-date"  value="C:\Apps\Balony\Balony-latest-${TODAY}.jar" />
+        <copy file="C:\Apps\Balony.jar" todir="C:\Apps\Balony\_Upload_\"></copy>
         
+        <tstamp/>
+        <property name="current-date"  value="C:\Apps\Balony\Balony-latest-${TODAY}.jar" />        
         <copy file="C:\Apps\Balony.jar" tofile="${current-date}" ></copy>
         
         <taskdef name="jar-bundler" classpath="lib/jarbundler-2.4.0.jar"  classname="net.sourceforge.jarbundler.JarBundler"></taskdef>
         <jar-bundler name="Balony"
                      dir="${basedir}"
-                     icon="build/classes/resources/balloon.icns"
+                     icon="MacOSX_resources/balloon.icns"
                      usejavaxkey="true"
                      mainclass="balony.main"
                      shortname="Balony"
                      workingdirectory="$APP_PACKAGE/Contents/Resources/Java/"
-                     stubfile="build/classes/resources/universalJavaApplicationStub"
+                     stubfile="MacOSX_resources/universalJavaApplicationStub"
                      verbose="true"
                      vmoptions="-Xmx1024M">
             <jarfileset dir = "resources">
@@ -41,16 +36,18 @@
             </jarfileset>
             <jarfileset dir = "C:\Apps\\">
                 <include name="Balony.jar"></include>
-            </jarfileset>
-            
+            </jarfileset>            
         </jar-bundler>
         <chmod file="Balony.app/Contents/MacOS/universalJavaApplicationStub" perm="ugo+rx"></chmod>
-
+        
+        <zip destfile="C:\Apps\Balony\_Upload_\Balony-MacOSX.zip">
+            <zipfileset dir="Balony.app" prefix="Balony.app"></zipfileset>
+        </zip>
+        
         <exec executable="C:\Program Files (x86)\Caphyon\Advanced Installer 12.3.1\bin\x86\AdvancedInstaller.com">
             <arg line="/build C:\Apps\Balony\Balony-simple.aip"/>
         </exec>
 
- 
     </target>  
 
 </project>

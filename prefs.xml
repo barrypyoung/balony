@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-<entry key="scanLayout">2x2</entry>
+<entry key="BalonyLatestVersion">1.1a</entry>
 <entry key="osLaF">1</entry>
+<entry key="BalonyVersion">1.1</entry>
+<entry key="analysisFolder">D:\Scans\Kathryn\20151007 PTEN</entry>
+<entry key="scanFolder">D:\Scans\Barry\20080219 Scs2u\</entry>
+<entry key="optionsUpdateCheck">0</entry>
+<entry key="scanShrink">None</entry>
+<entry key="imageLastPreset">Loewen Lab 1536 RePad 300 dpi</entry>
+<entry key="caliibrated">1</entry>
+<entry key="LastKeyFile">C:\Users\Barry Young\Documents\NetBeansProjects\Balony\.\UBC-1536.key</entry>
+<entry key="SickFilterComboBox">control spot</entry>
+<entry key="imageFolder">D:\Scans\Barry\20080219 Scs2u\Cropped</entry>
+<entry key="scanRotate">90° CW</entry>
+<entry key="scanLayout">2x2</entry>
 <entry key="scanPlateD">3</entry>
 <entry key="scanPlateC">4</entry>
-<entry key="BalonyVersion">1.0a</entry>
 <entry key="scanPlateB">1</entry>
 <entry key="scanPlateA">2</entry>
-<entry key="analysisFolder">C:\Users\Barry Young\Documents</entry>
-<entry key="SickFilterComboBox">control spot</entry>
-<entry key="LastKeyFile">C:\Users\Barry Young\Documents\NetBeansProjects\Balony\.\UBC-1536.key</entry>
-<entry key="BalonyLatestVersion">1.0a</entry>
-<entry key="scanShrink">None</entry>
-<entry key="scanRotate">90° CW</entry>
 </properties>

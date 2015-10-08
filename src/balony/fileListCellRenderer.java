@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
@@ -24,13 +25,12 @@ public class fileListCellRenderer extends DefaultListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         File f = (File) value;
-        File[] files = f.getParentFile().listFiles(new FilenameFilter() {
-
+        File[] files;
+        files = f.getParentFile().listFiles(new FilenameFilter() {
+            
+            @Override
             public boolean accept(File dir, String name) {
-                if(name.endsWith(".txt") && name.contains("RAW")) {
-                    return true;
-                }
-                return false;
+                return name.endsWith(".txt") && name.contains("RAW");
             }
         });
 
@@ -80,7 +80,9 @@ public class fileListCellRenderer extends DefaultListCellRenderer {
                 }
                 bf.close();
 
-            } catch (Exception e) {
+            } catch (IOException e) {
+                System.out.println(e.getLocalizedMessage());
+            } catch (NumberFormatException e) {
                 System.out.println(e.getLocalizedMessage());
             }
         }
