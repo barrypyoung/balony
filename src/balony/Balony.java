@@ -59,133 +59,826 @@ import org.kohsuke.github.PagedIterable;
  */
 public final class Balony extends javax.swing.JFrame {
 
-    // Prefs:
-    // Folders
-    public static final String PREFS_SCANFOLDER = "scanFolder";
+    /**
+     * Prefs value used to store the last folder accessed from the "Scan" tab.
+     */
+        public static final String PREFS_SCANFOLDER = "scanFolder";
+
+    /**
+     * Prefs value used to store the last folder accessed from the "Image" tab.
+     */
     public static final String PREFS_IMAGEFOLDER = "imageFolder";
+
+    /**
+     * Prefs value used to store the last folder accessed from the "Analysis" tab.
+     */
     public static final String PREFS_ANALYSISFOLDER = "analysisFolder";
+
+    /**
+     * Prefs value used to store the last folder accessed from the
+     * "control" section of the "Scoring" tab.
+     */
     public static final String PREFS_CTRLFOLDER = "ctrlFolder";
+
+    /**
+     * Prefs value used to store the last folder accessed from the
+     * "experiment" section of the "Scoring" tab.
+     */
     public static final String PREFS_EXPFOLDER = "expFolder";
+
+    /**
+     * Prefs value used to store the last folder accessed from the "Restore Table" 
+     * button of the "Analysis" tab.
+     */
     public static final String PREFS_TABLEFOLDER = "tableFolder";
+
+    /**
+     * Prefs value used to store the last selected value from the layout
+     * drop-down of the "Image" tab.
+     */
     public static final String PREFS_SCAN_LAYOUT = "scanLayout";
+
+    /**
+     * Prefs value used to store the last selected value from the "Plate A"
+     * drop-down of the "Image" tab.
+     */
     public static final String PREFS_SCAN_PLATE_A = "scanPlateA";
+
+    /**
+     * Prefs value used to store the last selected value from the "Plate B"
+     * drop-down of the "Image" tab.
+     */
     public static final String PREFS_SCAN_PLATE_B = "scanPlateB";
+
+    /**
+     * Prefs value used to store the last selected value from the "Plate C"
+     * drop-down of the "Image" tab.
+     */
     public static final String PREFS_SCAN_PLATE_C = "scanPlateC";
+
+    /**
+     * Prefs value used to store the last selected value from the "Plate D"
+     * drop-down of the "Image" tab.
+     */
     public static final String PREFS_SCAN_PLATE_D = "scanPlateD";
+
+    /**
+     * Prefs value used to store the last selected value from the "Rotate Plates"
+     * drop-down of the "Image" tab.
+     */
     public static final String PREFS_SCAN_ROTATE = "scanRotate";
+
+    /**
+     * Prefs value used to store the last selected value from the "Shrink Plates"
+     * drop-down of the "Image" tab.
+     */
     public static final String PREFS_SCAN_SHRINK = "scanShrink";
+
+    /**
+     *
+     */
     public static final String PREFS_SCAN_GRAYSCALE = "scanGrayscale";
+
+    /**
+     *
+     */
     public static final String PREFS_SCAN_CLOSE = "scanClose";
+
+    /**
+     *
+     */
     public static final String PREFS_SCAN_AUTONAME = "scanAutoname";
+
+    /**
+     *
+     */
     public static final String PREFS_SCAN_SUBFOLDER = "scanSubfolder";
+
+    /**
+     *
+     */
     public static final String PREFS_SCAN_PREVIEW = "scanPreview";
+
+    /**
+     *
+     */
     public static final String PREFS_IMAGE_PRESET = "imageLastPreset";
+
+    /**
+     *
+     */
     public static final String PREFS_IMAGE_AUTONAME = "imageAutoName";
+
+    /**
+     *
+     */
     public static final String PREFS_IMAGE_AUTOTHRESH = "imageAutoThresh";
+
+    /**
+     *
+     */
     public static final String PREFS_IMAGE_AUTOGRID = "imgaeAutoGrid";
+
+    /**
+     *
+     */
     public static final String PREFS_IMAGE_AUTOQUANT = "imageAutoQuant";
+
+    /**
+     *
+     */
     public static final String PREFS_IMAGE_AUTOINVERT = "imageAutoInvert";
+
+    /**
+     *
+     */
     public static final String PREFS_IMAGE_AUTOSAVE = "imageAutoSave";
+
+    /**
+     *
+     */
     public static final String PREFS_IMAGE_THRESHMETHOD = "imageThreshMethod";
+
+    /**
+     *
+     */
     public static final String PREFS_IMAGE_THRESVALUE = "imageThreshValue";
+
+    /**
+     *
+     */
     public static final String PREFS_IMAGE_GRID_SINGLE_CORNER = "imageGridSingleCorner";
+
+    /**
+     *
+     */
     public static final String THRESH_AUTO = "threshAuto";
+
+    /**
+     *
+     */
     public static final String THRESH_MANUAL = "threshManual";
+
+    /**
+     *
+     */
     public static final String PREFS_SCORE_NORM = "scoreNormalization";
+
+    /**
+     *
+     */
     public static final String PREFS_SCORE_SCOREBY = "scoreScoreBy";
+
+    /**
+     *
+     */
     public static final String PREFS_SCORE_KEYFILE = "LastKeyFile";
+
+    /**
+     *
+     */
     public static final String PREFS_SCORE_AUTOANALYZE = "scoreAutoAnalyze";
+
+    /**
+     *
+     */
     public static final String SCORE_BY_ARRAY = "scoreByArrayPos";
+
+    /**
+     *
+     */
     public static final String SCORE_BY_ORF = "scoreByORF";
+
+    /**
+     *
+     */
     public static final String PREFS_ANALYSIS_OPEN_TABLES = "analysisOpenTables";
+
+    /**
+     *
+     */
     public static final String PREFS_ANALYSIS_LOWCUTOFF = "LowCutOff";
+
+    /**
+     *
+     */
     public static final String PREFS_ANALYSIS_MAXSPOTSIZE = "MaxSpotSize";
+
+    /**
+     *
+     */
     public static final String PREFS_ANALYSIS_MINSPOTSIZE = "MinSpotSize";
+
+    /**
+     *
+     */
     public static final String PREFS_ANALYSIS_HIGHCUTOFF = "HightCutOff";
+
+    /**
+     *
+     */
     public static final String PREFS_ANALYSIS_SICKCUTOFF = "SickCutOff";
+
+    /**
+     *
+     */
     public static final String PREFS_ANALYSIS_SICKFILTER = "SickFilterComboBox";
+
+    /**
+     *
+     */
     public static final String PREFS_ANALYSIS_OVERRIDE_KEYFILE = "analysisKeyFileOverride";
+
+    /**
+     *
+     */
     public static final String PREFS_OPTIONS_OS_LOOK_AND_FEEL = "osLaF";
+
+    /**
+     *
+     */
     public static final String PREFS_OPTIONS_UPDATE_CHECK = "optionsUpdateCheck";
+
+    /**
+     *
+     */
     public static final String PREFS_BALONYVERSION = "BalonyVersion";
+
+    /**
+     *
+     */
     public static final String PREFS_BALONYLATESTVERSION = "BalonyLatestVersion";
+
+    /**
+     *
+     */
+    public static final String PREFS_ANALYSIS_WIZARDMODE = "analysisWizardMode";
+
+    /**
+     *
+     */
     public static final String PREFS_XML = "prefs.xml";
+
+    /**
+     *
+     */
     public static final String AREA_COL = "Area";
+
+    /**
+     *
+     */
     public static final String HEIGHT_COL = "Height";
+
+    /**
+     *
+     */
     public static final String BALONY_GOOGLECODE_FEED = "https://code.google.com/feeds/p/balony/downloads/basic";
+
+    /**
+     *
+     */
     public static final String BALONY_RAW_DATA = "Balony raw data";
+
+    /**
+     *
+     */
     public static final String BEGIN_DATA = "<Begin Data>";
+
+    /**
+     *
+     */
     public static final String CALIBRATED = "caliibrated";
+
+    /**
+     *
+     */
     public static final String KEYFILE = ".key";
+
+    /**
+     *
+     */
     public static final String PRESET = ".preset";
+
+    /**
+     *
+     */
     public static final String PLATE = "plate";
+
+    /**
+     *
+     */
     public static final String RT_AREA = "Area";
+
+    /**
+     *
+     */
     public static final String RT_HEIGHT = "Height";
+
+    /**
+     *
+     */
     public static final String RT_WIDTH = "Width";
+
+    /**
+     *
+     */
     public static final String RT_X = "X";
+
+    /**
+     *
+     */
     public static final String RT_Y = "Y";
+
+    /**
+     *
+     */
     public static final String SCORE_HEADER
             = "Screen\tORF Name\tGene Name\tPlate\tRow\tColumn\t\t\t\t\t\tCtrl Mean\tCtrl SD\tExp Mean\tExp SD\tSize Difference\t";
+
+    /**
+     *
+     */
     public static final String SET = "set";
+
+    /**
+     *
+     */
     public static final String AUTO_ANALYZE_LOG = "AutoAnalyze.log";
-    public float minX, minY, maxX, maxY, stepX, stepY, circ, snap, dx, dy;
+    public float minX,
+
+    /**
+     *
+     */
+    minY,
+
+    /**
+     *
+     */
+    maxX,
+
+    /**
+     *
+     */
+    maxY,
+
+    /**
+     *
+     */
+    stepX,
+
+    /**
+     *
+     */
+    stepY,
+
+    /**
+     *
+     */
+    circ,
+
+    /**
+     *
+     */
+    snap,
+
+    /**
+     *
+     */
+    dx,
+
+    /**
+     *
+     */
+    dy;
+
+    /**
+     *
+     */
     public static double theta;
-    public static int Area[][], xCoord[][], yCoord[][], width[][], height[][];
-    public static int rows, cols, dpi;
-    public static boolean loaded, rotated, gridded, threshed, quant, inverted, fullAuto;
-    public ImagePlus loadedIm, oIm, oToCrop, toCrop, cropA, cropB, cropC, cropD, autoTmp, zoomBox;
-    public static ColorProcessor oriCp, tcCp;
+    public static int Area[][],
+
+    /**
+     *
+     */
+
+    /**
+     *
+     */
+
+    /**
+     *
+     */
+
+    /**
+     *
+     */
+    xCoord[][], yCoord[][], width[][], height[][];
+    public static int rows,
+
+    /**
+     *
+     */
+    cols,
+
+    /**
+     *
+     */
+    dpi;
+    public static boolean loaded,
+
+    /**
+     *
+     */
+    rotated,
+
+    /**
+     *
+     */
+    gridded,
+
+    /**
+     *
+     */
+    threshed,
+
+    /**
+     *
+     */
+    quant,
+
+    /**
+     *
+     */
+    inverted,
+
+    /**
+     *
+     */
+    fullAuto;
+    public ImagePlus loadedIm,
+
+    /**
+     *
+     */
+    oIm,
+
+    /**
+     *
+     */
+    oToCrop,
+
+    /**
+     *
+     */
+    toCrop,
+
+    /**
+     *
+     */
+    cropA,
+
+    /**
+     *
+     */
+    cropB,
+
+    /**
+     *
+     */
+    cropC,
+
+    /**
+     *
+     */
+    cropD,
+
+    /**
+     *
+     */
+    autoTmp,
+
+    /**
+     *
+     */
+    zoomBox;
+    public static ColorProcessor oriCp,
+
+    /**
+     *
+     */
+    tcCp;
+
+    /**
+     *
+     */
     public static File currFolder;
-    public static Integer currSet, currPlate;
-    public int lastThresh, badSpots, bestThresh, bestSpots;
+    public static Integer currSet,
+
+    /**
+     *
+     */
+    currPlate;
+    public int lastThresh,
+
+    /**
+     *
+     */
+    badSpots,
+
+    /**
+     *
+     */
+    bestThresh,
+
+    /**
+     *
+     */
+    bestSpots;
+
+    /**
+     *
+     */
     public static String message;
+
+    /**
+     *
+     */
     public int rethresh;
-    public File currFile, currScanFile;
+    public File currFile,
+
+    /**
+     *
+     */
+    currScanFile;
+
+    /**
+     *
+     */
     public platenameData[] ctrlplateData;
+
+    /**
+     *
+     */
     public platenameData[] expplateData;
+
+    /**
+     *
+     */
     public spotData ctrlData;
+
+    /**
+     *
+     */
     public spotData expData;
-    public int minCtrlSet, maxCtrlSet, minExpSet, maxExpSet;
-    public int minCtrlPlate, maxCtrlPlate, minExpPlate, maxExpPlate;
-    public int autoCheckPos, fullAutoFail;
+    public int minCtrlSet,
+
+    /**
+     *
+     */
+    maxCtrlSet,
+
+    /**
+     *
+     */
+    minExpSet,
+
+    /**
+     *
+     */
+    maxExpSet;
+    public int minCtrlPlate,
+
+    /**
+     *
+     */
+    maxCtrlPlate,
+
+    /**
+     *
+     */
+    minExpPlate,
+
+    /**
+     *
+     */
+    maxExpPlate;
+    public int autoCheckPos,
+
+    /**
+     *
+     */
+    fullAutoFail;
+
+    /**
+     *
+     */
     public StringBuilder messageText;
+
+    /**
+     *
+     */
     public HashSet<dataTable> dataTables;
+
+    /**
+     *
+     */
     public HashMap<String, analysisData> aD;
+
+    /**
+     *
+     */
     public HashSet<arrayDefinition> arrayDefs;
+
+    /**
+     *
+     */
     public dataTable currentDT;
+
+    /**
+     *
+     */
     public TreeMap<String, plateArray> allArraysMap;
+
+    /**
+     *
+     */
     public Properties prefs;
+
+    /**
+     *
+     */
     public HashMap<String, File> keyFiles;
+
+    /**
+     *
+     */
     public String keyOrfs[][][];
+
+    /**
+     *
+     */
     public String keyGenes[][][];
+
+    /**
+     *
+     */
     public HashMap<File, imageSettings> iSet;
+
+    /**
+     *
+     */
     public HashMap<String, String> keyOrfList;
+
+    /**
+     *
+     */
     public HashMap<String, sgdInfo> allSGDInfo;
+
+    /**
+     *
+     */
     public HashMap<String, Integer> genomeIndex;
+
+    /**
+     *
+     */
     public gridPresets gridP;
+
+    /**
+     *
+     */
     public colonySize cSize;
+
+    /**
+     *
+     */
     public quantSettings quantP;
+
+    /**
+     *
+     */
     public autoWorker fullAutoWorker;
+
+    /**
+     *
+     */
     public processWorker pw;
+
+    /**
+     *
+     */
     public gridWorker gw;
+
+    /**
+     *
+     */
     public quantWorker qw;
+
+    /**
+     *
+     */
     public myWindowListener mwl;
+
+    /**
+     *
+     */
     public HashMap<String, Integer[]> grOval;
+
+    /**
+     *
+     */
     public HashMap<String, Integer[]> mgOval;
+
+    /**
+     *
+     */
     public HashMap<String, Integer[]> redRect;
+
+    /**
+     *
+     */
     public ArrayList<Integer[]> yeOval;
-    public boolean fileMod, norethresh, calibrated, incalibration, autoGridSetting;
-    public QuantScan qs, qs1;
+    public boolean fileMod,
+
+    /**
+     *
+     */
+    norethresh,
+
+    /**
+     *
+     */
+    calibrated,
+
+    /**
+     *
+     */
+    incalibration,
+
+    /**
+     *
+     */
+    autoGridSetting;
+    public QuantScan qs,
+
+    /**
+     *
+     */
+    qs1;
+
+    /**
+     *
+     */
     public ImageWindow imWin;
+
+    /**
+     *
+     */
     public int multiPAcount;
+
+    /**
+     *
+     */
     public boolean stopped;
+
+    /**
+     *
+     */
     public boolean resetGrid;
+
+    /**
+     *
+     */
     public boolean useOSLaF;
+
+    /**
+     *
+     */
     public File scanPreview;
+
+    /**
+     *
+     */
     public JLabel tip;
+
+    /**
+     *
+     */
     public Image balloonImage;
+
+    /**
+     *
+     */
     public String BalonyVersion;
+
+    /**
+     *
+     */
     public static final String SGD_FEATURES_FILE = "SGD_features.tab";
+
+    /**
+     *
+     */
     public messageJFrame messageFrame;
 
     @Override
@@ -289,6 +982,8 @@ public final class Balony extends javax.swing.JFrame {
         }
 
         autoAnalyzeJCheckBox.setSelected(prefs.getProperty(PREFS_SCORE_AUTOANALYZE,
+                "1").equals("1"));
+        wizardModeJCheckBox.setSelected(prefs.getProperty(PREFS_ANALYSIS_WIZARDMODE,
                 "1").equals("1"));
 
         analysisOpenDataTablesJCheckBox.setSelected(prefs.getProperty(
@@ -445,16 +1140,28 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public int getScreenHeight() {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         return gd.getDisplayMode().getHeight();
     }
 
+    /**
+     *
+     * @return
+     */
     public int getScreenWidth() {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         return gd.getDisplayMode().getWidth();
     }
 
+    /**
+     *
+     * @param files
+     */
     public void loadImageFileList(Object[] files) {
         imageFileJList.removeAll();
         fileListCellRenderer flcr = new fileListCellRenderer();
@@ -464,6 +1171,10 @@ public final class Balony extends javax.swing.JFrame {
     }
     // Read in gene info from SGD_feaures.tab
 
+    /**
+     *
+     * @return
+     */
     public String get_appdata_folder() {
         String roam = "";
 
@@ -477,10 +1188,18 @@ public final class Balony extends javax.swing.JFrame {
         return roam;
     }
 
+    /**
+     *
+     * @return
+     */
     public String get_sgdfile_name() {
         return SGD_FEATURES_FILE;
     }
 
+    /**
+     *
+     * @return
+     */
     public static String get_prefsfile_name() {
         return PREFS_XML;
     }
@@ -541,9 +1260,33 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    void openSpotCompare(int plate, int row, int column) {
+        
+        spotCompare spc = new spotCompare();
+        spc.setIconImage(balloonImage);
+        spc.setTitle("Spot Compare");
+        
+        ArrayList<String> ads = new ArrayList<String>();
+        
+        for(int i = 0; i < dataTablesComboBox.getItemCount(); i++ ) {
+            ads.add( dataTablesComboBox.getItemAt(i).toString());
+        }
+        
+        spc.setScreens(ads);
+        spc.balony=this;
+        spc.setPosition(plate, row, column);
+        spc.setVisible(true);
+    }
+
+    /**
+     *
+     */
     public class sgdUpdater extends SwingWorker<String, Void> {
 
-        public static final String SGD_FEATURES_URL
+            /**
+             *
+             */
+            public static final String SGD_FEATURES_URL
                 = "http://downloads.yeastgenome.org/curation/chromosomal_feature/SGD_features.tab";
 
         @Override
@@ -598,6 +1341,9 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     */
     public void updateSGDInfo() {
         new sgdUpdater().execute();
     }
@@ -652,6 +1398,9 @@ public final class Balony extends javax.swing.JFrame {
     }
     // Load preset aray dimensions
 
+    /**
+     *
+     */
     public void loadPresets() {
         Object o = gridChoicejComboBox.getSelectedItem();
         File[] f = null;
@@ -854,6 +1603,7 @@ public final class Balony extends javax.swing.JFrame {
         analysisOpenDataTablesJCheckBox = new javax.swing.JCheckBox();
         restoreTableButton = new javax.swing.JButton();
         wizardModeJCheckBox = new javax.swing.JCheckBox();
+        jButton3 = new javax.swing.JButton();
         sgdFeaturesJPanel = new javax.swing.JPanel();
         analysisOverrideKeyFileCheckBox = new javax.swing.JCheckBox();
         downloadSGDInfoButton = new javax.swing.JButton();
@@ -1487,7 +2237,7 @@ public final class Balony extends javax.swing.JFrame {
         );
         scanPreviewPanelLayout.setVerticalGroup(
             scanPreviewPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 141, Short.MAX_VALUE)
+            .add(0, 145, Short.MAX_VALUE)
         );
 
         scanPreviewJCheckBox.setSelected(true);
@@ -1551,7 +2301,7 @@ public final class Balony extends javax.swing.JFrame {
                         .add(scanPreviewJCheckBox)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(scanPreviewPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         tabPane.addTab("Scan", scanPanel);
@@ -2308,6 +3058,11 @@ public final class Balony extends javax.swing.JFrame {
 
         scoreRCJCheckBox.setSelected(true);
         scoreRCJCheckBox.setText("Row / Column");
+        scoreRCJCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                scoreRCJCheckBoxActionPerformed(evt);
+            }
+        });
 
         scoreSpatialJCheckBox.setText("Spatial");
 
@@ -2611,6 +3366,18 @@ public final class Balony extends javax.swing.JFrame {
 
         wizardModeJCheckBox.setSelected(true);
         wizardModeJCheckBox.setText("Wizard Mode (sets options and parameters upon loading)");
+        wizardModeJCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                wizardModeJCheckBoxActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Remove");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout analysisTablesPanelLayout = new org.jdesktop.layout.GroupLayout(analysisTablesPanel);
         analysisTablesPanel.setLayout(analysisTablesPanelLayout);
@@ -2627,7 +3394,8 @@ public final class Balony extends javax.swing.JFrame {
                         .add(restoreTableButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE))
                     .add(analysisTablesPanelLayout.createSequentialGroup()
                         .add(wizardModeJCheckBox)
-                        .add(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(jButton3)))
                 .addContainerGap())
         );
         analysisTablesPanelLayout.setVerticalGroup(
@@ -2640,7 +3408,9 @@ public final class Balony extends javax.swing.JFrame {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(dataTablesComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(wizardModeJCheckBox)
+                .add(analysisTablesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(wizardModeJCheckBox)
+                    .add(jButton3))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -3037,7 +3807,7 @@ public final class Balony extends javax.swing.JFrame {
                 .add(updaterJPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(contactJPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(203, Short.MAX_VALUE))
+                .addContainerGap(211, Short.MAX_VALUE))
         );
 
         tabPane.addTab("Options", optionsPanel);
@@ -3062,6 +3832,11 @@ public final class Balony extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Prepare to load the image
+     * @param f The file to load
+     * @param rG Reset the grid if true
+     */
     public void imageLoad(File f, boolean rG) {
         if (cSize != null) {
             cSize.setVisible(false);
@@ -3092,6 +3867,9 @@ public final class Balony extends javax.swing.JFrame {
         imageLoad2();
     }
 
+    /**
+     * Actually load the image
+     */
     public void imageLoad2() {
         if (!calibrated) {
             autoGridSetting = autoGridJCheckBox.isSelected();
@@ -3239,7 +4017,13 @@ public final class Balony extends javax.swing.JFrame {
     }
 
     // Draws the current grid over an image
-    public void drawGrid(ImageCanvas ic, Color c) {
+
+    /**
+     *
+     * @param ic
+     * @param c
+     */
+        public void drawGrid(ImageCanvas ic, Color c) {
         float i;
         GeneralPath path = new GeneralPath();
         for (i = 0; i < cols; i++) {
@@ -3261,7 +4045,11 @@ public final class Balony extends javax.swing.JFrame {
     }
 
     // Find spots within the grid area and quantify them
-    public void doQuant() {
+
+    /**
+     *
+     */
+        public void doQuant() {
         if (threshed == false) {
             messageText.append("\nQuantification requires thresholded image.");
             return;
@@ -3526,6 +4314,13 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     * @param lowStrin
+     * @param circ
+     * @param snap
+     * @param minpix
+     */
     public void doQuant2(boolean lowStrin, float circ, float snap, int minpix) {
         float as[], ws[], hs[], xs[], ys[];
 
@@ -3631,7 +4426,11 @@ public final class Balony extends javax.swing.JFrame {
     }
 
     // Draw shapes corresponding to measured colonies
-    public void drawShapes() {
+
+    /**
+     *
+     */
+        public void drawShapes() {
         Overlay o = new Overlay();
 
         if (!yeOval.isEmpty()) {
@@ -3741,6 +4540,9 @@ public final class Balony extends javax.swing.JFrame {
         qw.execute();
     }//GEN-LAST:event_quantButtonActionPerformed
 
+    /**
+     *
+     */
     public class quantWorker extends SwingWorker<String, Void> {
 
         @Override
@@ -3784,6 +4586,9 @@ public final class Balony extends javax.swing.JFrame {
 
     }//GEN-LAST:event_definegridButtonActionPerformed
 
+    /**
+     *
+     */
     public void switchToInputImage() {
         if (imWin == null || imWin.getImagePlus() == null || loadedIm == null) {
             return;
@@ -3803,6 +4608,9 @@ public final class Balony extends javax.swing.JFrame {
         loadedIm.getCanvas().setSourceRect(r);
     }
 
+    /**
+     *
+     */
     public void switchToOutputImage() {
         if (imWin == null || imWin.getImagePlus() == null || oIm == null) {
             return;
@@ -3938,6 +4746,9 @@ public final class Balony extends javax.swing.JFrame {
 
     }//GEN-LAST:event_saveButtonActionPerformed
 
+    /**
+     *
+     */
     public void modCheck() {
         if (fileMod) {
             if (oIm != null) {
@@ -3954,6 +4765,11 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     * @param infile
+     * @return
+     */
     public static String getSaveFileName(String infile) {
         String ss = infile.toLowerCase(), t;
         String set, plate, base;
@@ -4055,6 +4871,9 @@ public final class Balony extends javax.swing.JFrame {
         savePrefs();
     }//GEN-LAST:event_gridChoicejComboBoxActionPerformed
 
+    /**
+     *
+     */
     public void savePrefs() {
         try {
             String outFile = get_prefsfile_name();
@@ -4484,6 +5303,10 @@ public final class Balony extends javax.swing.JFrame {
         expdirTextField.setText(s);
         updateScoreTab();
     }//GEN-LAST:event_expButtonActionPerformed
+
+    /**
+     *
+     */
     public class scanLoader extends SwingWorker<Object, Object> {
 
         @Override
@@ -4498,6 +5321,9 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     */
     public void scanLoad() {
         if (oToCrop != null && oToCrop.getWindow() != null) {
             oToCrop.getWindow().close();
@@ -4530,6 +5356,9 @@ public final class Balony extends javax.swing.JFrame {
         updateScanNames();
     }
 
+    /**
+     *
+     */
     public void setupCompositeImage() {
         if (oToCrop == null) {
             return;
@@ -4622,6 +5451,10 @@ public final class Balony extends javax.swing.JFrame {
         oToCrop.setOverlay(o);
     }
 
+    /**
+     *
+     * @param f
+     */
     public void setScanBaseNames(File f) {
         String ss = f.getName().toLowerCase(), t;
         int j, k;
@@ -4670,6 +5503,9 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     */
     public void updateScanNames() {
         if (scanAutoPlateNameJCheckBox.isSelected()) {
             String base = scanbaseTextField.getText();
@@ -4942,6 +5778,9 @@ public final class Balony extends javax.swing.JFrame {
         updateScanNames();
     }//GEN-LAST:event_scansetComboBoxActionPerformed
 
+    /**
+     *
+     */
     public class processWorker extends SwingWorker<String, Void> {
 
         @Override
@@ -5004,6 +5843,9 @@ public final class Balony extends javax.swing.JFrame {
         pw.execute();
     }//GEN-LAST:event_scanprocessallButtonActionPerformed
 
+    /**
+     *
+     */
     public class imageLoader extends SwingWorker<String, Void> {
 
         @Override
@@ -5019,6 +5861,9 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     */
     public class autoWorker extends SwingWorker<String, Void> {
 
         @Override
@@ -5122,6 +5967,9 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     */
     public void saveAutoCheckImage() {
         if (oIm != null) {
             String outdir = currFolder.getAbsolutePath() + File.separator + File.separator + "autocheck_images";
@@ -5266,6 +6114,10 @@ public final class Balony extends javax.swing.JFrame {
             scanCTextField.setEnabled(false);
         }
     }//GEN-LAST:event_scansaveCCheckBoxActionPerformed
+
+    /**
+     *
+     */
     public void updateSlider() {
         int i = -1;
         try {
@@ -5462,9 +6314,9 @@ public final class Balony extends javax.swing.JFrame {
                 System.out.println(e.getLocalizedMessage());
             }
 
-            Integer[] comar = new Integer[goodFiles.size()];
-            for (int com = 0; com < goodFiles.size(); com++) {
-                comar[com] = goodFiles.size() - com;
+            Integer[] comar = new Integer[ad.getSets()];
+            for (int com = 0; com < ad.getSets(); com++) {
+                comar[com] = ad.getSets() - com;
             }
 
             dt.lcHitsJComboBox.setModel(new DefaultComboBoxModel(comar));
@@ -5550,12 +6402,25 @@ public final class Balony extends javax.swing.JFrame {
 
     }//GEN-LAST:event_analysisLoadButtonActionPerformed
 
+    /**
+     *
+     */
     public class compMenu extends JMenuItem {
 
-        public dataTable thisTable;
-        public dataTable compTable;
+            /**
+             *
+             */
+            public dataTable thisTable;
 
-        public void compMenu() {
+            /**
+             *
+             */
+            public dataTable compTable;
+
+            /**
+             *
+             */
+            public void compMenu() {
         }
     }
     private void dataTablesComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dataTablesComboBoxActionPerformed
@@ -5566,6 +6431,11 @@ public final class Balony extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_dataTablesComboBoxActionPerformed
 
+    /**
+     *
+     * @param d
+     * @return
+     */
     public static Double mean(Double[] d) {
         int i = 0;
         Double tot = 0d;
@@ -5582,6 +6452,11 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     * @param d
+     * @return
+     */
     public static Double stdev(Double[] d) {
         int i = 0;
         Double tot = 0d;
@@ -5602,6 +6477,11 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     * @param d
+     * @return
+     */
     public static float sum(float[] d) {
         int i = 0;
         float tot = 0f;
@@ -5928,6 +6808,11 @@ public final class Balony extends javax.swing.JFrame {
                 loadedIm.getCanvas(), Color.green);
         gridded = true;
     }//GEN-LAST:event_gridCentreButtonActionPerformed
+
+    /**
+     *
+     * @param n
+     */
     public void doGridNudgeRight(int n) {
         if (loadedIm == null) {
             return;
@@ -5942,6 +6827,10 @@ public final class Balony extends javax.swing.JFrame {
         drawGrid(loadedIm.getCanvas(), Color.green);
     }
 
+    /**
+     *
+     * @param n
+     */
     public void doGridNudgeUp(int n) {
         if (loadedIm == null) {
             return;
@@ -5956,6 +6845,10 @@ public final class Balony extends javax.swing.JFrame {
         drawGrid(loadedIm.getCanvas(), Color.green);
     }
 
+    /**
+     *
+     * @param n
+     */
     public void doGridNudgeDown(int n) {
         if (loadedIm == null) {
             return;
@@ -5970,6 +6863,10 @@ public final class Balony extends javax.swing.JFrame {
         drawGrid(loadedIm.getCanvas(), Color.green);
     }
 
+    /**
+     *
+     * @param n
+     */
     public void doGridNudgeLeft(int n) {
         if (loadedIm == null) {
             return;
@@ -6646,6 +7543,10 @@ public final class Balony extends javax.swing.JFrame {
         }
         scanFileJList.setSelectionInterval(0, scanFileJList.getModel().getSize() - 1);
     }//GEN-LAST:event_scanSelectAllButtonActionPerformed
+
+    /**
+     *
+     */
     public void doAddCtrl() {
         if (ctrlplateComboBox.getItemCount() == 0) {
             return;
@@ -6750,6 +7651,9 @@ public final class Balony extends javax.swing.JFrame {
         normalizeControl();
     }
 
+    /**
+     *
+     */
     public void doAddExp() {
 
         if (expplateComboBox.getItemCount() == 0) {
@@ -7094,10 +7998,44 @@ public final class Balony extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void wizardModeJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wizardModeJCheckBoxActionPerformed
+        prefs.setProperty(PREFS_ANALYSIS_WIZARDMODE, wizardModeJCheckBox.isSelected()?"1":"0");
+        savePrefs();
+    }//GEN-LAST:event_wizardModeJCheckBoxActionPerformed
+
+    private void scoreRCJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scoreRCJCheckBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_scoreRCJCheckBoxActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        String scr = dataTablesComboBox.getSelectedItem().toString();
+        dataTables.remove(aD.get(scr).getDt());
+        dataTablesComboBox.removeItem(aD.get(scr).getDt());
+        aD.get(scr).getDt().dispose();
+        aD.remove(scr);       
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    /**
+     *
+     */
     public class updateWorker extends SwingWorker<String, Void> {
 
-        public String newjar, newfile, newversion;
-        public boolean background;
+        public String newjar,
+
+            /**
+             *
+             */
+            newfile,
+
+            /**
+             *
+             */
+            newversion;
+
+            /**
+             *
+             */
+            public boolean background;
 
         @Override
         protected String doInBackground() throws Exception {
@@ -7289,6 +8227,9 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     */
     public class gridWorker extends SwingWorker<String, Void> {
 
         @Override
@@ -7306,6 +8247,9 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     */
     public void doAutoGrid() {
         if (stopped) {
             stopped = false;
@@ -7448,10 +8392,10 @@ public final class Balony extends javax.swing.JFrame {
                             totArea += as[count];
                         }
                     }
-                    minX = (float) BalonyTools.getMinMax((Float[]) alX.toArray())[0];
-                    maxX = (float) BalonyTools.getMinMax((Float[]) alX.toArray())[1];
-                    minY = (float) BalonyTools.getMinMax((Float[]) alY.toArray())[0];
-                    maxY = (float) BalonyTools.getMinMax((Float[]) alY.toArray())[1];
+                    minX = (float) BalonyTools.getMinMax( alX.toArray())[0];
+                    maxX = (float) BalonyTools.getMinMax( alX.toArray())[1];
+                    minY = (float) BalonyTools.getMinMax( alY.toArray())[0];
+                    maxY = (float) BalonyTools.getMinMax( alY.toArray())[1];
                     System.out.println("minY: " + minY);
                     System.out.println("maxY: " + maxY);
                     stepX = (maxX - minX) / (cols - 1);
@@ -7570,6 +8514,9 @@ public final class Balony extends javax.swing.JFrame {
         loadedIm.getCanvas().requestFocus();
     }
 
+    /**
+     *
+     */
     public void normalizeControl() {
         double rav;
         ctrlData.setNormArea(new Double[maxCtrlSet + 1][maxCtrlPlate + 1][ctrlData.getRows() + 1][ctrlData.getCols() + 1]);
@@ -7754,6 +8701,9 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     */
     public void normalizeExperiment() {
         double rav;
         // Normalize spot size
@@ -7933,6 +8883,9 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     */
     public void doThresh() {
         int i;
         if (loaded == false) {
@@ -8022,6 +8975,11 @@ public final class Balony extends javax.swing.JFrame {
         });
     }
 
+    /**
+     *
+     * @param str
+     * @return
+     */
     public static String getOnlyNumerics(String str) {
         if (str == null) {
             return null;
@@ -8044,11 +9002,31 @@ public final class Balony extends javax.swing.JFrame {
      */
     public class ManualGrid implements MouseListener, MouseMotionListener, Runnable, KeyListener {
 
-        public ImageCanvas i;
-        public int cnt, x[], y[];
-        public GeneralPath path;
+            /**
+             *
+             */
+            public ImageCanvas i;
+        public int cnt,
 
-        public void ManualGrid(ImageCanvas ic) {
+            /**
+             *
+             */
+
+            /**
+             *
+             */
+            x[], y[];
+
+            /**
+             *
+             */
+            public GeneralPath path;
+
+            /**
+             *
+             * @param ic
+             */
+            public void ManualGrid(ImageCanvas ic) {
             resetListeners(ic);
             ic.addMouseListener(this);
             ic.addMouseMotionListener(this);
@@ -8062,7 +9040,11 @@ public final class Balony extends javax.swing.JFrame {
             messageText.append("\nManual gridding: Click one corner of the array.");
         }
 
-        public void reset(ImageCanvas ic) {
+            /**
+             *
+             * @param ic
+             */
+            public void reset(ImageCanvas ic) {
             Cursor c = new Cursor(Cursor.DEFAULT_CURSOR);
             ic.setCursor(c);
             ic.removeMouseListener(this);
@@ -8240,14 +9222,33 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     */
     public class QuantScan implements MouseListener, MouseMotionListener, MouseWheelListener, Runnable, KeyListener {
 
-        public ImageCanvas i;
-        public int cnt, x[], y[];
+            /**
+             *
+             */
+            public ImageCanvas i;
+        public int cnt,
+
+            /**
+             *
+             */
+
+            /**
+             *
+             */
+            x[], y[];
         GeneralPath path;
         Cursor c;
 
-        public void QuantScan(ImageCanvas ic) {
+            /**
+             *
+             * @param ic
+             */
+            public void QuantScan(ImageCanvas ic) {
             if (oIm != null && oIm.getWindow() != null) {
                 mwl = new myWindowListener();
                 oIm.getWindow().addWindowListener(mwl);
@@ -8279,7 +9280,11 @@ public final class Balony extends javax.swing.JFrame {
             y = new int[2];
         }
 
-        public void reset(ImageCanvas ic) {
+            /**
+             *
+             * @param ic
+             */
+            public void reset(ImageCanvas ic) {
             ic.removeMouseListener(this);
         }
 
@@ -8391,6 +9396,9 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     */
     public class myWindowListener implements WindowListener {
 
         @Override
@@ -8423,6 +9431,10 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     * @param i
+     */
     public void resetListeners(ImageCanvas i) {
         try {
             if (i.getMouseListeners() != null) {
@@ -8456,14 +9468,33 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     */
     public class RotateCorrector implements MouseListener, MouseMotionListener, Runnable, KeyListener {
 
-        public ImageCanvas i;
-        public int cnt;
-        public float x[], y[];
+            /**
+             *
+             */
+            public ImageCanvas i;
+
+            /**
+             *
+             */
+            public int cnt;
+        public float x[],
+
+            /**
+             *
+             */
+            y[];
         GeneralPath path;
 
-        public void RotateCorrector(ImageCanvas ic) {
+            /**
+             *
+             * @param ic
+             */
+            public void RotateCorrector(ImageCanvas ic) {
             resetListeners(ic);
             ic.addMouseListener(this);
             ic.addMouseMotionListener(this);
@@ -8476,7 +9507,11 @@ public final class Balony extends javax.swing.JFrame {
             i.setCursor(c);
         }
 
-        public void reset(ImageCanvas ic) {
+            /**
+             *
+             * @param ic
+             */
+            public void reset(ImageCanvas ic) {
             Cursor c = new Cursor(Cursor.DEFAULT_CURSOR);
             i.setCursor(c);
             ic.removeMouseListener(this);
@@ -8594,14 +9629,34 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     */
     public class ManualSpot implements MouseListener, MouseMotionListener, Runnable, KeyListener {
 
-        public ImageCanvas i;
-        public int cnt, x[], y[];
+            /**
+             *
+             */
+            public ImageCanvas i;
+        public int cnt,
+
+            /**
+             *
+             */
+            x[],
+
+            /**
+             *
+             */
+            y[];
         GeneralPath path;
         Overlay o;
 
-        public void ManualSpot(ImageCanvas ic) {
+            /**
+             *
+             * @param ic
+             */
+            public void ManualSpot(ImageCanvas ic) {
             resetListeners(ic);
             ic.addMouseListener(this);
             ic.addMouseMotionListener(this);
@@ -8614,7 +9669,11 @@ public final class Balony extends javax.swing.JFrame {
             i.setCursor(c);
         }
 
-        public void reset(ImageCanvas ic) {
+            /**
+             *
+             * @param ic
+             */
+            public void reset(ImageCanvas ic) {
             Cursor c = new Cursor(Cursor.DEFAULT_CURSOR);
             ic.setCursor(c);
             ic.removeMouseListener(this);
@@ -8729,12 +9788,27 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     */
     public class ManualSpotRemover implements MouseListener, MouseMotionListener, Runnable, KeyListener {
 
-        public ImageCanvas i;
-        public int x, y;
+            /**
+             *
+             */
+            public ImageCanvas i;
+        public int x,
 
-        public void ManualSpot(ImageCanvas ic) {
+            /**
+             *
+             */
+            y;
+
+            /**
+             *
+             * @param ic
+             */
+            public void ManualSpot(ImageCanvas ic) {
             resetListeners(ic);
             ic.addMouseListener(this);
             i = ic;
@@ -8742,7 +9816,11 @@ public final class Balony extends javax.swing.JFrame {
             i.setCursor(c);
         }
 
-        public void reset(ImageCanvas ic) {
+            /**
+             *
+             * @param ic
+             */
+            public void reset(ImageCanvas ic) {
             Cursor c = new Cursor(Cursor.DEFAULT_CURSOR);
             ic.setCursor(c);
             ic.removeMouseListener(this);
@@ -8814,22 +9892,41 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
+    /**
+     *
+     */
     public class Zoomer implements MouseListener, MouseMotionListener, Runnable, KeyListener {
 
-        public ImageCanvas i;
-        public int d;
+            /**
+             *
+             */
+            public ImageCanvas imgCanvas;
 
-        public void Zoomer(ImageCanvas ic, int dir) {
+            /**
+             *
+             */
+            public int d;
+
+            /**
+             *
+             * @param ic
+             * @param dir
+             */
+            public void Zoomer(ImageCanvas ic, int dir) {
             resetListeners(ic);
             ic.addMouseListener(this);
             ic.addMouseMotionListener(this);
-            i = ic;
+            imgCanvas = ic;
             d = dir;
             Cursor c = new Cursor(Cursor.CROSSHAIR_CURSOR);
-            i.setCursor(c);
+            imgCanvas.setCursor(c);
         }
 
-        public void reset(ImageCanvas ic) {
+            /**
+             *
+             * @param ic
+             */
+            public void reset(ImageCanvas ic) {
             Cursor c = new Cursor(Cursor.DEFAULT_CURSOR);
             ic.setCursor(c);
             ic.removeMouseListener(this);
@@ -8854,7 +9951,7 @@ public final class Balony extends javax.swing.JFrame {
         @Override
         public void mouseEntered(MouseEvent e) {
             Cursor c = new Cursor(Cursor.CROSSHAIR_CURSOR);
-            i.setCursor(c);
+            imgCanvas.setCursor(c);
         }
 
         @Override
@@ -8871,7 +9968,7 @@ public final class Balony extends javax.swing.JFrame {
                     || (e.getButton() == MouseEvent.BUTTON3 && d == 1)) {
                 int x = e.getX();
                 int y = e.getY();
-                i.zoomIn(x, y);
+                imgCanvas.zoomIn(x, y);
             }
             if ((e.getButton() == MouseEvent.BUTTON1 && d == 1)
                     || (e.getButton() == MouseEvent.BUTTON3 && d == 0)) {
@@ -8947,6 +10044,7 @@ public final class Balony extends javax.swing.JFrame {
     private javax.swing.JTextField imageThreshManualJTextField;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

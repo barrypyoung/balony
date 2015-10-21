@@ -134,7 +134,7 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="tableSettingsJPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="92" max="32767" attributes="0"/>
+                      <EmptySpace pref="120" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -203,22 +203,22 @@
                       </Group>
                       <Group type="102" attributes="0">
                           <Component id="lowCutOffPanel" min="-2" max="-2" attributes="1"/>
-                          <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
                                   <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jTextField1" min="-2" pref="87" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="descFilterJTextField" min="-2" pref="110" max="-2" attributes="0"/>
+                                  <Component id="descFilterJTextField" max="32767" attributes="0"/>
                               </Group>
                               <Component id="spotParamsPanel" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace pref="20" max="32767" attributes="0"/>
+                  <EmptySpace pref="36" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -584,7 +584,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Misc"/>
+                <TitledBorder title="Table Data"/>
               </Border>
             </Property>
           </Properties>
@@ -630,7 +630,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="refreshTableJButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Refresh Table"/>
+                <Property name="text" type="java.lang.String" value="Refresh"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshTableJButtonActionPerformed"/>
@@ -638,7 +638,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="exportTableJButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Export Table..."/>
+                <Property name="text" type="java.lang.String" value="Export..."/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="exportTableJButtonActionPerformed"/>
@@ -868,6 +868,7 @@
         </Container>
         <Component class="javax.swing.JTextField" name="jTextField1">
           <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField1ActionPerformed"/>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextField1KeyReleased"/>
           </Events>
         </Component>

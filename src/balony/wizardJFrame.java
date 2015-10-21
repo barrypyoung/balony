@@ -78,11 +78,13 @@ public class wizardJFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Low cut-off");
+        jLabel1.setText("Low cut-off:");
+        jLabel1.setEnabled(false);
 
         jTextField1.setEnabled(false);
 
-        jLabel2.setText("High cut-off");
+        jLabel2.setText("High cut-off:");
+        jLabel2.setEnabled(false);
 
         jTextField3.setEnabled(false);
 
@@ -162,11 +164,12 @@ public class wizardJFrame extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jRadioButton3)
                     .addComponent(jRadioButton4)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(5, 5, 5)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel4))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jLabel3)
+                            .addGap(5, 5, 5)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel4)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(

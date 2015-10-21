@@ -10,13 +10,13 @@ package balony;
  */
 public class BalonyTools {
 
-    public static Float[] getMinMax(Float[] a) {
+    public static Float[] getMinMax(Object[] a) {
         float min = Float.MAX_VALUE;
         float max = -Float.MAX_VALUE;
         float value;
         
-        for (Float a1 : a) {
-            value = a1;
+        for (Object a1 : a) {
+            value = (Float) a1;
             if (value < min) {
                 min = value;
             }

@@ -163,7 +163,6 @@ public class quantSettings extends javax.swing.JFrame {
 
         jLabel3.setText("bad spots.");
 
-        autoRotateJCheckBox.setSelected(true);
         autoRotateJCheckBox.setText("Rotate image on failed auto-grid.");
         autoRotateJCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -173,7 +172,7 @@ public class quantSettings extends javax.swing.JFrame {
 
         jLabel4.setText("When analyzing multiple files, abandon auto-grid after");
 
-        jTextField1.setText("120");
+        jTextField1.setText("30");
 
         jLabel5.setText("seconds of trying.");
 

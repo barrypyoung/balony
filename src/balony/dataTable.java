@@ -510,7 +510,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        commandsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Misc"));
+        commandsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Table Data"));
 
         saveButton.setText("Save...");
         saveButton.addActionListener(new java.awt.event.ActionListener() {
@@ -519,14 +519,14 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
             }
         });
 
-        refreshTableJButton.setText("Refresh Table");
+        refreshTableJButton.setText("Refresh");
         refreshTableJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 refreshTableJButtonActionPerformed(evt);
             }
         });
 
-        exportTableJButton.setText("Export Table...");
+        exportTableJButton.setText("Export...");
         exportTableJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exportTableJButtonActionPerformed(evt);
@@ -715,6 +715,11 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                 .addContainerGap())
         );
 
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextField1KeyReleased(evt);
@@ -752,8 +757,8 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                         .addComponent(commandsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(tableSettingsJPanelLayout.createSequentialGroup()
                         .addComponent(lowCutOffPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(50, 50, 50)
-                        .addGroup(tableSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(tableSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(tableSettingsJPanelLayout.createSequentialGroup()
                                 .addComponent(jButton1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -761,9 +766,9 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel12)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(descFilterJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(descFilterJTextField))
                             .addComponent(spotParamsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         tableSettingsJPanelLayout.setVerticalGroup(
             tableSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -799,7 +804,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                         .addComponent(tableJScrollPane))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(tableSettingsJPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(92, Short.MAX_VALUE))))
+                        .addContainerGap(120, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1759,6 +1764,10 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
         
 // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     public void updatePlots() {
         for (ratioPlot rp : rPs) {
