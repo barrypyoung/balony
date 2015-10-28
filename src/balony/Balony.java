@@ -302,6 +302,9 @@ public final class Balony extends javax.swing.JFrame {
     /**
      *
      */
+    
+    public static final String PREFS_OPTIONS_UPDATE_BETA_CHECK = "optionsUpdateBetaCheck";
+    
     public static final String PREFS_BALONYVERSION = "BalonyVersion";
 
     /**
@@ -999,6 +1002,8 @@ public final class Balony extends javax.swing.JFrame {
 
         updateCheckJCheckBox.setSelected(prefs.getProperty(PREFS_OPTIONS_UPDATE_CHECK,
                 "1").equals("1"));
+        updateCheckJCheckBox1.setSelected(prefs.getProperty(PREFS_OPTIONS_UPDATE_BETA_CHECK,
+                "0").equals("1"));
 
         if (prefs.containsKey(PREFS_BALONYVERSION)) {
             BalonyVersion = prefs.getProperty(PREFS_BALONYVERSION);
@@ -1633,6 +1638,7 @@ public final class Balony extends javax.swing.JFrame {
         latestVersionJLabel = new javax.swing.JLabel();
         updateCheckJCheckBox = new javax.swing.JCheckBox();
         jButton2 = new javax.swing.JButton();
+        updateCheckJCheckBox1 = new javax.swing.JCheckBox();
         contactJPanel = new javax.swing.JPanel();
         contactJLabel = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -3694,25 +3700,41 @@ public final class Balony extends javax.swing.JFrame {
             }
         });
 
+        updateCheckJCheckBox1.setText("Include experimental pre-release versions (might not work!)");
+        updateCheckJCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateCheckJCheckBox1ActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout updaterJPanelLayout = new org.jdesktop.layout.GroupLayout(updaterJPanel);
         updaterJPanel.setLayout(updaterJPanelLayout);
         updaterJPanelLayout.setHorizontalGroup(
             updaterJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(updaterJPanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .add(updaterJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(updaterJPanelLayout.createSequentialGroup()
-                        .add(updaterJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(jLabel5)
-                            .add(jLabel3))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(updaterJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(currVersionJLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(latestVersionJLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addContainerGap()
+                        .add(updaterJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(updaterJPanelLayout.createSequentialGroup()
+                                .add(updaterJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                                    .add(jLabel5)
+                                    .add(jLabel3))
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(updaterJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                                    .add(currVersionJLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .add(latestVersionJLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .add(updaterJPanelLayout.createSequentialGroup()
+                                .add(updateCheckJCheckBox)
+                                .add(0, 0, Short.MAX_VALUE))))
                     .add(updaterJPanelLayout.createSequentialGroup()
                         .add(updaterJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(updateCheckJCheckBox)
-                            .add(jButton2))
+                            .add(updaterJPanelLayout.createSequentialGroup()
+                                .add(18, 18, 18)
+                                .add(updateCheckJCheckBox1))
+                            .add(updaterJPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .add(jButton2)))
                         .add(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -3721,6 +3743,8 @@ public final class Balony extends javax.swing.JFrame {
             .add(updaterJPanelLayout.createSequentialGroup()
                 .add(updateCheckJCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(updateCheckJCheckBox1)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(updaterJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel3)
                     .add(currVersionJLabel))
@@ -3730,7 +3754,7 @@ public final class Balony extends javax.swing.JFrame {
                     .add(latestVersionJLabel))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jButton2)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .add(20, 20, 20))
         );
 
         contactJPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Contact"));
@@ -3804,10 +3828,10 @@ public final class Balony extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(updaterJPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(updaterJPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 145, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(contactJPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(211, Short.MAX_VALUE))
+                .addContainerGap(188, Short.MAX_VALUE))
         );
 
         tabPane.addTab("Options", optionsPanel);
@@ -8015,6 +8039,12 @@ public final class Balony extends javax.swing.JFrame {
         aD.remove(scr);       
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void updateCheckJCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateCheckJCheckBox1ActionPerformed
+        prefs.setProperty(PREFS_OPTIONS_UPDATE_BETA_CHECK,
+                updateCheckJCheckBox1.isSelected() ? "1" : "0");
+        savePrefs();        
+    }//GEN-LAST:event_updateCheckJCheckBox1ActionPerformed
+
     /**
      *
      */
@@ -8044,6 +8074,7 @@ public final class Balony extends javax.swing.JFrame {
             String mostrecentname = "";
             GHRelease recent = new GHRelease();
             String recenturl = "";
+            boolean prereleaseOk = updateCheckJCheckBox1.isSelected();
             try {
                 System.out.println("Starting update check");
                 GitHub github = GitHub.connectAnonymously();
@@ -8051,7 +8082,8 @@ public final class Balony extends javax.swing.JFrame {
                 PagedIterable<GHRelease> releases = repo.listReleases();
                 for (GHRelease release : releases) {
 
-                    if (release.getPublished_at().getTime() > mostrecent && !release.isDraft() && !release.isPrerelease()
+                    if (release.getPublished_at().getTime() > mostrecent && !release.isDraft() && 
+                            (!release.isPrerelease() || prereleaseOk)
                             && !release.getAssets().isEmpty()) {
 
                         mostrecent = release.getPublished_at().getTime();
@@ -8105,69 +8137,6 @@ public final class Balony extends javax.swing.JFrame {
                 System.out.println(ex.getLocalizedMessage());
             }
 
-//            try {
-//                URL feedSource = new URL(BALONY_GOOGLECODE_FEED);
-//                SyndFeedInput input = new SyndFeedInput();
-//                SyndFeed feed = input.build(new XmlReader(feedSource));
-//                @SuppressWarnings("unchecked")
-//                List<SyndEntryImpl> entries = feed.getEntries();
-//                boolean found = false;
-//                for (SyndEntryImpl e : entries) {
-//                    @SuppressWarnings("unchecked")
-//                    ArrayList<SyndContentImpl> content = (ArrayList<SyndContentImpl>) e.getContents();
-//
-//                    for (SyndContentImpl co : content) {
-//                        String s = co.getValue();
-//                        if (s.contains("Balony-latest") && !found) {
-//                            found = true;
-//                            int i = s.lastIndexOf("a href=");
-//                            int j = s.lastIndexOf("Download");
-//                            if (i != -1 && j != -1) {
-//                                newjar = s.substring(i + 8, j - 2);
-//                                latestVersionJLabel.setText(newjar.substring(35, newjar.length() - 4));
-//                                int n = JOptionPane.NO_OPTION;
-//                                if (BalonyVersion.equals(newjar)) {
-//                                    if (!background) {
-//
-//                                        JOptionPane.showMessageDialog(getParent(),
-//                                                "You are already using the latest version of Balony.");
-//                                    }
-////                                    n = JOptionPane.showOptionDialog(null,
-////                                            "You are already using latest version of Balony. Update anyway?",
-////                                            "Warning", JOptionPane.YES_NO_OPTION,
-////                                            JOptionPane.QUESTION_MESSAGE, null,
-////                                            null, null);
-//                                } else {
-//                                    n = JOptionPane.showOptionDialog(null,
-//                                            "A newer version of Balony is available. Update?",
-//                                            "Warning", JOptionPane.YES_NO_OPTION,
-//                                            JOptionPane.QUESTION_MESSAGE, null,
-//                                            null, null);
-//                                }
-//
-//                                if (n == JOptionPane.YES_OPTION) {
-//
-//                                    newfile = e.getTitle();
-//                                    System.out.println("New jar file: " + newjar);
-//
-//                                    BalonyVersion = newjar;
-//                                    prefs.setProperty(PREFS_BALONYVERSION, BalonyVersion);
-//                                    savePrefs();
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//
-//            } catch (IOException e) {
-//                System.out.println(e.getLocalizedMessage());
-//            } catch (IllegalArgumentException e) {
-//                System.out.println(e.getLocalizedMessage());
-//            } catch (FeedException e) {
-//                System.out.println(e.getLocalizedMessage());
-//            } catch (HeadlessException e) {
-//                System.out.println(e.getLocalizedMessage());
-//            }
             if (newjar != null) {
                 System.out.println("Starting update process");
                 try {
@@ -10171,6 +10140,7 @@ public final class Balony extends javax.swing.JFrame {
     private javax.swing.JButton toggleInputOutputButton;
     private javax.swing.JButton updateCheckButton;
     private javax.swing.JCheckBox updateCheckJCheckBox;
+    private javax.swing.JCheckBox updateCheckJCheckBox1;
     private javax.swing.JPanel updaterJPanel;
     private javax.swing.JTextField upperCutOffJTextField;
     private javax.swing.JButton viewLogButton;
