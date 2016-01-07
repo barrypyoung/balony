@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.util.Properties;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -16,6 +17,8 @@ import javax.swing.UIManager.LookAndFeelInfo;
  */
 public class main {
 
+    static Balony b;
+    
     public static void main(String args[]) {
         String[] os = new String[1];
         Properties prefs = new Properties();
@@ -40,7 +43,13 @@ public class main {
                                 break;
                             }
                         }
-                    } catch (Exception e) {
+                    } catch (ClassNotFoundException e) {
+                        System.out.println("Nimbus not available");
+                    } catch (InstantiationException e) {
+                        System.out.println("Nimbus not available");
+                    } catch (IllegalAccessException e) {
+                        System.out.println("Nimbus not available");
+                    } catch (UnsupportedLookAndFeelException e) {
                         System.out.println("Nimbus not available");
                     }
                 } else if (p.equals("1")) {
@@ -53,13 +62,19 @@ public class main {
                     UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                     System.out.println("Using default look-and-feel");
                 }
-            } catch (Exception e) {
+            } catch (ClassNotFoundException e) {
+                System.out.println(e.getLocalizedMessage());
+            } catch (InstantiationException e) {
+                System.out.println(e.getLocalizedMessage());
+            } catch (IllegalAccessException e) {
+                System.out.println(e.getLocalizedMessage());
+            } catch (UnsupportedLookAndFeelException e) {
                 System.out.println(e.getLocalizedMessage());
             }
         } else {
             try {
                 String osn = System.getProperty("os.name").toLowerCase();
-                if (osn.indexOf("win") >= 0) {
+                if (osn.contains("win")) {
                     os[0] = "1";
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 } else {
@@ -71,18 +86,35 @@ public class main {
                                 break;
                             }
                         }
-                    } catch (Exception e) {
+                    } catch (ClassNotFoundException e) {
+                        UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+                        System.out.println("Nimbus not available");
+                    } catch (InstantiationException e) {
+                        UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+                        System.out.println("Nimbus not available");
+                    } catch (IllegalAccessException e) {
+                        UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+                        System.out.println("Nimbus not available");
+                    } catch (UnsupportedLookAndFeelException e) {
                         UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                         System.out.println("Nimbus not available");
                     }
 
                 }
-            } catch (Exception e) {
+            } catch (ClassNotFoundException e) {
+                System.out.println(e.getLocalizedMessage());
+            } catch (InstantiationException e) {
+                System.out.println(e.getLocalizedMessage());
+            } catch (IllegalAccessException e) {
+                System.out.println(e.getLocalizedMessage());
+            } catch (UnsupportedLookAndFeelException e) {
                 System.out.println(e.getLocalizedMessage());
             }
         }
 
-        Balony.main(os);
+        b = new Balony();
+        b.main(os);
 
     }
+   
 }

@@ -14,8 +14,11 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -652,7 +655,9 @@ public class spotInfo extends javax.swing.JFrame {
             Desktop d = Desktop.getDesktop();
             d.browse(new URI("http://www.yeastgenome.org/cgi-bin/locus.fpl?locus="
                     + orfJLabel.getText()));
-        } catch (Exception e) {
+        } catch (URISyntaxException e) {
+            System.out.println(e.getLocalizedMessage());
+        } catch (IOException e) {
             System.out.println(e.getLocalizedMessage());
         }
     }//GEN-LAST:event_geneJLabelMouseClicked
@@ -695,10 +700,10 @@ public class spotInfo extends javax.swing.JFrame {
 
     public void doFind(String s) {
 
-        int row = sourceDT.convertRowIndexToView(currRow);
+        int row2 = sourceDT.convertRowIndexToView(currRow);
 
         boolean found = false;
-        int i = row + 1;
+        int i = row2 + 1;
 
         while (!found && i < sourceDT.getRowCount()) {
             String orf = "";
@@ -731,7 +736,7 @@ public class spotInfo extends javax.swing.JFrame {
         } else {
 
             i = 0;
-            while (!found && i < row) {
+            while (!found && i < row2) {
                 String orf = "";
                 String gene = "";
                 try {
@@ -762,7 +767,7 @@ public class spotInfo extends javax.swing.JFrame {
             }
         }
 
-        i = row + 1;
+        i = row2 + 1;
         while (!found && i < sourceDT.getRowCount()) {
             String orf = "";
             String gene = "";
@@ -793,7 +798,7 @@ public class spotInfo extends javax.swing.JFrame {
         } else {
 
             i = 0;
-            while (!found && i < row) {
+            while (!found && i < row2) {
                 String orf = "";
                 String gene = "";
                 try {
@@ -951,11 +956,11 @@ public class spotInfo extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        balony.openSpotCompare(plate, row, column);
+        balony.openSpotCompare(plate, row, column, new ArrayList<String>());
     }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
-     * @param args the command line arguments
+     * @param g
      */
 //    public static void main(String args[]) {
 //        java.awt.EventQueue.invokeLater(new Runnable() {
@@ -1014,13 +1019,11 @@ public class spotInfo extends javax.swing.JFrame {
         ga.setBackground(Color.white);
         ga.clearRect(0, 0, 100, 100);
 
-        for (int i = 0; i < tableData.length; i++) {
-            if (tableData[i][1] != null && tableData[i][2] != null) {
-                double r1 = Math.sqrt((Double) tableData[i][1]) * 30;
-                double r2 = Math.sqrt((Double) tableData[i][2]) * 30;
-
+        for (Object[] tableData1 : tableData) {
+            if (tableData1[1] != null && tableData1[2] != null) {
+                double r1 = Math.sqrt((Double) tableData1[1]) * 30;
+                double r2 = Math.sqrt((Double) tableData1[2]) * 30;
                 ga.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
                 ga.setColor(Color.red);
                 ga.drawOval((int) (30 - r1 / 2), (int) (25 - r1 / 2), (int) r1, (int) r1);
                 ga.drawOval((int) (70 - r2 / 2), (int) (25 - r2 / 2), (int) r2, (int) r2);
@@ -1128,7 +1131,7 @@ public class spotInfo extends javax.swing.JFrame {
 
     class MyTableModel extends AbstractTableModel {
 
-        private String[] columnNames = {"Set #", "Ctrl", "Exp", "Ratio", "Diff"};
+        private final String[] columnNames = {"Set #", "Ctrl", "Exp", "Ratio", "Diff"};
 
         @Override
         public int getColumnCount() {

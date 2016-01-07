@@ -62,7 +62,7 @@ public final class Balony extends javax.swing.JFrame {
     /**
      * Prefs value used to store the last folder accessed from the "Scan" tab.
      */
-        public static final String PREFS_SCANFOLDER = "scanFolder";
+    public static final String PREFS_SCANFOLDER = "scanFolder";
 
     /**
      * Prefs value used to store the last folder accessed from the "Image" tab.
@@ -70,25 +70,26 @@ public final class Balony extends javax.swing.JFrame {
     public static final String PREFS_IMAGEFOLDER = "imageFolder";
 
     /**
-     * Prefs value used to store the last folder accessed from the "Analysis" tab.
+     * Prefs value used to store the last folder accessed from the "Analysis"
+     * tab.
      */
     public static final String PREFS_ANALYSISFOLDER = "analysisFolder";
 
     /**
-     * Prefs value used to store the last folder accessed from the
-     * "control" section of the "Scoring" tab.
+     * Prefs value used to store the last folder accessed from the "control"
+     * section of the "Scoring" tab.
      */
     public static final String PREFS_CTRLFOLDER = "ctrlFolder";
 
     /**
-     * Prefs value used to store the last folder accessed from the
-     * "experiment" section of the "Scoring" tab.
+     * Prefs value used to store the last folder accessed from the "experiment"
+     * section of the "Scoring" tab.
      */
     public static final String PREFS_EXPFOLDER = "expFolder";
 
     /**
-     * Prefs value used to store the last folder accessed from the "Restore Table" 
-     * button of the "Analysis" tab.
+     * Prefs value used to store the last folder accessed from the "Restore
+     * Table" button of the "Analysis" tab.
      */
     public static final String PREFS_TABLEFOLDER = "tableFolder";
 
@@ -123,14 +124,14 @@ public final class Balony extends javax.swing.JFrame {
     public static final String PREFS_SCAN_PLATE_D = "scanPlateD";
 
     /**
-     * Prefs value used to store the last selected value from the "Rotate Plates"
-     * drop-down of the "Image" tab.
+     * Prefs value used to store the last selected value from the "Rotate
+     * Plates" drop-down of the "Image" tab.
      */
     public static final String PREFS_SCAN_ROTATE = "scanRotate";
 
     /**
-     * Prefs value used to store the last selected value from the "Shrink Plates"
-     * drop-down of the "Image" tab.
+     * Prefs value used to store the last selected value from the "Shrink
+     * Plates" drop-down of the "Image" tab.
      */
     public static final String PREFS_SCAN_SHRINK = "scanShrink";
 
@@ -302,9 +303,8 @@ public final class Balony extends javax.swing.JFrame {
     /**
      *
      */
-    
     public static final String PREFS_OPTIONS_UPDATE_BETA_CHECK = "optionsUpdateBetaCheck";
-    
+
     public static final String PREFS_BALONYVERSION = "BalonyVersion";
 
     /**
@@ -321,6 +321,10 @@ public final class Balony extends javax.swing.JFrame {
      *
      */
     public static final String PREFS_XML = "prefs.xml";
+
+    public static final String PREFS_CTRL_TYPE = "scoringControlType";
+    public static final String PREFS_ALT_ODD_EVEN = "scoringOddEven";
+    public static final String PREFS_NORMALIZATION = "scoringNormMethod";
 
     /**
      *
@@ -408,195 +412,160 @@ public final class Balony extends javax.swing.JFrame {
      */
     public static final String AUTO_ANALYZE_LOG = "AutoAnalyze.log";
     public float minX,
-
-    /**
-     *
-     */
-    minY,
-
-    /**
-     *
-     */
-    maxX,
-
-    /**
-     *
-     */
-    maxY,
-
-    /**
-     *
-     */
-    stepX,
-
-    /**
-     *
-     */
-    stepY,
-
-    /**
-     *
-     */
-    circ,
-
-    /**
-     *
-     */
-    snap,
-
-    /**
-     *
-     */
-    dx,
-
-    /**
-     *
-     */
-    dy;
+            /**
+             *
+             */
+            minY,
+            /**
+             *
+             */
+            maxX,
+            /**
+             *
+             */
+            maxY,
+            /**
+             *
+             */
+            stepX,
+            /**
+             *
+             */
+            stepY,
+            /**
+             *
+             */
+            circ,
+            /**
+             *
+             */
+            snap,
+            /**
+             *
+             */
+            dx,
+            /**
+             *
+             */
+            dy;
 
     /**
      *
      */
     public static double theta;
     public static int Area[][],
-
-    /**
-     *
-     */
-
-    /**
-     *
-     */
-
-    /**
-     *
-     */
-
-    /**
-     *
-     */
-    xCoord[][], yCoord[][], width[][], height[][];
+            /**
+             *
+             */
+            /**
+             *
+             */
+            /**
+             *
+             */
+            /**
+             *
+             */
+            xCoord[][], yCoord[][], width[][], height[][];
     public static int rows,
-
-    /**
-     *
-     */
-    cols,
-
-    /**
-     *
-     */
-    dpi;
+            /**
+             *
+             */
+            cols,
+            /**
+             *
+             */
+            dpi;
     public static boolean loaded,
-
-    /**
-     *
-     */
-    rotated,
-
-    /**
-     *
-     */
-    gridded,
-
-    /**
-     *
-     */
-    threshed,
-
-    /**
-     *
-     */
-    quant,
-
-    /**
-     *
-     */
-    inverted,
-
-    /**
-     *
-     */
-    fullAuto;
+            /**
+             *
+             */
+            rotated,
+            /**
+             *
+             */
+            gridded,
+            /**
+             *
+             */
+            threshed,
+            /**
+             *
+             */
+            quant,
+            /**
+             *
+             */
+            inverted,
+            /**
+             *
+             */
+            fullAuto;
     public ImagePlus loadedIm,
-
-    /**
-     *
-     */
-    oIm,
-
-    /**
-     *
-     */
-    oToCrop,
-
-    /**
-     *
-     */
-    toCrop,
-
-    /**
-     *
-     */
-    cropA,
-
-    /**
-     *
-     */
-    cropB,
-
-    /**
-     *
-     */
-    cropC,
-
-    /**
-     *
-     */
-    cropD,
-
-    /**
-     *
-     */
-    autoTmp,
-
-    /**
-     *
-     */
-    zoomBox;
+            /**
+             *
+             */
+            oIm,
+            /**
+             *
+             */
+            oToCrop,
+            /**
+             *
+             */
+            toCrop,
+            /**
+             *
+             */
+            cropA,
+            /**
+             *
+             */
+            cropB,
+            /**
+             *
+             */
+            cropC,
+            /**
+             *
+             */
+            cropD,
+            /**
+             *
+             */
+            autoTmp,
+            /**
+             *
+             */
+            zoomBox;
     public static ColorProcessor oriCp,
-
-    /**
-     *
-     */
-    tcCp;
+            /**
+             *
+             */
+            tcCp;
 
     /**
      *
      */
     public static File currFolder;
     public static Integer currSet,
-
-    /**
-     *
-     */
-    currPlate;
+            /**
+             *
+             */
+            currPlate;
     public int lastThresh,
-
-    /**
-     *
-     */
-    badSpots,
-
-    /**
-     *
-     */
-    bestThresh,
-
-    /**
-     *
-     */
-    bestSpots;
+            /**
+             *
+             */
+            badSpots,
+            /**
+             *
+             */
+            bestThresh,
+            /**
+             *
+             */
+            bestSpots;
 
     /**
      *
@@ -608,11 +577,10 @@ public final class Balony extends javax.swing.JFrame {
      */
     public int rethresh;
     public File currFile,
-
-    /**
-     *
-     */
-    currScanFile;
+            /**
+             *
+             */
+            currScanFile;
 
     /**
      *
@@ -634,43 +602,36 @@ public final class Balony extends javax.swing.JFrame {
      */
     public spotData expData;
     public int minCtrlSet,
-
-    /**
-     *
-     */
-    maxCtrlSet,
-
-    /**
-     *
-     */
-    minExpSet,
-
-    /**
-     *
-     */
-    maxExpSet;
+            /**
+             *
+             */
+            maxCtrlSet,
+            /**
+             *
+             */
+            minExpSet,
+            /**
+             *
+             */
+            maxExpSet;
     public int minCtrlPlate,
-
-    /**
-     *
-     */
-    maxCtrlPlate,
-
-    /**
-     *
-     */
-    minExpPlate,
-
-    /**
-     *
-     */
-    maxExpPlate;
+            /**
+             *
+             */
+            maxCtrlPlate,
+            /**
+             *
+             */
+            minExpPlate,
+            /**
+             *
+             */
+            maxExpPlate;
     public int autoCheckPos,
-
-    /**
-     *
-     */
-    fullAutoFail;
+            /**
+             *
+             */
+            fullAutoFail;
 
     /**
      *
@@ -735,7 +696,7 @@ public final class Balony extends javax.swing.JFrame {
     /**
      *
      */
-    public HashMap<String, sgdInfo> allSGDInfo;
+    public static HashMap<String, sgdInfo> allSGDInfo;
 
     /**
      *
@@ -802,32 +763,27 @@ public final class Balony extends javax.swing.JFrame {
      */
     public ArrayList<Integer[]> yeOval;
     public boolean fileMod,
-
-    /**
-     *
-     */
-    norethresh,
-
-    /**
-     *
-     */
-    calibrated,
-
-    /**
-     *
-     */
-    incalibration,
-
-    /**
-     *
-     */
-    autoGridSetting;
+            /**
+             *
+             */
+            norethresh,
+            /**
+             *
+             */
+            calibrated,
+            /**
+             *
+             */
+            incalibration,
+            /**
+             *
+             */
+            autoGridSetting;
     public QuantScan qs,
-
-    /**
-     *
-     */
-    qs1;
+            /**
+             *
+             */
+            qs1;
 
     /**
      *
@@ -975,6 +931,16 @@ public final class Balony extends javax.swing.JFrame {
         threshJSlider.setValue(Integer.parseInt(thr));
         imageThreshManualJTextField.setText(thr);
         updateSlider();
+
+        plateCtrlRadioButton.setSelected(prefs.getProperty(PREFS_CTRL_TYPE, "1").equals("1"));
+        altColRadioButton.setSelected(prefs.getProperty(PREFS_CTRL_TYPE, "1").equals("2"));
+        altRowRadioButton.setSelected(prefs.getProperty(PREFS_CTRL_TYPE, "1").equals("3"));
+
+        altOddRadioButton.setSelected(prefs.getProperty(PREFS_ALT_ODD_EVEN, "1").equals("1"));
+        altEvenRadioButton.setSelected(prefs.getProperty(PREFS_ALT_ODD_EVEN, "1").equals("2"));
+
+        normPlateMedianButton.setSelected(prefs.getProperty(PREFS_NORMALIZATION, "1").equals("1"));
+        normORFButton.setSelected(prefs.getProperty(PREFS_NORMALIZATION, "1").equals("2"));
 
         scoreRCComboBox.setSelectedItem(prefs.getProperty(PREFS_SCORE_NORM,
                 "Median"));
@@ -1265,22 +1231,27 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
 
-    void openSpotCompare(int plate, int row, int column) {
-        
+    public spotCompare openSpotCompare(int plate, int row, int column, ArrayList<String> screens) {
+
         spotCompare spc = new spotCompare();
         spc.setIconImage(balloonImage);
         spc.setTitle("Spot Compare");
-        
+
         ArrayList<String> ads = new ArrayList<String>();
-        
-        for(int i = 0; i < dataTablesComboBox.getItemCount(); i++ ) {
-            ads.add( dataTablesComboBox.getItemAt(i).toString());
+
+        if (screens.isEmpty()) {
+            for (int i = 0; i < dataTablesComboBox.getItemCount(); i++) {
+                ads.add(dataTablesComboBox.getItemAt(i).toString());
+            }
+        } else {
+            ads = screens;
         }
-        
+
         spc.setScreens(ads);
-        spc.balony=this;
+        spc.balony = this;
         spc.setPosition(plate, row, column);
         spc.setVisible(true);
+        return spc;
     }
 
     /**
@@ -1288,10 +1259,10 @@ public final class Balony extends javax.swing.JFrame {
      */
     public class sgdUpdater extends SwingWorker<String, Void> {
 
-            /**
-             *
-             */
-            public static final String SGD_FEATURES_URL
+        /**
+         *
+         */
+        public static final String SGD_FEATURES_URL
                 = "http://downloads.yeastgenome.org/curation/chromosomal_feature/SGD_features.tab";
 
         @Override
@@ -1462,6 +1433,10 @@ public final class Balony extends javax.swing.JFrame {
         scanprocessButton = new javax.swing.JButton();
         scoreRCComboBox = new javax.swing.JComboBox();
         updateCheckButton = new javax.swing.JButton();
+        buttonGroup3 = new javax.swing.ButtonGroup();
+        scoreCompetitionJCheckBox = new javax.swing.JCheckBox();
+        normButtonGroup = new javax.swing.ButtonGroup();
+        buttonGroup4 = new javax.swing.ButtonGroup();
         tabPane = new javax.swing.JTabbedPane();
         scanPanel = new javax.swing.JPanel();
         scanPlateNamingPanel = new javax.swing.JPanel();
@@ -1580,7 +1555,6 @@ public final class Balony extends javax.swing.JFrame {
         normalPanel = new javax.swing.JPanel();
         scoreRCJCheckBox = new javax.swing.JCheckBox();
         scoreSpatialJCheckBox = new javax.swing.JCheckBox();
-        scoreCompetitionJCheckBox = new javax.swing.JCheckBox();
         ctrlPanel = new javax.swing.JPanel();
         ctrldirTextField = new javax.swing.JTextField(40);
         ctrldirButton = new javax.swing.JButton();
@@ -1601,6 +1575,16 @@ public final class Balony extends javax.swing.JFrame {
         scoreKeysComboBox = new javax.swing.JComboBox();
         keyFileLoadButton = new javax.swing.JButton();
         scoringRefreshButton = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        plateCtrlRadioButton = new javax.swing.JRadioButton();
+        altColRadioButton = new javax.swing.JRadioButton();
+        altRowRadioButton = new javax.swing.JRadioButton();
+        altOddRadioButton = new javax.swing.JRadioButton();
+        altEvenRadioButton = new javax.swing.JRadioButton();
+        jPanel2 = new javax.swing.JPanel();
+        normPlateMedianButton = new javax.swing.JRadioButton();
+        normORFButton = new javax.swing.JRadioButton();
+        normORFJTextField = new javax.swing.JTextField();
         analysistabPanel = new javax.swing.JPanel();
         analysisTablesPanel = new javax.swing.JPanel();
         analysisLoadButton = new javax.swing.JButton();
@@ -1692,6 +1676,8 @@ public final class Balony extends javax.swing.JFrame {
                 updateCheckButtonActionPerformed(evt);
             }
         });
+
+        scoreCompetitionJCheckBox.setText("Competition");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Balony");
@@ -2243,7 +2229,7 @@ public final class Balony extends javax.swing.JFrame {
         );
         scanPreviewPanelLayout.setVerticalGroup(
             scanPreviewPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 145, Short.MAX_VALUE)
+            .add(0, 0, Short.MAX_VALUE)
         );
 
         scanPreviewJCheckBox.setSelected(true);
@@ -2307,7 +2293,7 @@ public final class Balony extends javax.swing.JFrame {
                         .add(scanPreviewJCheckBox)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(scanPreviewPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tabPane.addTab("Scan", scanPanel);
@@ -3060,7 +3046,7 @@ public final class Balony extends javax.swing.JFrame {
             }
         });
 
-        normalPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Normalization"));
+        normalPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Spot Correction"));
 
         scoreRCJCheckBox.setSelected(true);
         scoreRCJCheckBox.setText("Row / Column");
@@ -3072,8 +3058,6 @@ public final class Balony extends javax.swing.JFrame {
 
         scoreSpatialJCheckBox.setText("Spatial");
 
-        scoreCompetitionJCheckBox.setText("Competition");
-
         org.jdesktop.layout.GroupLayout normalPanelLayout = new org.jdesktop.layout.GroupLayout(normalPanel);
         normalPanel.setLayout(normalPanelLayout);
         normalPanelLayout.setHorizontalGroup(
@@ -3082,9 +3066,8 @@ public final class Balony extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(normalPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(scoreRCJCheckBox)
-                    .add(scoreSpatialJCheckBox)
-                    .add(scoreCompetitionJCheckBox))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .add(scoreSpatialJCheckBox))
+                .addContainerGap(102, Short.MAX_VALUE))
         );
         normalPanelLayout.setVerticalGroup(
             normalPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -3093,12 +3076,11 @@ public final class Balony extends javax.swing.JFrame {
                 .add(scoreRCJCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(scoreSpatialJCheckBox)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(scoreCompetitionJCheckBox)
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         ctrlPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Control Plates"));
+        ctrlPanel.setPreferredSize(new java.awt.Dimension(210, 99));
 
         ctrldirTextField.setEditable(false);
 
@@ -3106,6 +3088,12 @@ public final class Balony extends javax.swing.JFrame {
         ctrldirButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ctrldirButtonActionPerformed(evt);
+            }
+        });
+
+        ctrlplateComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ctrlplateComboBoxActionPerformed(evt);
             }
         });
 
@@ -3119,7 +3107,7 @@ public final class Balony extends javax.swing.JFrame {
                     .add(ctrlplateComboBox, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(ctrlPanelLayout.createSequentialGroup()
                         .add(ctrldirTextField)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(ctrldirButton)))
                 .addContainerGap())
         );
@@ -3127,15 +3115,16 @@ public final class Balony extends javax.swing.JFrame {
             ctrlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, ctrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(ctrlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(ctrldirButton)
-                    .add(ctrldirTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(ctrlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(ctrldirTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(ctrldirButton))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(ctrlplateComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         expPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Experimental Plates"));
+        expPanel.setPreferredSize(new java.awt.Dimension(210, 99));
 
         expButton.setText("...");
         expButton.addActionListener(new java.awt.event.ActionListener() {
@@ -3145,6 +3134,12 @@ public final class Balony extends javax.swing.JFrame {
         });
 
         expdirTextField.setEditable(false);
+
+        expplateComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                expplateComboBoxActionPerformed(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout expPanelLayout = new org.jdesktop.layout.GroupLayout(expPanel);
         expPanel.setLayout(expPanelLayout);
@@ -3200,6 +3195,7 @@ public final class Balony extends javax.swing.JFrame {
 
         scoreSaveButtonGroup.add(scoreByOrfRadioButton);
         scoreByOrfRadioButton.setText("Score by ORF");
+        scoreByOrfRadioButton.setEnabled(false);
         scoreByOrfRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 scoreByOrfRadioButtonActionPerformed(evt);
@@ -3277,7 +3273,7 @@ public final class Balony extends javax.swing.JFrame {
                         .add(scoreArraykeyLabel)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                         .add(keyFileLoadButton)
-                        .add(0, 74, Short.MAX_VALUE)))
+                        .add(0, 47, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         scoreKeyfilePanelLayout.setVerticalGroup(
@@ -3299,6 +3295,133 @@ public final class Balony extends javax.swing.JFrame {
             }
         });
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Control Type"));
+
+        buttonGroup3.add(plateCtrlRadioButton);
+        plateCtrlRadioButton.setSelected(true);
+        plateCtrlRadioButton.setText("Control Plates");
+        plateCtrlRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                plateCtrlRadioButtonActionPerformed(evt);
+            }
+        });
+
+        buttonGroup3.add(altColRadioButton);
+        altColRadioButton.setText("Alternate columns");
+        altColRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                altColRadioButtonActionPerformed(evt);
+            }
+        });
+
+        buttonGroup3.add(altRowRadioButton);
+        altRowRadioButton.setText("Alternate rows");
+        altRowRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                altRowRadioButtonActionPerformed(evt);
+            }
+        });
+
+        buttonGroup4.add(altOddRadioButton);
+        altOddRadioButton.setSelected(true);
+        altOddRadioButton.setText("Odd");
+        altOddRadioButton.setEnabled(false);
+        altOddRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                altOddRadioButtonActionPerformed(evt);
+            }
+        });
+
+        buttonGroup4.add(altEvenRadioButton);
+        altEvenRadioButton.setText("Even");
+        altEvenRadioButton.setEnabled(false);
+        altEvenRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                altEvenRadioButtonActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel1Layout.createSequentialGroup()
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(altColRadioButton)
+                    .add(plateCtrlRadioButton)
+                    .add(altRowRadioButton))
+                .add(18, 18, 18)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(altEvenRadioButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 58, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(17, Short.MAX_VALUE))
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(altOddRadioButton)
+                        .add(0, 0, Short.MAX_VALUE))))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(plateCtrlRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(altColRadioButton)
+                    .add(altOddRadioButton))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(altRowRadioButton)
+                    .add(altEvenRadioButton))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Normalization"));
+
+        normButtonGroup.add(normPlateMedianButton);
+        normPlateMedianButton.setSelected(true);
+        normPlateMedianButton.setText("Plate Median");
+        normPlateMedianButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                normPlateMedianButtonActionPerformed(evt);
+            }
+        });
+
+        normButtonGroup.add(normORFButton);
+        normORFButton.setText("ORF/Gene");
+        normORFButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                normORFButtonActionPerformed(evt);
+            }
+        });
+
+        normORFJTextField.setEnabled(false);
+
+        org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(normPlateMedianButton)
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(normORFButton)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(normORFJTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 82, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(29, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(normPlateMedianButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(normORFButton)
+                    .add(normORFJTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(29, Short.MAX_VALUE))
+        );
+
         org.jdesktop.layout.GroupLayout scoringtabaPanelLayout = new org.jdesktop.layout.GroupLayout(scoringtabaPanel);
         scoringtabaPanel.setLayout(scoringtabaPanelLayout);
         scoringtabaPanelLayout.setHorizontalGroup(
@@ -3308,30 +3431,42 @@ public final class Balony extends javax.swing.JFrame {
                 .add(scoringtabaPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(savescorePanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(scoringtabaPanelLayout.createSequentialGroup()
-                        .add(normalPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(scoreKeyfilePanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(expPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(ctrlPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(scoringRefreshButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .add(scoringtabaPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(scoringtabaPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                                .add(org.jdesktop.layout.GroupLayout.LEADING, scoringRefreshButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .add(scoringtabaPanelLayout.createSequentialGroup()
+                                    .add(scoringtabaPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                                        .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .add(ctrlPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE))
+                                    .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                    .add(scoringtabaPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                                        .add(expPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .add(scoreKeyfilePanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                            .add(normalPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         scoringtabaPanelLayout.setVerticalGroup(
             scoringtabaPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(scoringtabaPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(ctrlPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(scoringtabaPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                    .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(expPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(scoringtabaPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(ctrlPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(expPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(scoringRefreshButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(scoringtabaPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                    .add(normalPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(scoreKeyfilePanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .add(scoringtabaPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(scoreKeyfilePanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(normalPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(savescorePanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(57, 57, 57))
+                .add(savescorePanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(43, 43, 43))
         );
 
         tabPane.addTab("Scoring", scoringtabaPanel);
@@ -3397,7 +3532,7 @@ public final class Balony extends javax.swing.JFrame {
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(analysisOpenDataTablesJCheckBox)
                         .add(18, 18, 18)
-                        .add(restoreTableButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE))
+                        .add(restoreTableButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .add(analysisTablesPanelLayout.createSequentialGroup()
                         .add(wizardModeJCheckBox)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -3831,7 +3966,7 @@ public final class Balony extends javax.swing.JFrame {
                 .add(updaterJPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 145, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(contactJPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(188, Short.MAX_VALUE))
+                .addContainerGap(158, Short.MAX_VALUE))
         );
 
         tabPane.addTab("Options", optionsPanel);
@@ -3842,12 +3977,12 @@ public final class Balony extends javax.swing.JFrame {
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .add(tabPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(0, 4, Short.MAX_VALUE))
+                .add(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(tabPane)
+                .add(tabPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(0, 0, Short.MAX_VALUE))
         );
 
@@ -3858,6 +3993,7 @@ public final class Balony extends javax.swing.JFrame {
 
     /**
      * Prepare to load the image
+     *
      * @param f The file to load
      * @param rG Reset the grid if true
      */
@@ -4041,13 +4177,12 @@ public final class Balony extends javax.swing.JFrame {
     }
 
     // Draws the current grid over an image
-
     /**
      *
      * @param ic
      * @param c
      */
-        public void drawGrid(ImageCanvas ic, Color c) {
+    public void drawGrid(ImageCanvas ic, Color c) {
         float i;
         GeneralPath path = new GeneralPath();
         for (i = 0; i < cols; i++) {
@@ -4069,11 +4204,10 @@ public final class Balony extends javax.swing.JFrame {
     }
 
     // Find spots within the grid area and quantify them
-
     /**
      *
      */
-        public void doQuant() {
+    public void doQuant() {
         if (threshed == false) {
             messageText.append("\nQuantification requires thresholded image.");
             return;
@@ -4450,11 +4584,10 @@ public final class Balony extends javax.swing.JFrame {
     }
 
     // Draw shapes corresponding to measured colonies
-
     /**
      *
      */
-        public void drawShapes() {
+    public void drawShapes() {
         Overlay o = new Overlay();
 
         if (!yeOval.isEmpty()) {
@@ -4787,6 +4920,7 @@ public final class Balony extends javax.swing.JFrame {
             }
             doSave(false);
         }
+
     }
 
     /**
@@ -6431,20 +6565,20 @@ public final class Balony extends javax.swing.JFrame {
      */
     public class compMenu extends JMenuItem {
 
-            /**
-             *
-             */
-            public dataTable thisTable;
+        /**
+         *
+         */
+        public dataTable thisTable;
 
-            /**
-             *
-             */
-            public dataTable compTable;
+        /**
+         *
+         */
+        public dataTable compTable;
 
-            /**
-             *
-             */
-            public void compMenu() {
+        /**
+         *
+         */
+        public void compMenu() {
         }
     }
     private void dataTablesComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dataTablesComboBoxActionPerformed
@@ -7572,6 +7706,10 @@ public final class Balony extends javax.swing.JFrame {
      *
      */
     public void doAddCtrl() {
+        if (!plateCtrlRadioButton.isSelected()) {
+            return;
+        }
+
         if (ctrlplateComboBox.getItemCount() == 0) {
             return;
         }
@@ -7630,6 +7768,7 @@ public final class Balony extends javax.swing.JFrame {
         }
         ctrlData.setArea(new Integer[maxCtrlSet + 1][maxCtrlPlate + 1][ctrlData.getRows() + 1][ctrlData.getCols() + 1]);
         ctrlData.setImgfile(new String[maxCtrlSet + 1][maxCtrlPlate + 1]);
+
         for (File f : files) {
             try {
                 String t;
@@ -7693,12 +7832,22 @@ public final class Balony extends javax.swing.JFrame {
                 }
             }
         }
+
         // Need initial scan to determine sets, plates, rows, cols
+        if (!plateCtrlRadioButton.isSelected()) {
+            ctrlData = new spotData();
+            maxCtrlSet = 0;
+            minCtrlSet = 100000;
+            maxCtrlPlate = 0;
+            minCtrlPlate = 100000;
+        }
+
         expData = new spotData();
         maxExpSet = 0;
         minExpSet = 1000000;
         maxExpPlate = 0;
         minExpPlate = 1000000;
+
         for (File f : files) {
             try {
                 String t;
@@ -7707,17 +7856,47 @@ public final class Balony extends javax.swing.JFrame {
                 while (!(t = in.readLine()).equals(BEGIN_DATA)) {
                     if (t.length() > 4) {
                         if (t.startsWith("Rows")) {
-                            expData.setRows(Integer.parseInt(t.substring(6)));
+                            int r = Integer.parseInt(t.substring(6));
+
+                            expData.setRows(r);
+
+                            if (altRowRadioButton.isSelected()) {
+                                ctrlData.setRows(r / 2);
+                                expData.setRows(r / 2);
+                            }
+
+                            if (altColRadioButton.isSelected()) {
+                                ctrlData.setRows(r);
+                            }
                         }
+
                         if (t.startsWith("Cols")) {
-                            expData.setCols(Integer.parseInt(t.substring(6)));
+                            int c = Integer.parseInt(t.substring(6));
+
+                            expData.setCols(c);
+
+                            if (altColRadioButton.isSelected()) {
+                                ctrlData.setCols(c / 2);
+                                expData.setCols(c / 2);
+                            }
+
+                            if (altRowRadioButton.isSelected()) {
+                                ctrlData.setCols(c);
+                            }
+
                         }
                         if (t.startsWith("Set:")) {
                             set = Integer.parseInt(t.substring(5));
                             if (set > maxExpSet) {
                                 maxExpSet = set;
+                                if (!plateCtrlRadioButton.isSelected()) {
+                                    maxCtrlSet = set;
+                                }
                             }
                             if (set < minExpSet) {
+                                if (!plateCtrlRadioButton.isSelected()) {
+                                    minCtrlSet = set;
+                                }
                                 minExpSet = set;
                             }
                         }
@@ -7725,8 +7904,14 @@ public final class Balony extends javax.swing.JFrame {
                             plate = Integer.parseInt(t.substring(7));
                             if (plate > maxExpPlate) {
                                 maxExpPlate = plate;
+                                if (!plateCtrlRadioButton.isSelected()) {
+                                    maxCtrlPlate = plate;
+                                }
                             }
                             if (plate < minExpPlate) {
+                                if (!plateCtrlRadioButton.isSelected()) {
+                                    minCtrlPlate = plate;
+                                }
                                 minExpPlate = plate;
                             }
                         }
@@ -7736,8 +7921,15 @@ public final class Balony extends javax.swing.JFrame {
                 System.out.println(e.getLocalizedMessage());
             }
         }
+
         expData.setArea(new Integer[maxExpSet + 1][maxExpPlate + 1][expData.getRows() + 1][expData.getCols() + 1]);
         expData.setImgfile(new String[maxExpSet + 1][maxExpPlate + 1]);
+
+        if (!plateCtrlRadioButton.isSelected()) {
+            ctrlData.setArea(new Integer[maxCtrlSet + 1][maxCtrlPlate + 1][ctrlData.getRows() + 1][ctrlData.getCols() + 1]);
+            ctrlData.setImgfile(new String[maxCtrlSet + 1][maxCtrlPlate + 1]);
+        }
+
         for (File f : files) {
             try {
                 String t;
@@ -7757,20 +7949,68 @@ public final class Balony extends javax.swing.JFrame {
                         }
                         if (t.startsWith("Source") && set > 0 && plate > 0) {
                             expData.getImgfile()[set][plate] = f.getName();
+                            if (!plateCtrlRadioButton.isSelected()) {
+                                ctrlData.getImgfile()[set][plate] = f.getName();
+                            }
                         }
                         if (t.startsWith("Name")) {
                             expData.setName(t.substring(6));
+                            if (!plateCtrlRadioButton.isSelected()) {
+                                ctrlData.setName(t.substring(6));
+                            }
                         }
                     }
                 }
+
                 in.readLine();
                 while ((t = in.readLine()) != null && set > 0 && plate > 0) {
                     String nums[] = t.split("\t");
                     if (nums.length > 2) {
+
+                        int areano = Integer.parseInt(nums[2]);
                         int rowno = Integer.parseInt(nums[0]);
                         int colno = Integer.parseInt(nums[1]);
-                        int areano = Integer.parseInt(nums[2]);
-                        expData.getArea()[set][plate][rowno][colno] = areano;
+
+                        if (plateCtrlRadioButton.isSelected()) {
+                            expData.getArea()[set][plate][rowno][colno] = areano;
+                        }
+
+                        if (altColRadioButton.isSelected()) {
+                            if (altOddRadioButton.isSelected()) {
+                                if (colno % 2 == 0) {
+                                    expData.getArea()[set][plate][rowno][colno / 2] = areano;
+                                } else {
+                                    ctrlData.getArea()[set][plate][rowno][(colno + 1) / 2] = areano;
+                                }
+                            }
+
+                            if (altEvenRadioButton.isSelected()) {
+                                if (colno % 2 == 0) {
+                                    ctrlData.getArea()[set][plate][rowno][colno / 2] = areano;
+                                } else {
+                                    expData.getArea()[set][plate][rowno][(colno + 1) / 2] = areano;
+                                }
+                            }
+                        }
+
+                        if (altRowRadioButton.isSelected()) {
+                            if (altOddRadioButton.isSelected()) {
+                                if (rowno % 2 == 0) {
+                                    expData.getArea()[set][plate][rowno / 2][colno] = areano;
+                                } else {
+                                    ctrlData.getArea()[set][plate][(rowno + 1) / 2][colno] = areano;
+                                }
+                            }
+
+                            if (altEvenRadioButton.isSelected()) {
+                                if (rowno % 2 == 0) {
+                                    ctrlData.getArea()[set][plate][rowno / 2][colno] = areano;
+                                } else {
+                                    expData.getArea()[set][plate][(rowno + 1) / 2][colno] = areano;
+                                }
+                            }
+                        }
+
                     }
                 }
             } catch (IOException e) {
@@ -7780,6 +8020,11 @@ public final class Balony extends javax.swing.JFrame {
         messageText.append("\nDone loading control data");
         messageText.append("\nSets: ").append(minExpSet).append("-").append(maxExpSet);
         messageText.append("\nPlates: ").append(minExpPlate).append("-").append(maxExpPlate);
+
+        if (!plateCtrlRadioButton.isSelected()) {
+            normalizeControl();
+        }
+
         normalizeExperiment();
     }
 
@@ -8023,7 +8268,7 @@ public final class Balony extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void wizardModeJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wizardModeJCheckBoxActionPerformed
-        prefs.setProperty(PREFS_ANALYSIS_WIZARDMODE, wizardModeJCheckBox.isSelected()?"1":"0");
+        prefs.setProperty(PREFS_ANALYSIS_WIZARDMODE, wizardModeJCheckBox.isSelected() ? "1" : "0");
         savePrefs();
     }//GEN-LAST:event_wizardModeJCheckBoxActionPerformed
 
@@ -8036,14 +8281,125 @@ public final class Balony extends javax.swing.JFrame {
         dataTables.remove(aD.get(scr).getDt());
         dataTablesComboBox.removeItem(aD.get(scr).getDt());
         aD.get(scr).getDt().dispose();
-        aD.remove(scr);       
+        aD.remove(scr);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void updateCheckJCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateCheckJCheckBox1ActionPerformed
         prefs.setProperty(PREFS_OPTIONS_UPDATE_BETA_CHECK,
                 updateCheckJCheckBox1.isSelected() ? "1" : "0");
-        savePrefs();        
+        savePrefs();
     }//GEN-LAST:event_updateCheckJCheckBox1ActionPerformed
+
+    private void ctrlplateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctrlplateComboBoxActionPerformed
+        updateScoringFileName();
+    }//GEN-LAST:event_ctrlplateComboBoxActionPerformed
+
+    public void updateScoringFileName() {
+        if (ctrlplateComboBox.getSelectedItem() != null && expplateComboBox.getSelectedItem() != null) {
+            scorenameTextField.setText(ctrlplateComboBox.getSelectedItem().toString() + "--"
+                    + expplateComboBox.getSelectedItem().toString());
+        }
+    }
+
+    private void plateCtrlRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plateCtrlRadioButtonActionPerformed
+        ctrlTypeChanged();
+    }//GEN-LAST:event_plateCtrlRadioButtonActionPerformed
+
+    private void altColRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_altColRadioButtonActionPerformed
+        ctrlTypeChanged();
+    }//GEN-LAST:event_altColRadioButtonActionPerformed
+
+    private void altRowRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_altRowRadioButtonActionPerformed
+        ctrlTypeChanged();
+    }//GEN-LAST:event_altRowRadioButtonActionPerformed
+
+    private void normPlateMedianButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_normPlateMedianButtonActionPerformed
+        normButtonPressed();
+    }//GEN-LAST:event_normPlateMedianButtonActionPerformed
+
+    private void normORFButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_normORFButtonActionPerformed
+        normButtonPressed();
+    }//GEN-LAST:event_normORFButtonActionPerformed
+
+    private void expplateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_expplateComboBoxActionPerformed
+        updateScoringFileName();
+    }//GEN-LAST:event_expplateComboBoxActionPerformed
+
+    private void altOddRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_altOddRadioButtonActionPerformed
+        oddEvenChanged();
+    }//GEN-LAST:event_altOddRadioButtonActionPerformed
+
+    private void altEvenRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_altEvenRadioButtonActionPerformed
+        oddEvenChanged();
+    }//GEN-LAST:event_altEvenRadioButtonActionPerformed
+
+    public void oddEvenChanged() {
+        if (altOddRadioButton.isSelected()) {
+            prefs.setProperty(PREFS_ALT_ODD_EVEN, "1");
+        }
+
+        if (altEvenRadioButton.isSelected()) {
+            prefs.setProperty(PREFS_ALT_ODD_EVEN, "2");
+        }
+
+    }
+
+    public void normButtonPressed() {
+        if (normPlateMedianButton.isSelected()) {
+            normORFJTextField.setEnabled(false);
+            prefs.setProperty(PREFS_NORMALIZATION, "1");
+        } else {
+            normORFJTextField.setEnabled(true);
+        }
+
+        if (normORFButton.isSelected()) {
+            prefs.setProperty(PREFS_NORMALIZATION, "2");
+        }
+
+        savePrefs();
+
+    }
+
+    private void ctrlTypeChanged() {
+
+        for (Component c : ctrlPanel.getComponents()) {
+            if (plateCtrlRadioButton.isSelected()) {
+
+                c.setEnabled(true);
+                altOddRadioButton.setEnabled(false);
+                altEvenRadioButton.setEnabled(false);
+
+            } else {
+                c.setEnabled(false);
+                altOddRadioButton.setEnabled(true);
+                altEvenRadioButton.setEnabled(true);
+            }
+        }
+
+        if (plateCtrlRadioButton.isSelected()) {
+            prefs.setProperty(PREFS_CTRL_TYPE, "1");
+        }
+
+        if (altColRadioButton.isSelected()) {
+            prefs.setProperty(PREFS_CTRL_TYPE, "2");
+            JOptionPane.showMessageDialog(this,
+                    "Warning: using alternate  columns as the control means that the\n" +
+                    "scored array will have half the number of columns as the input and\n"+
+                    "this MUST be reflected in the key file.",
+                    PLATE, JOptionPane.WARNING_MESSAGE);
+        }
+
+        if (altRowRadioButton.isSelected()) {
+            prefs.setProperty(PREFS_CTRL_TYPE, "3");
+            JOptionPane.showMessageDialog(this,
+                    "Warning: using alternate  rows as the control means that the\n" +
+                    "scored array will have half the number of rows as the input and\n"+
+                    "this MUST be reflected in the key file.",
+                    PLATE, JOptionPane.WARNING_MESSAGE);
+        }
+
+        savePrefs();
+    }
 
     /**
      *
@@ -8051,21 +8407,19 @@ public final class Balony extends javax.swing.JFrame {
     public class updateWorker extends SwingWorker<String, Void> {
 
         public String newjar,
+                /**
+                 *
+                 */
+                newfile,
+                /**
+                 *
+                 */
+                newversion;
 
-            /**
-             *
-             */
-            newfile,
-
-            /**
-             *
-             */
-            newversion;
-
-            /**
-             *
-             */
-            public boolean background;
+        /**
+         *
+         */
+        public boolean background;
 
         @Override
         protected String doInBackground() throws Exception {
@@ -8082,8 +8436,8 @@ public final class Balony extends javax.swing.JFrame {
                 PagedIterable<GHRelease> releases = repo.listReleases();
                 for (GHRelease release : releases) {
 
-                    if (release.getPublished_at().getTime() > mostrecent && !release.isDraft() && 
-                            (!release.isPrerelease() || prereleaseOk)
+                    if (release.getPublished_at().getTime() > mostrecent && !release.isDraft()
+                            && (!release.isPrerelease() || prereleaseOk)
                             && !release.getAssets().isEmpty()) {
 
                         mostrecent = release.getPublished_at().getTime();
@@ -8361,10 +8715,10 @@ public final class Balony extends javax.swing.JFrame {
                             totArea += as[count];
                         }
                     }
-                    minX = (float) BalonyTools.getMinMax( alX.toArray())[0];
-                    maxX = (float) BalonyTools.getMinMax( alX.toArray())[1];
-                    minY = (float) BalonyTools.getMinMax( alY.toArray())[0];
-                    maxY = (float) BalonyTools.getMinMax( alY.toArray())[1];
+                    minX = (float) BalonyTools.getMinMax(alX.toArray())[0];
+                    maxX = (float) BalonyTools.getMinMax(alX.toArray())[1];
+                    minY = (float) BalonyTools.getMinMax(alY.toArray())[0];
+                    maxY = (float) BalonyTools.getMinMax(alY.toArray())[1];
                     System.out.println("minY: " + minY);
                     System.out.println("maxY: " + maxY);
                     stepX = (maxX - minX) / (cols - 1);
@@ -8487,284 +8841,514 @@ public final class Balony extends javax.swing.JFrame {
      *
      */
     public void normalizeControl() {
-        double rav;
+//        double rav;
         ctrlData.setNormArea(new Double[maxCtrlSet + 1][maxCtrlPlate + 1][ctrlData.getRows() + 1][ctrlData.getCols() + 1]);
-        for (int s = minCtrlSet; s <= maxCtrlSet; s++) {
-            for (int p = minCtrlPlate; p <= maxCtrlPlate; p++) {
-                int median;
-                ArrayList<Integer> tmpSpots = new ArrayList<Integer>();
-                for (int i = 1; i <= ctrlData.getRows(); i++) {
-                    for (int j = 1; j <= ctrlData.getCols(); j++) {
-                        if (ctrlData.getArea()[s][p][i][j] == null) {
-                            JOptionPane.showMessageDialog(this, "Data missing "
-                                    + "for control plate (set " + s + ", plate "
-                                    + p + ").",
-                                    "Warning", JOptionPane.WARNING_MESSAGE);
-                            System.out.println("Row: " + i + ", Col " + j);
-                            return;
-                        }
-                        if (ctrlData.getArea()[s][p][i][j] != 0) {
-                            tmpSpots.add(ctrlData.getArea()[s][p][i][j]);
-                        }
-                    }
-                }
-                Collections.sort(tmpSpots);
-                median = tmpSpots.get(((tmpSpots.size() - 1) / 2));
-                for (int i = 1; i <= ctrlData.getRows(); i++) {
-                    for (int j = 1; j <= ctrlData.getCols(); j++) {
-                        ctrlData.getNormArea()[s][p][i][j] = (double) ctrlData.getArea()[s][p][i][j] / median;
-                    }
-                }
-            }
-        }
+        normalizeData(ctrlData, minCtrlSet, maxCtrlSet, minCtrlPlate, maxCtrlPlate);
 
-        if (scoreRCJCheckBox.isSelected()) {
-            // Row/column correction
-
-            for (int s = minCtrlSet; s <= maxCtrlSet; s++) {
-                for (int p = minCtrlPlate; p <= maxCtrlPlate; p++) {
-                    double normFactor[][] = new double[ctrlData.getRows() + 1][ctrlData.getCols() + 1];
-                    for (int i = 1; i <= ctrlData.getRows(); i++) {
-                        ArrayList<Double> mdn2 = new ArrayList<Double>();
-                        for (int j = 1; j <= ctrlData.getCols(); j++) {
-                            if (ctrlData.getNormArea()[s][p][i][j] != 0) {
-                                mdn2.add(ctrlData.getNormArea()[s][p][i][j]);
-                            }
-                        }
-                        if (mdn2.size() > 0) {
-                            Collections.sort(mdn2);
-                            rav = mdn2.get(((mdn2.size() - 1) / 2));
-                            if (rav < 1.0) {
-                                rav = 1.0;
-                            }
-                            for (int j = 1; j <= ctrlData.getCols(); j++) {
-                                normFactor[i][j] = rav;
-                            }
-                        }
-                    }
-                    for (int i = 1; i <= ctrlData.getCols(); i++) {
-                        ArrayList<Double> mdn2 = new ArrayList<Double>();
-                        for (int j = 1; j <= ctrlData.getRows(); j++) {
-                            if (ctrlData.getNormArea()[s][p][j][i] != 0) {
-                                mdn2.add(ctrlData.getNormArea()[s][p][j][i]);
-                            }
-                        }
-                        if (mdn2.size() > 0) {
-                            Collections.sort(mdn2);
-                            rav = mdn2.get(((mdn2.size() - 1) / 2));
-                            if (rav < 1.0) {
-                                rav = 1.0;
-                            }
-                            for (int j = 1; j <= ctrlData.getRows(); j++) {
-                                normFactor[j][i] *= rav;
-                            }
-                        }
-                    }
-
-                    for (int i = 1; i <= ctrlData.getRows(); i++) {
-                        for (int j = 1; j <= ctrlData.getCols(); j++) {
-                            ctrlData.getNormArea()[s][p][i][j] /= normFactor[i][j];
-                        }
-                    }
-
-                    // Re-normalize
-                    ArrayList<Double> tmpSpots = new ArrayList<Double>();
-                    double median;
-                    for (int i = 1; i <= ctrlData.getRows(); i++) {
-                        for (int j = 1; j <= ctrlData.getCols(); j++) {
-                            if (ctrlData.getNormArea()[s][p][i][j] != 0) {
-                                tmpSpots.add(ctrlData.getNormArea()[s][p][i][j]);
-                            }
-                        }
-                    }
-                    Collections.sort(tmpSpots);
-                    median = tmpSpots.get(((tmpSpots.size() - 1) / 2));
-                    for (int i = 1; i <= ctrlData.getRows(); i++) {
-                        for (int j = 1; j <= ctrlData.getCols(); j++) {
-                            ctrlData.getNormArea()[s][p][i][j]
-                                    = ctrlData.getNormArea()[s][p][i][j] / median;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (scoreSpatialJCheckBox.isSelected()) {
-            // Spatial corection
-
-            for (int s = minCtrlSet; s <= maxCtrlSet; s++) {
-                for (int p = minCtrlPlate; p <= maxCtrlPlate; p++) {
-
-                    double[] xval = new double[ctrlData.getCols()];
-                    double[] yval = new double[ctrlData.getCols()];
-
-                    // LOESS for horizontal direction
-                    for (int n = 0; n < ctrlData.getCols(); n++) {
-                        xval[n] = n;
-                        double[] cval = new double[ctrlData.getRows()];
-                        for (int nn = 0; nn < ctrlData.getRows(); nn++) {
-                            cval[nn] = ctrlData.getNormArea()[s][p][nn + 1][n + 1];
-                        }
-
-                        Arrays.sort(cval);
-
-                        yval[n] = cval[(cval.length - 1) / 2];
-
-                    }
-
-                    LoessInterpolator lin = new LoessInterpolator();
-                    double[] xloess = lin.smooth(xval, yval);
-
-                    StringBuilder outstring = new StringBuilder();
-                    for (int n = 0; n < xval.length; n++) {
-                        outstring.append(xloess[n]).append("\n");
-                    }
-
-//                    System.out.println("Horiz Loess for 1,1,3,4:\n " + outstring);
-                    // LOESS for vert direction
-                    xval = new double[ctrlData.getRows()];
-                    yval = new double[ctrlData.getRows()];
-
-                    for (int n = 0; n < ctrlData.getRows(); n++) {
-                        xval[n] = n;
-
-                        double[] cval = new double[ctrlData.getCols()];
-                        for (int nn = 0; nn < ctrlData.getCols(); nn++) {
-                            cval[nn] = ctrlData.getNormArea()[s][p][n + 1][nn + 1];
-                        }
-
-                        Arrays.sort(cval);
-
-                        yval[n] = cval[(cval.length - 1) / 2];
-
-                    }
-
-                    lin = new LoessInterpolator();
-                    double[] yloess = lin.smooth(xval, yval);
-
-                    outstring = new StringBuilder();
-                    for (int n = 0; n < xval.length; n++) {
-                        outstring.append(yloess[n]).append("\n");
-                    }
-
-//                    System.out.println("Vert Loess for 1,1,3,4:\n " + outstring);
-                    for (int i = 1; i <= ctrlData.getRows(); i++) {
-                        for (int j = 1; j <= ctrlData.getCols(); j++) {
-                            ctrlData.getNormArea()[s][p][i][j]
-                                    = ctrlData.getNormArea()[s][p][i][j] / (yloess[i - 1] * xloess[j - 1]);
-                        }
-                    }
-
-                }
-            }
-
-        }
-
-        if (scoreCompetitionJCheckBox.isSelected()) {
-            // Competition correction
-        }
-
+//        for (int s = minCtrlSet; s <= maxCtrlSet; s++) {
+//            for (int p = minCtrlPlate; p <= maxCtrlPlate; p++) {
+//                int median;
+//                ArrayList<Integer> tmpSpots = new ArrayList<Integer>();
+//                for (int i = 1; i <= ctrlData.getRows(); i++) {
+//                    for (int j = 1; j <= ctrlData.getCols(); j++) {
+//                        if (ctrlData.getArea()[s][p][i][j] == null) {
+//                            JOptionPane.showMessageDialog(this, "Data missing "
+//                                    + "for control plate (set " + s + ", plate "
+//                                    + p + ").",
+//                                    "Warning", JOptionPane.WARNING_MESSAGE);
+//                            System.out.println("Row: " + i + ", Col " + j);
+//                            return;
+//                        }
+//                        if (ctrlData.getArea()[s][p][i][j] != 0) {
+//                            tmpSpots.add(ctrlData.getArea()[s][p][i][j]);
+//                        }
+//                    }
+//                }
+//                Collections.sort(tmpSpots);
+//                median = tmpSpots.get(((tmpSpots.size() - 1) / 2));
+//                for (int i = 1; i <= ctrlData.getRows(); i++) {
+//                    for (int j = 1; j <= ctrlData.getCols(); j++) {
+//                        ctrlData.getNormArea()[s][p][i][j] = (double) ctrlData.getArea()[s][p][i][j] / median;
+//                    }
+//                }
+//            }
+//        }
+//        if (scoreRCJCheckBox.isSelected()) {
+//            // Row/column correction
+//
+//            for (int s = minCtrlSet; s <= maxCtrlSet; s++) {
+//                for (int p = minCtrlPlate; p <= maxCtrlPlate; p++) {
+//                    double normFactor[][] = new double[ctrlData.getRows() + 1][ctrlData.getCols() + 1];
+//                    for (int i = 1; i <= ctrlData.getRows(); i++) {
+//                        ArrayList<Double> mdn2 = new ArrayList<Double>();
+//                        for (int j = 1; j <= ctrlData.getCols(); j++) {
+//                            if (ctrlData.getNormArea()[s][p][i][j] != 0) {
+//                                mdn2.add(ctrlData.getNormArea()[s][p][i][j]);
+//                            }
+//                        }
+//                        if (mdn2.size() > 0) {
+//                            Collections.sort(mdn2);
+//                            rav = mdn2.get(((mdn2.size() - 1) / 2));
+//                            if (rav < 1.0) {
+//                                rav = 1.0;
+//                            }
+//                            for (int j = 1; j <= ctrlData.getCols(); j++) {
+//                                normFactor[i][j] = rav;
+//                            }
+//                        }
+//                    }
+//                    for (int i = 1; i <= ctrlData.getCols(); i++) {
+//                        ArrayList<Double> mdn2 = new ArrayList<Double>();
+//                        for (int j = 1; j <= ctrlData.getRows(); j++) {
+//                            if (ctrlData.getNormArea()[s][p][j][i] != 0) {
+//                                mdn2.add(ctrlData.getNormArea()[s][p][j][i]);
+//                            }
+//                        }
+//                        if (mdn2.size() > 0) {
+//                            Collections.sort(mdn2);
+//                            rav = mdn2.get(((mdn2.size() - 1) / 2));
+//                            if (rav < 1.0) {
+//                                rav = 1.0;
+//                            }
+//                            for (int j = 1; j <= ctrlData.getRows(); j++) {
+//                                normFactor[j][i] *= rav;
+//                            }
+//                        }
+//                    }
+//
+//                    for (int i = 1; i <= ctrlData.getRows(); i++) {
+//                        for (int j = 1; j <= ctrlData.getCols(); j++) {
+//                            ctrlData.getNormArea()[s][p][i][j] /= normFactor[i][j];
+//                        }
+//                    }
+//
+//                    // Re-normalize
+//                    ArrayList<Double> tmpSpots = new ArrayList<Double>();
+//                    double median;
+//                    for (int i = 1; i <= ctrlData.getRows(); i++) {
+//                        for (int j = 1; j <= ctrlData.getCols(); j++) {
+//                            if (ctrlData.getNormArea()[s][p][i][j] != 0) {
+//                                tmpSpots.add(ctrlData.getNormArea()[s][p][i][j]);
+//                            }
+//                        }
+//                    }
+//                    Collections.sort(tmpSpots);
+//                    median = tmpSpots.get(((tmpSpots.size() - 1) / 2));
+//                    for (int i = 1; i <= ctrlData.getRows(); i++) {
+//                        for (int j = 1; j <= ctrlData.getCols(); j++) {
+//                            ctrlData.getNormArea()[s][p][i][j]
+//                                    = ctrlData.getNormArea()[s][p][i][j] / median;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        if (scoreSpatialJCheckBox.isSelected()) {
+//            // Spatial corection
+//
+//            for (int s = minCtrlSet; s <= maxCtrlSet; s++) {
+//                for (int p = minCtrlPlate; p <= maxCtrlPlate; p++) {
+//
+//                    double[] xval = new double[ctrlData.getCols()];
+//                    double[] yval = new double[ctrlData.getCols()];
+//
+//                    // LOESS for horizontal direction
+//                    for (int n = 0; n < ctrlData.getCols(); n++) {
+//                        xval[n] = n;
+//                        double[] cval = new double[ctrlData.getRows()];
+//                        for (int nn = 0; nn < ctrlData.getRows(); nn++) {
+//                            cval[nn] = ctrlData.getNormArea()[s][p][nn + 1][n + 1];
+//                        }
+//
+//                        Arrays.sort(cval);
+//
+//                        yval[n] = cval[(cval.length - 1) / 2];
+//
+//                    }
+//
+//                    LoessInterpolator lin = new LoessInterpolator();
+//                    double[] xloess = lin.smooth(xval, yval);
+//
+////                    StringBuilder outstring = new StringBuilder();
+////                    for (int n = 0; n < xval.length; n++) {
+////                        outstring.append(xloess[n]).append("\n");
+////                    }
+////                    System.out.println("Horiz Loess for 1,1,3,4:\n " + outstring);
+//                    // LOESS for vert direction
+//                    xval = new double[ctrlData.getRows()];
+//                    yval = new double[ctrlData.getRows()];
+//
+//                    for (int n = 0; n < ctrlData.getRows(); n++) {
+//                        xval[n] = n;
+//
+//                        double[] cval = new double[ctrlData.getCols()];
+//                        for (int nn = 0; nn < ctrlData.getCols(); nn++) {
+//                            cval[nn] = ctrlData.getNormArea()[s][p][n + 1][nn + 1];
+//                        }
+//
+//                        Arrays.sort(cval);
+//
+//                        yval[n] = cval[(cval.length - 1) / 2];
+//
+//                    }
+//
+//                    lin = new LoessInterpolator();
+//                    double[] yloess = lin.smooth(xval, yval);
+//
+////                    outstring = new StringBuilder();
+////                    for (int n = 0; n < xval.length; n++) {
+////                        outstring.append(yloess[n]).append("\n");
+////                    }
+////                    System.out.println("Vert Loess for 1,1,3,4:\n " + outstring);
+//                    for (int i = 1; i <= ctrlData.getRows(); i++) {
+//                        for (int j = 1; j <= ctrlData.getCols(); j++) {
+//                            ctrlData.getNormArea()[s][p][i][j]
+//                                    = ctrlData.getNormArea()[s][p][i][j] / (yloess[i - 1] * xloess[j - 1]);
+//                        }
+//                    }
+//
+//                }
+//            }
+//
+//        }
+//
+//        if (scoreCompetitionJCheckBox.isSelected()) {
+//            // Competition correction
+//        }
         messageText.append("\nControl data normalized.");
-        if (ctrlData != null && expData != null) {
-            scorenameTextField.setText(ctrlData.getName() + "--" + expData.getName());
-        }
+//        if (ctrlData != null && expData != null) {
+//            scorenameTextField.setText(ctrlData.getName() + "--" + expData.getName());
+//        }
     }
 
     /**
      *
      */
     public void normalizeExperiment() {
-        double rav;
+//        double rav;
         // Normalize spot size
         expData.setNormArea(new Double[maxExpSet + 1][maxExpPlate + 1][expData.getRows() + 1][expData.getCols() + 1]);
-        for (int s = minExpSet; s <= maxExpSet; s++) {
-            for (int p = minExpPlate; p <= maxExpPlate; p++) {
-                int median;
-                ArrayList<Integer> tmpSpots = new ArrayList<Integer>();
-                for (int i = 1; i <= expData.getRows(); i++) {
-                    for (int j = 1; j <= expData.getCols(); j++) {
-                        if (expData.getArea()[s][p][i][j] == null) {
-                            JOptionPane.showMessageDialog(this, "Data missing "
-                                    + "for experimental plate (set " + s + ", plate "
-                                    + p + ").", "Warning", JOptionPane.WARNING_MESSAGE);
-                            return;
-                        }
-                        if (expData.getArea()[s][p][i][j] != 0) {
-                            tmpSpots.add(expData.getArea()[s][p][i][j]);
-                        }
-                    }
-                }
-                Collections.sort(tmpSpots);
-                median = tmpSpots.get(((tmpSpots.size() - 1) / 2));
-                for (int i = 1; i <= expData.getRows(); i++) {
-                    for (int j = 1; j <= expData.getCols(); j++) {
-                        expData.getNormArea()[s][p][i][j] = (double) expData.getArea()[s][p][i][j] / median;
-                    }
-                }
-            }
-        }
 
+        normalizeData(expData, minExpSet, maxExpSet, minExpPlate, maxExpPlate);
+
+//        for (int s = minExpSet; s <= maxExpSet; s++) {
+//            for (int p = minExpPlate; p <= maxExpPlate; p++) {
+//                int median;
+//                ArrayList<Integer> tmpSpots = new ArrayList<Integer>();
+//                for (int i = 1; i <= expData.getRows(); i++) {
+//                    for (int j = 1; j <= expData.getCols(); j++) {
+//                        if (expData.getArea()[s][p][i][j] == null) {
+//                            JOptionPane.showMessageDialog(this, "Data missing "
+//                                    + "for experimental plate (set " + s + ", plate "
+//                                    + p + ").", "Warning", JOptionPane.WARNING_MESSAGE);
+//                            return;
+//                        }
+//                        if (expData.getArea()[s][p][i][j] != 0) {
+//                            tmpSpots.add(expData.getArea()[s][p][i][j]);
+//                        }
+//                    }
+//                }
+//                Collections.sort(tmpSpots);
+//                median = tmpSpots.get(((tmpSpots.size() - 1) / 2));
+//                for (int i = 1; i <= expData.getRows(); i++) {
+//                    for (int j = 1; j <= expData.getCols(); j++) {
+//                        expData.getNormArea()[s][p][i][j] = (double) expData.getArea()[s][p][i][j] / median;
+//                    }
+//                }
+//            }
+//        }
         if (scoreRCJCheckBox.isSelected()) {
             // Do R/C correction
 
-            for (int s = minExpSet; s <= maxExpSet; s++) {
-                for (int p = minExpPlate; p <= maxExpPlate; p++) {
-                    double normFactor[][] = new double[expData.getRows() + 1][expData.getCols() + 1];
-                    for (int i = 1; i <= expData.getRows(); i++) {
-                        ArrayList<Double> mdn = new ArrayList<Double>();
-                        for (int j = 1; j <= expData.getCols(); j++) {
-                            if (expData.getNormArea()[s][p][i][j] != 0) {
-                                mdn.add(expData.getNormArea()[s][p][i][j]);
+//
+//            for (int s = minExpSet; s <= maxExpSet; s++) {
+//                for (int p = minExpPlate; p <= maxExpPlate; p++) {
+//                    double normFactor[][] = new double[expData.getRows() + 1][expData.getCols() + 1];
+//                    for (int i = 1; i <= expData.getRows(); i++) {
+//                        ArrayList<Double> mdn = new ArrayList<Double>();
+//                        for (int j = 1; j <= expData.getCols(); j++) {
+//                            if (expData.getNormArea()[s][p][i][j] != 0) {
+//                                mdn.add(expData.getNormArea()[s][p][i][j]);
+//                            }
+//                        }
+//                        if (mdn.size() > 0) {
+//                            Collections.sort(mdn);
+//                            rav = mdn.get(((mdn.size() - 1) / 2));
+//                            if (rav < 1.0) {
+//                                rav = 1.0;
+//                            }
+//                            for (int j = 1; j <= expData.getCols(); j++) {
+//                                normFactor[i][j] = rav;
+//                            }
+//                        }
+//                    }
+//                    for (int i = 1; i <= expData.getCols(); i++) {
+//                        ArrayList<Double> mdn = new ArrayList<Double>();
+//                        for (int j = 1; j <= expData.getRows(); j++) {
+//                            if (expData.getNormArea()[s][p][j][i] != 0) {
+//                                mdn.add(expData.getNormArea()[s][p][j][i]);
+//                            }
+//                        }
+//                        if (mdn.size() > 0) {
+//                            Collections.sort(mdn);
+//                            rav = mdn.get(((mdn.size() - 1) / 2));
+//                            if (rav < 1.0) {
+//                                rav = 1.0;
+//                            }
+//                            for (int j = 1; j <= expData.getRows(); j++) {
+//                                normFactor[j][i] *= rav;
+//                            }
+//                        }
+//                    }
+//                    for (int i = 1; i <= expData.getRows(); i++) {
+//                        for (int j = 1; j <= expData.getCols(); j++) {
+//                            expData.getNormArea()[s][p][i][j] /= normFactor[i][j];
+//                        }
+//                    }
+//                    ArrayList<Double> tmpSpots = new ArrayList<Double>();
+//                    for (int i = 1; i <= expData.getRows(); i++) {
+//                        for (int j = 1; j <= expData.getCols(); j++) {
+//                            if (expData.getNormArea()[s][p][i][j] != 0) {
+//                                tmpSpots.add(expData.getNormArea()[s][p][i][j]);
+//                            }
+//                        }
+//                    }
+//                    Collections.sort(tmpSpots);
+//                    double median = tmpSpots.get(((tmpSpots.size() - 1) / 2));
+//                    for (int i = 1; i <= expData.getRows(); i++) {
+//                        for (int j = 1; j <= expData.getCols(); j++) {
+//                            expData.getNormArea()[s][p][i][j]
+//                                    = expData.getNormArea()[s][p][i][j] / median;
+//                        }
+//                    }
+//                }
+//            }
+        }
+
+//        if (scoreSpatialJCheckBox.isSelected()) {
+//            // Spatial corection
+//
+//            for (int s = minExpSet; s <= maxExpSet; s++) {
+//                for (int p = minExpPlate; p <= maxExpPlate; p++) {
+//
+//                    double[] xval = new double[expData.getCols()];
+//                    double[] yval = new double[expData.getCols()];
+//
+//                    // LOESS for horizontal direction
+//                    for (int n = 0; n < expData.getCols(); n++) {
+//                        xval[n] = n;
+//                        double[] cval = new double[expData.getRows()];
+//                        for (int nn = 0; nn < expData.getRows(); nn++) {
+//                            cval[nn] = expData.getNormArea()[s][p][nn + 1][n + 1];
+//                        }
+//
+//                        Arrays.sort(cval);
+//
+//                        yval[n] = cval[(cval.length - 1) / 2];
+//
+//                    }
+//
+//                    LoessInterpolator lin = new LoessInterpolator();
+//                    double[] xloess = lin.smooth(xval, yval);
+//
+//                    StringBuilder outstring = new StringBuilder();
+//                    for (int n = 0; n < xval.length; n++) {
+//                        outstring.append(xloess[n]).append("\n");
+//                    }
+//
+////                    System.out.println("Horiz Loess for 1,1,3,4:\n " + outstring);
+//                    // LOESS for vert direction
+//                    xval = new double[expData.getRows()];
+//                    yval = new double[expData.getRows()];
+//
+//                    for (int n = 0; n < expData.getRows(); n++) {
+//                        xval[n] = n;
+//
+//                        double[] cval = new double[expData.getCols()];
+//                        for (int nn = 0; nn < expData.getCols(); nn++) {
+//                            cval[nn] = expData.getNormArea()[s][p][n + 1][nn + 1];
+//                        }
+//
+//                        Arrays.sort(cval);
+//
+//                        yval[n] = cval[(cval.length - 1) / 2];
+//
+//                    }
+//
+//                    lin = new LoessInterpolator();
+//                    double[] yloess = lin.smooth(xval, yval);
+//
+//                    outstring = new StringBuilder();
+//                    for (int n = 0; n < xval.length; n++) {
+//                        outstring.append(yloess[n]).append("\n");
+//                    }
+//
+////                    System.out.println("Vert Loess for 1,1,3,4:\n " + outstring);
+//                    for (int i = 1; i <= expData.getRows(); i++) {
+//                        for (int j = 1; j <= expData.getCols(); j++) {
+//                            expData.getNormArea()[s][p][i][j]
+//                                    = expData.getNormArea()[s][p][i][j] / (yloess[i - 1] * xloess[j - 1]);
+//                        }
+//                    }
+//
+//                }
+//            }
+//
+////        }
+//        if (scoreCompetitionJCheckBox.isSelected()) {
+//            // Competition correction
+//        }
+        messageText.append("\nExperiment data normalized.");
+//        if (ctrlData != null && expData != null) {
+//            scorenameTextField.setText(ctrlData.getName() + "--" + expData.getName());
+//        }
+    }
+
+    private void normalizePlate(spotData data, int s, int p) {
+        int median = 0;
+        boolean forceMedian = false;
+
+        if (normORFButton.isSelected()) {
+            String ctrlORF = normORFJTextField.getText().toUpperCase().trim();
+            ArrayList<Integer> ctrlSpots = new ArrayList<Integer>();
+            for (int i = 1; i <= data.getRows(); i++) {
+                for (int j = 1; j <= data.getCols(); j++) {
+                    if (keyOrfs[p][i][j].toUpperCase().equals(ctrlORF)
+                            || keyGenes[p][i][j].toUpperCase().equals(ctrlORF)) {
+                        if (data.getArea()[s][p][i][j] > 0) {
+                            ctrlSpots.add(data.getArea()[s][p][i][j]);
+                        }
+                    }
+                }
+            }
+
+            if (ctrlSpots.isEmpty()) {
+                messageText.append("\nError on plate " + p
+                        + " - no control spots found; using plate median.");
+                forceMedian = true;
+            } else {
+                Collections.sort(ctrlSpots);
+                median = ctrlSpots.get((ctrlSpots.size() - 1) / 2);
+            }
+        }
+
+        if (normPlateMedianButton.isSelected() || forceMedian) {
+            // Get median value for plate
+
+            ArrayList<Integer> tmpSpots = new ArrayList<Integer>();
+            for (int i = 1; i <= data.getRows(); i++) {
+                for (int j = 1; j <= data.getCols(); j++) {
+                    if (data.getArea()[s][p][i][j] == null) {
+                        JOptionPane.showMessageDialog(this, "Data missing "
+                                + "for experimental plate (set " + s + ", plate "
+                                + p + ").", "Warning", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                    if (data.getArea()[s][p][i][j] != 0) {
+                        tmpSpots.add(data.getArea()[s][p][i][j]);
+                    }
+                }
+            }
+            Collections.sort(tmpSpots);
+            median = tmpSpots.get((tmpSpots.size() - 1) / 2);
+
+        }
+
+        if (median != 0) {
+            for (int i = 1; i <= data.getRows(); i++) {
+                for (int j = 1; j <= data.getCols(); j++) {
+                    data.getNormArea()[s][p][i][j] = (double) data.getArea()[s][p][i][j] / median;
+                }
+            }
+        }
+    }
+
+    // Normalize data on each plate
+    private void normalizeData(spotData data, int minSet, int maxSet, int minPlate, int maxPlate) {
+//        Double[][][][] newData = Arrays.copyOf(data.getNormArea(), data.getNormArea().length);
+        double rav;
+
+        // For each set...
+        for (int s = minSet; s <= maxSet; s++) {
+
+            // For each plate: per-plate normalization to convert from absolute to relative pixel sizes
+            int median = 0;
+
+            // Separate function in case we want to re-do this
+            for (int p = minPlate; p <= maxPlate; p++) {
+                normalizePlate(data, s, p);
+
+            } // plate
+        } // set
+
+        // Do optional corrections:
+        if (scoreRCJCheckBox.isSelected()) {
+            // Row/column correction
+
+            for (int s = minSet; s <= maxSet; s++) {
+                for (int p = minPlate; p <= maxPlate; p++) {
+                    double normFactor[][] = new double[data.getRows() + 1][data.getCols() + 1];
+                    for (int i = 1; i <= data.getRows(); i++) {
+                        ArrayList<Double> mdn2 = new ArrayList<Double>();
+                        for (int j = 1; j <= data.getCols(); j++) {
+                            if (data.getNormArea()[s][p][i][j] != 0) {
+                                mdn2.add(data.getNormArea()[s][p][i][j]);
                             }
                         }
-                        if (mdn.size() > 0) {
-                            Collections.sort(mdn);
-                            rav = mdn.get(((mdn.size() - 1) / 2));
+                        if (mdn2.size() > 0) {
+                            Collections.sort(mdn2);
+                            rav = mdn2.get(((mdn2.size() - 1) / 2));
                             if (rav < 1.0) {
                                 rav = 1.0;
                             }
-                            for (int j = 1; j <= expData.getCols(); j++) {
+                            for (int j = 1; j <= data.getCols(); j++) {
                                 normFactor[i][j] = rav;
                             }
                         }
                     }
-                    for (int i = 1; i <= expData.getCols(); i++) {
-                        ArrayList<Double> mdn = new ArrayList<Double>();
-                        for (int j = 1; j <= expData.getRows(); j++) {
-                            if (expData.getNormArea()[s][p][j][i] != 0) {
-                                mdn.add(expData.getNormArea()[s][p][j][i]);
+                    for (int i = 1; i <= data.getCols(); i++) {
+                        ArrayList<Double> mdn2 = new ArrayList<Double>();
+                        for (int j = 1; j <= data.getRows(); j++) {
+                            if (data.getNormArea()[s][p][j][i] != 0) {
+                                mdn2.add(data.getNormArea()[s][p][j][i]);
                             }
                         }
-                        if (mdn.size() > 0) {
-                            Collections.sort(mdn);
-                            rav = mdn.get(((mdn.size() - 1) / 2));
+                        if (mdn2.size() > 0) {
+                            Collections.sort(mdn2);
+                            rav = mdn2.get(((mdn2.size() - 1) / 2));
                             if (rav < 1.0) {
                                 rav = 1.0;
                             }
-                            for (int j = 1; j <= expData.getRows(); j++) {
+                            for (int j = 1; j <= data.getRows(); j++) {
                                 normFactor[j][i] *= rav;
                             }
                         }
                     }
-                    for (int i = 1; i <= expData.getRows(); i++) {
-                        for (int j = 1; j <= expData.getCols(); j++) {
-                            expData.getNormArea()[s][p][i][j] /= normFactor[i][j];
+
+                    for (int i = 1; i <= data.getRows(); i++) {
+                        for (int j = 1; j <= data.getCols(); j++) {
+                            data.getNormArea()[s][p][i][j] /= normFactor[i][j];
                         }
                     }
-                    ArrayList<Double> tmpSpots = new ArrayList<Double>();
-                    for (int i = 1; i <= expData.getRows(); i++) {
-                        for (int j = 1; j <= expData.getCols(); j++) {
-                            if (expData.getNormArea()[s][p][i][j] != 0) {
-                                tmpSpots.add(expData.getNormArea()[s][p][i][j]);
+
+                    // Re-normalize
+                    if (normPlateMedianButton.isSelected()) {
+                        ArrayList<Double> tmpSpots = new ArrayList<Double>();
+                        double median;
+                        for (int i = 1; i <= data.getRows(); i++) {
+                            for (int j = 1; j <= data.getCols(); j++) {
+                                if (data.getNormArea()[s][p][i][j] != 0) {
+                                    tmpSpots.add(data.getNormArea()[s][p][i][j]);
+                                }
                             }
                         }
-                    }
-                    Collections.sort(tmpSpots);
-                    double median = tmpSpots.get(((tmpSpots.size() - 1) / 2));
-                    for (int i = 1; i <= expData.getRows(); i++) {
-                        for (int j = 1; j <= expData.getCols(); j++) {
-                            expData.getNormArea()[s][p][i][j]
-                                    = expData.getNormArea()[s][p][i][j] / median;
+                        Collections.sort(tmpSpots);
+                        median = tmpSpots.get(((tmpSpots.size() - 1) / 2));
+                        for (int i = 1; i <= data.getRows(); i++) {
+                            for (int j = 1; j <= data.getCols(); j++) {
+                                data.getNormArea()[s][p][i][j]
+                                        = data.getNormArea()[s][p][i][j] / median;
+                            }
                         }
                     }
                 }
@@ -8774,18 +9358,18 @@ public final class Balony extends javax.swing.JFrame {
         if (scoreSpatialJCheckBox.isSelected()) {
             // Spatial corection
 
-            for (int s = minExpSet; s <= maxExpSet; s++) {
-                for (int p = minExpPlate; p <= maxExpPlate; p++) {
+            for (int s = minSet; s <= maxSet; s++) {
+                for (int p = minPlate; p <= maxPlate; p++) {
 
-                    double[] xval = new double[expData.getCols()];
-                    double[] yval = new double[expData.getCols()];
+                    double[] xval = new double[data.getCols()];
+                    double[] yval = new double[data.getCols()];
 
                     // LOESS for horizontal direction
-                    for (int n = 0; n < expData.getCols(); n++) {
+                    for (int n = 0; n < data.getCols(); n++) {
                         xval[n] = n;
-                        double[] cval = new double[expData.getRows()];
-                        for (int nn = 0; nn < expData.getRows(); nn++) {
-                            cval[nn] = expData.getNormArea()[s][p][nn + 1][n + 1];
+                        double[] cval = new double[data.getRows()];
+                        for (int nn = 0; nn < data.getRows(); nn++) {
+                            cval[nn] = data.getNormArea()[s][p][nn + 1][n + 1];
                         }
 
                         Arrays.sort(cval);
@@ -8797,22 +9381,21 @@ public final class Balony extends javax.swing.JFrame {
                     LoessInterpolator lin = new LoessInterpolator();
                     double[] xloess = lin.smooth(xval, yval);
 
-                    StringBuilder outstring = new StringBuilder();
-                    for (int n = 0; n < xval.length; n++) {
-                        outstring.append(xloess[n]).append("\n");
-                    }
-
+//                    StringBuilder outstring = new StringBuilder();
+//                    for (int n = 0; n < xval.length; n++) {
+//                        outstring.append(xloess[n]).append("\n");
+//                    }
 //                    System.out.println("Horiz Loess for 1,1,3,4:\n " + outstring);
                     // LOESS for vert direction
-                    xval = new double[expData.getRows()];
-                    yval = new double[expData.getRows()];
+                    xval = new double[data.getRows()];
+                    yval = new double[data.getRows()];
 
-                    for (int n = 0; n < expData.getRows(); n++) {
+                    for (int n = 0; n < data.getRows(); n++) {
                         xval[n] = n;
 
-                        double[] cval = new double[expData.getCols()];
-                        for (int nn = 0; nn < expData.getCols(); nn++) {
-                            cval[nn] = expData.getNormArea()[s][p][n + 1][nn + 1];
+                        double[] cval = new double[data.getCols()];
+                        for (int nn = 0; nn < data.getCols(); nn++) {
+                            cval[nn] = data.getNormArea()[s][p][n + 1][nn + 1];
                         }
 
                         Arrays.sort(cval);
@@ -8824,16 +9407,15 @@ public final class Balony extends javax.swing.JFrame {
                     lin = new LoessInterpolator();
                     double[] yloess = lin.smooth(xval, yval);
 
-                    outstring = new StringBuilder();
-                    for (int n = 0; n < xval.length; n++) {
-                        outstring.append(yloess[n]).append("\n");
-                    }
-
+//                    outstring = new StringBuilder();
+//                    for (int n = 0; n < xval.length; n++) {
+//                        outstring.append(yloess[n]).append("\n");
+//                    }
 //                    System.out.println("Vert Loess for 1,1,3,4:\n " + outstring);
-                    for (int i = 1; i <= expData.getRows(); i++) {
-                        for (int j = 1; j <= expData.getCols(); j++) {
-                            expData.getNormArea()[s][p][i][j]
-                                    = expData.getNormArea()[s][p][i][j] / (yloess[i - 1] * xloess[j - 1]);
+                    for (int i = 1; i <= data.getRows(); i++) {
+                        for (int j = 1; j <= data.getCols(); j++) {
+                            data.getNormArea()[s][p][i][j]
+                                    = data.getNormArea()[s][p][i][j] / (yloess[i - 1] * xloess[j - 1]);
                         }
                     }
 
@@ -8842,14 +9424,6 @@ public final class Balony extends javax.swing.JFrame {
 
         }
 
-        if (scoreCompetitionJCheckBox.isSelected()) {
-            // Competition correction
-        }
-
-        messageText.append("\nExperiment data normalized.");
-        if (ctrlData != null && expData != null) {
-            scorenameTextField.setText(ctrlData.getName() + "--" + expData.getName());
-        }
     }
 
     /**
@@ -8923,22 +9497,54 @@ public final class Balony extends javax.swing.JFrame {
         loadedIm.killRoi();
     }
 
+    public static String getFancyDesc(String desc) {
+        StringTokenizer st = new StringTokenizer(desc, " ,;:/\"().?[]{}");
+
+        while (st.hasMoreTokens()) {
+            String s = st.nextToken();
+
+            for (String myorf : allSGDInfo.keySet()) {
+                if (myorf.toLowerCase().equals(s.toLowerCase())) {
+                    desc = desc.replace(s, "<u><font color='blue'>" + s + "</font></u>");
+//                    sI.jEditorPane1.getDocument().putProperty(s, true);
+                }
+            }
+        }
+
+        st = new StringTokenizer(desc, " ,;:/\"().?[]{}-");
+
+        while (st.hasMoreTokens()) {
+            String s = st.nextToken();
+            if (s.endsWith("p")) {
+                s = s.substring(0, s.length() - 1);
+            }
+
+            for (String myorf : allSGDInfo.keySet()) {
+                if (allSGDInfo.get(myorf).gene.toLowerCase().equals(s.toLowerCase())) {
+                    desc = desc.replace(s, "<u><font color='blue'>" + s + "</font></u>");
+//                    sI.jEditorPane1.getDocument().putProperty(s, true);
+                }
+            }
+        }
+        return "<html><font face = 'Tahoma, Helvetica'>" + desc + "</font></html>";
+    }
+
     /**
      * @param args the command line arguments
      */
-    public static void main(final String args[]) {
+    public void main(final String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                Balony b = new Balony();
-                b.pack();
-                b.setVisible(true);
+//                Balony b = new Balony();
+                pack();
+                setVisible(true);
                 if (args[0].equals("1")) {
-                    b.osLAFJRadioButton.setSelected(true);
+                    osLAFJRadioButton.setSelected(true);
                 } else if (args[0].equals("2")) {
-                    b.nimbusLAFJRadioButton.setSelected(true);
+                    nimbusLAFJRadioButton.setSelected(true);
                 } else {
-                    b.javaLAFJRadioButton.setSelected(true);
+                    javaLAFJRadioButton.setSelected(true);
                 }
             }
         });
@@ -8971,31 +9577,29 @@ public final class Balony extends javax.swing.JFrame {
      */
     public class ManualGrid implements MouseListener, MouseMotionListener, Runnable, KeyListener {
 
-            /**
-             *
-             */
-            public ImageCanvas i;
+        /**
+         *
+         */
+        public ImageCanvas i;
         public int cnt,
+                /**
+                 *
+                 */
+                /**
+                 *
+                 */
+                x[], y[];
 
-            /**
-             *
-             */
+        /**
+         *
+         */
+        public GeneralPath path;
 
-            /**
-             *
-             */
-            x[], y[];
-
-            /**
-             *
-             */
-            public GeneralPath path;
-
-            /**
-             *
-             * @param ic
-             */
-            public void ManualGrid(ImageCanvas ic) {
+        /**
+         *
+         * @param ic
+         */
+        public void ManualGrid(ImageCanvas ic) {
             resetListeners(ic);
             ic.addMouseListener(this);
             ic.addMouseMotionListener(this);
@@ -9009,11 +9613,11 @@ public final class Balony extends javax.swing.JFrame {
             messageText.append("\nManual gridding: Click one corner of the array.");
         }
 
-            /**
-             *
-             * @param ic
-             */
-            public void reset(ImageCanvas ic) {
+        /**
+         *
+         * @param ic
+         */
+        public void reset(ImageCanvas ic) {
             Cursor c = new Cursor(Cursor.DEFAULT_CURSOR);
             ic.setCursor(c);
             ic.removeMouseListener(this);
@@ -9196,28 +9800,26 @@ public final class Balony extends javax.swing.JFrame {
      */
     public class QuantScan implements MouseListener, MouseMotionListener, MouseWheelListener, Runnable, KeyListener {
 
-            /**
-             *
-             */
-            public ImageCanvas i;
+        /**
+         *
+         */
+        public ImageCanvas i;
         public int cnt,
-
-            /**
-             *
-             */
-
-            /**
-             *
-             */
-            x[], y[];
+                /**
+                 *
+                 */
+                /**
+                 *
+                 */
+                x[], y[];
         GeneralPath path;
         Cursor c;
 
-            /**
-             *
-             * @param ic
-             */
-            public void QuantScan(ImageCanvas ic) {
+        /**
+         *
+         * @param ic
+         */
+        public void QuantScan(ImageCanvas ic) {
             if (oIm != null && oIm.getWindow() != null) {
                 mwl = new myWindowListener();
                 oIm.getWindow().addWindowListener(mwl);
@@ -9249,11 +9851,11 @@ public final class Balony extends javax.swing.JFrame {
             y = new int[2];
         }
 
-            /**
-             *
-             * @param ic
-             */
-            public void reset(ImageCanvas ic) {
+        /**
+         *
+         * @param ic
+         */
+        public void reset(ImageCanvas ic) {
             ic.removeMouseListener(this);
         }
 
@@ -9442,28 +10044,27 @@ public final class Balony extends javax.swing.JFrame {
      */
     public class RotateCorrector implements MouseListener, MouseMotionListener, Runnable, KeyListener {
 
-            /**
-             *
-             */
-            public ImageCanvas i;
+        /**
+         *
+         */
+        public ImageCanvas i;
 
-            /**
-             *
-             */
-            public int cnt;
+        /**
+         *
+         */
+        public int cnt;
         public float x[],
-
-            /**
-             *
-             */
-            y[];
+                /**
+                 *
+                 */
+                y[];
         GeneralPath path;
 
-            /**
-             *
-             * @param ic
-             */
-            public void RotateCorrector(ImageCanvas ic) {
+        /**
+         *
+         * @param ic
+         */
+        public void RotateCorrector(ImageCanvas ic) {
             resetListeners(ic);
             ic.addMouseListener(this);
             ic.addMouseMotionListener(this);
@@ -9476,11 +10077,11 @@ public final class Balony extends javax.swing.JFrame {
             i.setCursor(c);
         }
 
-            /**
-             *
-             * @param ic
-             */
-            public void reset(ImageCanvas ic) {
+        /**
+         *
+         * @param ic
+         */
+        public void reset(ImageCanvas ic) {
             Cursor c = new Cursor(Cursor.DEFAULT_CURSOR);
             i.setCursor(c);
             ic.removeMouseListener(this);
@@ -9603,29 +10204,27 @@ public final class Balony extends javax.swing.JFrame {
      */
     public class ManualSpot implements MouseListener, MouseMotionListener, Runnable, KeyListener {
 
-            /**
-             *
-             */
-            public ImageCanvas i;
+        /**
+         *
+         */
+        public ImageCanvas i;
         public int cnt,
-
-            /**
-             *
-             */
-            x[],
-
-            /**
-             *
-             */
-            y[];
+                /**
+                 *
+                 */
+                x[],
+                /**
+                 *
+                 */
+                y[];
         GeneralPath path;
         Overlay o;
 
-            /**
-             *
-             * @param ic
-             */
-            public void ManualSpot(ImageCanvas ic) {
+        /**
+         *
+         * @param ic
+         */
+        public void ManualSpot(ImageCanvas ic) {
             resetListeners(ic);
             ic.addMouseListener(this);
             ic.addMouseMotionListener(this);
@@ -9638,11 +10237,11 @@ public final class Balony extends javax.swing.JFrame {
             i.setCursor(c);
         }
 
-            /**
-             *
-             * @param ic
-             */
-            public void reset(ImageCanvas ic) {
+        /**
+         *
+         * @param ic
+         */
+        public void reset(ImageCanvas ic) {
             Cursor c = new Cursor(Cursor.DEFAULT_CURSOR);
             ic.setCursor(c);
             ic.removeMouseListener(this);
@@ -9762,22 +10361,21 @@ public final class Balony extends javax.swing.JFrame {
      */
     public class ManualSpotRemover implements MouseListener, MouseMotionListener, Runnable, KeyListener {
 
-            /**
-             *
-             */
-            public ImageCanvas i;
+        /**
+         *
+         */
+        public ImageCanvas i;
         public int x,
+                /**
+                 *
+                 */
+                y;
 
-            /**
-             *
-             */
-            y;
-
-            /**
-             *
-             * @param ic
-             */
-            public void ManualSpot(ImageCanvas ic) {
+        /**
+         *
+         * @param ic
+         */
+        public void ManualSpot(ImageCanvas ic) {
             resetListeners(ic);
             ic.addMouseListener(this);
             i = ic;
@@ -9785,11 +10383,11 @@ public final class Balony extends javax.swing.JFrame {
             i.setCursor(c);
         }
 
-            /**
-             *
-             * @param ic
-             */
-            public void reset(ImageCanvas ic) {
+        /**
+         *
+         * @param ic
+         */
+        public void reset(ImageCanvas ic) {
             Cursor c = new Cursor(Cursor.DEFAULT_CURSOR);
             ic.setCursor(c);
             ic.removeMouseListener(this);
@@ -9866,22 +10464,22 @@ public final class Balony extends javax.swing.JFrame {
      */
     public class Zoomer implements MouseListener, MouseMotionListener, Runnable, KeyListener {
 
-            /**
-             *
-             */
-            public ImageCanvas imgCanvas;
+        /**
+         *
+         */
+        public ImageCanvas imgCanvas;
 
-            /**
-             *
-             */
-            public int d;
+        /**
+         *
+         */
+        public int d;
 
-            /**
-             *
-             * @param ic
-             * @param dir
-             */
-            public void Zoomer(ImageCanvas ic, int dir) {
+        /**
+         *
+         * @param ic
+         * @param dir
+         */
+        public void Zoomer(ImageCanvas ic, int dir) {
             resetListeners(ic);
             ic.addMouseListener(this);
             ic.addMouseMotionListener(this);
@@ -9891,11 +10489,11 @@ public final class Balony extends javax.swing.JFrame {
             imgCanvas.setCursor(c);
         }
 
-            /**
-             *
-             * @param ic
-             */
-            public void reset(ImageCanvas ic) {
+        /**
+         *
+         * @param ic
+         */
+        public void reset(ImageCanvas ic) {
             Cursor c = new Cursor(Cursor.DEFAULT_CURSOR);
             ic.setCursor(c);
             ic.removeMouseListener(this);
@@ -9955,9 +10553,14 @@ public final class Balony extends javax.swing.JFrame {
         @Override
         public void run() {
         }
+
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel advancedPanel;
+    private javax.swing.JRadioButton altColRadioButton;
+    private javax.swing.JRadioButton altEvenRadioButton;
+    private javax.swing.JRadioButton altOddRadioButton;
+    private javax.swing.JRadioButton altRowRadioButton;
     private javax.swing.JComboBox analysisArrayComboBox;
     private javax.swing.JPanel analysisArrayPanel;
     private javax.swing.JButton analysisLoadButton;
@@ -9980,6 +10583,8 @@ public final class Balony extends javax.swing.JFrame {
     private javax.swing.JButton autocheckforwardButton;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.ButtonGroup buttonGroup3;
+    private javax.swing.ButtonGroup buttonGroup4;
     private javax.swing.JButton choosefolderButton;
     private javax.swing.JLabel contactJLabel;
     private javax.swing.JLabel contactJLabel1;
@@ -10038,6 +10643,8 @@ public final class Balony extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     public javax.swing.JRadioButton javaLAFJRadioButton;
     private javax.swing.JButton keyFileLoadButton;
@@ -10049,9 +10656,14 @@ public final class Balony extends javax.swing.JFrame {
     private javax.swing.JTextField maxSpotSizeJTextField;
     private javax.swing.JTextField minSpotSizeJTextField;
     public javax.swing.JRadioButton nimbusLAFJRadioButton;
+    private javax.swing.ButtonGroup normButtonGroup;
+    private javax.swing.JRadioButton normORFButton;
+    private javax.swing.JTextField normORFJTextField;
+    private javax.swing.JRadioButton normPlateMedianButton;
     private javax.swing.JPanel normalPanel;
     private javax.swing.JPanel optionsPanel;
     public javax.swing.JRadioButton osLAFJRadioButton;
+    private javax.swing.JRadioButton plateCtrlRadioButton;
     private javax.swing.JTextField plateNameJTextField;
     private javax.swing.JTextField plateNumberJTextField;
     private javax.swing.JPanel platePanel;

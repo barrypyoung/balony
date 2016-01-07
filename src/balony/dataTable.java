@@ -56,7 +56,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  *
  * @author Barry Young
  */
-public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
+public class dataTable extends javax.swing.JFrame implements ClipboardOwner, screenCompare {
 
     public Double minSpotSize;
     public Double maxSpotSize;
@@ -185,11 +185,13 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
         saveButton = new javax.swing.JButton();
         refreshTableJButton = new javax.swing.JButton();
         exportTableJButton = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
         filteringPanel = new javax.swing.JPanel();
         linkageJButton = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         linkageJTextField = new javax.swing.JTextField();
         hideExcludedJCheckBox = new javax.swing.JCheckBox();
+        jButton6 = new javax.swing.JButton();
         spotParamsPanel = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         analysisSickFliterComboBox1 = new javax.swing.JComboBox();
@@ -533,23 +535,37 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
             }
         });
 
+        jButton7.setText("Compare...");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout commandsPanelLayout = new javax.swing.GroupLayout(commandsPanel);
         commandsPanel.setLayout(commandsPanelLayout);
         commandsPanelLayout.setHorizontalGroup(
             commandsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(commandsPanelLayout.createSequentialGroup()
+                .addGroup(commandsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(saveButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(refreshTableJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(commandsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(refreshTableJButton)
                     .addGroup(commandsPanelLayout.createSequentialGroup()
-                        .addComponent(saveButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(exportTableJButton)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jButton7)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(commandsPanelLayout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addComponent(exportTableJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         commandsPanelLayout.setVerticalGroup(
             commandsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(commandsPanelLayout.createSequentialGroup()
-                .addComponent(refreshTableJButton)
+                .addGroup(commandsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(refreshTableJButton)
+                    .addComponent(jButton7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(commandsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
@@ -583,20 +599,30 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
             }
         });
 
+        jButton6.setText("Import...");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout filteringPanelLayout = new javax.swing.GroupLayout(filteringPanel);
         filteringPanel.setLayout(filteringPanelLayout);
         filteringPanelLayout.setHorizontalGroup(
             filteringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, filteringPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(filteringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(filteringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(filteringPanelLayout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(linkageJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(linkageJButton))
-                    .addComponent(hideExcludedJCheckBox))
+                    .addGroup(filteringPanelLayout.createSequentialGroup()
+                        .addComponent(hideExcludedJCheckBox)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         filteringPanelLayout.setVerticalGroup(
@@ -607,7 +633,9 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                     .addComponent(linkageJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(linkageJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(hideExcludedJCheckBox)
+                .addGroup(filteringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(hideExcludedJCheckBox)
+                    .addComponent(jButton6))
                 .addContainerGap())
         );
 
@@ -812,7 +840,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                 .addContainerGap()
                 .addComponent(tableSettingsJPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tableJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
+                .addComponent(tableJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -864,7 +892,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                     String desc;
 
                     try {
-                        desc = balony.allSGDInfo.get(orf).desc;
+                        desc = Balony.allSGDInfo.get(orf).desc;
                     } catch (Exception e) {
                         desc = "";
                     }
@@ -905,6 +933,10 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
 
     public void updateSpotInfo(spotInfo sI, int row) {
 
+        if (row < 0) {
+            return;
+        }
+
         int p = 0;
         int r = 0;
         int c = 0;
@@ -940,7 +972,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
 
         String desc;
         try {
-            desc = balony.allSGDInfo.get(orf).desc;
+            desc = Balony.allSGDInfo.get(orf).desc;
         } catch (Exception e) {
             desc = "N/A";
         }
@@ -950,10 +982,10 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
         while (st.hasMoreTokens()) {
             String s = st.nextToken();
 
-            for (String myorf : balony.allSGDInfo.keySet()) {
+            for (String myorf : Balony.allSGDInfo.keySet()) {
                 if (myorf.toLowerCase().equals(s.toLowerCase())) {
                     desc = desc.replace(s, "<u><font color='blue'>" + s + "</font></u>");
-                    sI.jEditorPane1.getDocument().putProperty(s, true);
+//                    sI.jEditorPane1.getDocument().putProperty(s, true);
                 }
             }
         }
@@ -966,16 +998,15 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                 s = s.substring(0, s.length() - 1);
             }
 
-            for (String myorf : balony.allSGDInfo.keySet()) {
-                if (balony.allSGDInfo.get(myorf).gene.toLowerCase().equals(s.toLowerCase())) {
+            for (String myorf : Balony.allSGDInfo.keySet()) {
+                if (Balony.allSGDInfo.get(myorf).gene.toLowerCase().equals(s.toLowerCase())) {
                     desc = desc.replace(s, "<u><font color='blue'>" + s + "</font></u>");
-                    sI.jEditorPane1.getDocument().putProperty(s, true);
+//                    sI.jEditorPane1.getDocument().putProperty(s, true);
                 }
             }
         }
 
-        sI.jEditorPane1.setText("<html><font face = 'Tahoma, Helvetica'>"
-                + desc + "</font></html>");
+        sI.jEditorPane1.setText(Balony.getFancyDesc(desc));
 
         Double[] ctrlSpots = new Double[sets + 1];
         Double[] expSpots = new Double[sets + 1];
@@ -1003,7 +1034,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
         String qgene = linkageJTextField.getText().toLowerCase().trim();
         String orf = "";
 
-        HashSet<String> orfs = new HashSet<String>(balony.allSGDInfo.keySet());
+        HashSet<String> orfs = new HashSet<String>(Balony.allSGDInfo.keySet());
 
         for (String s : orfs) {
             if (s.toLowerCase().equals(qgene)) {
@@ -1013,8 +1044,8 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
 
         if (orf.length() == 0) {
 
-            for (String s : balony.allSGDInfo.keySet()) {
-                String gene = balony.allSGDInfo.get(s).gene;
+            for (String s : Balony.allSGDInfo.keySet()) {
+                String gene = Balony.allSGDInfo.get(s).gene;
                 if (gene.toLowerCase().equals(qgene)) {
                     orf = s;
                 }
@@ -1022,10 +1053,10 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
 
             if (orf.isEmpty()) {
 
-                for (String s : balony.allSGDInfo.keySet()) {
+                for (String s : Balony.allSGDInfo.keySet()) {
 
-                    if (balony.allSGDInfo.get(s).aliases != null) {
-                        ArrayList<String> al = balony.allSGDInfo.get(s).aliases;
+                    if (Balony.allSGDInfo.get(s).aliases != null) {
+                        ArrayList<String> al = Balony.allSGDInfo.get(s).aliases;
                         for (int i = 0; i < al.size(); i++) {
                             al.set(i, al.get(i).toLowerCase());
                         }
@@ -1165,6 +1196,31 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
 
         updateFilters();
     }//GEN-LAST:event_excludeJMenuItemActionPerformed
+
+    public void excludeORFs(ArrayList<String> orfs) {
+        if (orfs == null || orfs.isEmpty()) {
+            return;
+        }
+
+        for (Object tableData1[] : tableData) {
+            String orf = tableData1[COL_ORF].toString().toUpperCase();
+            if (orfs.contains(orf)) {
+                System.out.println("Excluded gene: " + orf);
+                TreeSet<String> ex;
+                if (tableData1[COL_EXCLUDE] == null) {
+                    ex = new TreeSet<String>();
+                } else {
+                    ex = (TreeSet<String>) tableData1[COL_EXCLUDE];
+                }
+                ex.add("Manual");
+                tableData1[COL_EXCLUDE] = ex;
+            }
+        }
+
+        for (String orf : orfs) {
+
+        }
+    }
 
     @SuppressWarnings("unchecked")
     private void includeJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_includeJMenuItemActionPerformed
@@ -1406,141 +1462,142 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
     }//GEN-LAST:event_lcHitsJComboBoxActionPerformed
 
     private void exportTableJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportTableJButtonActionPerformed
-        String opts[] = {"Tab-delimited text (raw)", "Excel .xls", "Excel 2007+ .xlsx"
-        };
-        int i = JOptionPane.showOptionDialog(this, "Choose output format:",
-                "Export Table", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
-                null, opts, opts[0]);
-        if (i == JOptionPane.CLOSED_OPTION) {
-            return;
-        }
+        tableWriter.writeTable(this, tableData, model.columnNames);
 
-        JFileChooser jfc = new JFileChooser();
-        if (i == 0) {
-            jfc.setFileFilter(new FileNameExtensionFilter("Tab-delimited text files",
-                    "txt"));
-            jfc.setSelectedFile(new File(getTitle().concat(".txt")));
-        }
-
-        if (i == 1) {
-            jfc.setFileFilter(new FileNameExtensionFilter("Excel .xls files",
-                    "xls"));
-            jfc.setSelectedFile(new File(getTitle().concat(".xls")));
-        }
-
-        if (i == 2) {
-            jfc.setFileFilter(new FileNameExtensionFilter("Excel .xlsx files",
-                    "xlsx"));
-            jfc.setSelectedFile(new File(getTitle().concat(".xlsx")));
-        }
-
-        int rv = jfc.showSaveDialog(this);
-        if (rv == JFileChooser.APPROVE_OPTION) {
-            File f = jfc.getSelectedFile();
-
-            try {
-
-                if (i == 0) {
-                    BufferedWriter out = new BufferedWriter(new FileWriter(f));
-                    for (String columnName : model.columnNames) {
-                        out.write(columnName);
-                        out.write("\t");
-                    }
-                    out.newLine();
-                    for (Object[] tableData1 : tableData) {
-                        for (int k = 0; k < model.columnNames.length; k++) {
-                            if (tableData1[k] != null) {
-                                out.write(tableData1[k].toString());
-                            }
-                            out.write("\t");
-                        }
-                        out.newLine();
-                    }
-                    out.close();
-                }
-
-                if (i > 0) {
-
-                    Workbook wb;
-
-                    if (i == 1) {
-                        wb = new HSSFWorkbook();
-                    } else {
-                        wb = new XSSFWorkbook();
-                    }
-
-                    Sheet sheet = wb.createSheet(getTitle());
-                    Row r;
-                    CellStyle style;
-                    sheet.createFreezePane(0, 1);
-
-                    for (int j = 0; j < tableData.length; j++) {
-                        r = sheet.createRow(j + 1);
-                        for (int k = 0; k < model.columnNames.length; k++) {
-
-                            if (tableData[j][k] != null) {
-                                Cell c = r.createCell(k);
-
-                                if (tableData[j][k] instanceof Integer) {
-                                    c.setCellType(Cell.CELL_TYPE_NUMERIC);
-                                    int v = ((Integer) tableData[j][k]);
-                                    c.setCellValue(v);
-                                } else {
-                                    if (tableData[j][k] instanceof Double) {
-                                        c.setCellType(Cell.CELL_TYPE_NUMERIC);
-                                        double v = ((Double) tableData[j][k]);
-                                        c.setCellValue(v);
-                                    } else {
-
-                                        c.setCellType(Cell.CELL_TYPE_STRING);
-                                        c.setCellValue(tableData[j][k].toString());
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    r = sheet.createRow(0);
-                    style = wb.createCellStyle();
-                    Font font = wb.createFont();
-                    font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-                    style.setFont(font);
-
-                    for (int k = 0; k < model.columnNames.length; k++) {
-                        Cell c = r.createCell(k);
-                        c.setCellType(Cell.CELL_TYPE_STRING);
-                        c.setCellStyle(style);
-                        c.setCellValue(model.columnNames[k]);
-                    }
-
-                    FileOutputStream fos = new FileOutputStream(f);
-                    wb.write(fos);
-                    fos.close();
-                }
-
-            } catch (Exception ex) {
-                Logger.getLogger(dataTable.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(this, "File error: ".concat(ex.getLocalizedMessage()),
-                        "File Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            int n = JOptionPane.showOptionDialog(this, "File saved. Open in default application?", "Message",
-                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-                    null, null);
-            if (n == JOptionPane.YES_OPTION) {
-                try {
-                    Desktop d = Desktop.getDesktop();
-                    d.open(f);
-                } catch (IOException e) {
-                    System.out.println(e.getLocalizedMessage());
-                }
-            }
-        }
-
-
+//        String opts[] = {"Tab-delimited text (raw)", "Excel .xls", "Excel 2007+ .xlsx"
+//        };
+//        int i = JOptionPane.showOptionDialog(this, "Choose output format:",
+//                "Export Table", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+//                null, opts, opts[0]);
+//        if (i == JOptionPane.CLOSED_OPTION) {
+//            return;
+//        }
+//
+//        JFileChooser jfc = new JFileChooser();
+//        if (i == 0) {
+//            jfc.setFileFilter(new FileNameExtensionFilter("Tab-delimited text files",
+//                    "txt"));
+//            jfc.setSelectedFile(new File(getTitle().concat(".txt")));
+//        }
+//
+//        if (i == 1) {
+//            jfc.setFileFilter(new FileNameExtensionFilter("Excel .xls files",
+//                    "xls"));
+//            jfc.setSelectedFile(new File(getTitle().concat(".xls")));
+//        }
+//
+//        if (i == 2) {
+//            jfc.setFileFilter(new FileNameExtensionFilter("Excel .xlsx files",
+//                    "xlsx"));
+//            jfc.setSelectedFile(new File(getTitle().concat(".xlsx")));
+//        }
+//
+//        int rv = jfc.showSaveDialog(this);
+//        if (rv == JFileChooser.APPROVE_OPTION) {
+//            File f = jfc.getSelectedFile();
+//
+//            try {
+//
+//                if (i == 0) {
+//                    BufferedWriter out = new BufferedWriter(new FileWriter(f));
+//                    for (String columnName : model.columnNames) {
+//                        out.write(columnName);
+//                        out.write("\t");
+//                    }
+//                    out.newLine();
+//                    for (Object[] tableData1 : tableData) {
+//                        for (int k = 0; k < model.columnNames.length; k++) {
+//                            if (tableData1[k] != null) {
+//                                out.write(tableData1[k].toString());
+//                            }
+//                            out.write("\t");
+//                        }
+//                        out.newLine();
+//                    }
+//                    out.close();
+//                }
+//
+//                if (i > 0) {
+//
+//                    Workbook wb;
+//
+//                    if (i == 1) {
+//                        wb = new HSSFWorkbook();
+//                    } else {
+//                        wb = new XSSFWorkbook();
+//                    }
+//
+//                    Sheet sheet = wb.createSheet(getTitle());
+//                    Row r;
+//                    CellStyle style;
+//                    sheet.createFreezePane(0, 1);
+//
+//                    for (int j = 0; j < tableData.length; j++) {
+//                        r = sheet.createRow(j + 1);
+//                        for (int k = 0; k < model.columnNames.length; k++) {
+//
+//                            if (tableData[j][k] != null) {
+//                                Cell c = r.createCell(k);
+//
+//                                if (tableData[j][k] instanceof Integer) {
+//                                    c.setCellType(Cell.CELL_TYPE_NUMERIC);
+//                                    int v = ((Integer) tableData[j][k]);
+//                                    c.setCellValue(v);
+//                                } else {
+//                                    if (tableData[j][k] instanceof Double) {
+//                                        c.setCellType(Cell.CELL_TYPE_NUMERIC);
+//                                        double v = ((Double) tableData[j][k]);
+//                                        c.setCellValue(v);
+//                                    } else {
+//
+//                                        c.setCellType(Cell.CELL_TYPE_STRING);
+//                                        c.setCellValue(tableData[j][k].toString());
+//
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//
+//                    r = sheet.createRow(0);
+//                    style = wb.createCellStyle();
+//                    Font font = wb.createFont();
+//                    font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+//                    style.setFont(font);
+//
+//                    for (int k = 0; k < model.columnNames.length; k++) {
+//                        Cell c = r.createCell(k);
+//                        c.setCellType(Cell.CELL_TYPE_STRING);
+//                        c.setCellStyle(style);
+//                        c.setCellValue(model.columnNames[k]);
+//                    }
+//
+//                    FileOutputStream fos = new FileOutputStream(f);
+//                    wb.write(fos);
+//                    fos.close();
+//                }
+//
+//            } catch (Exception ex) {
+//                Logger.getLogger(dataTable.class.getName()).log(Level.SEVERE, null, ex);
+//                JOptionPane.showMessageDialog(this, "File error: ".concat(ex.getLocalizedMessage()),
+//                        "File Error", JOptionPane.ERROR_MESSAGE);
+//                return;
+//            }
+//            int n = JOptionPane.showOptionDialog(this, "File saved. Open in default application?", "Message",
+//                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+//                    null, null);
+//            if (n == JOptionPane.YES_OPTION) {
+//                try {
+//                    Desktop d = Desktop.getDesktop();
+//                    d.open(f);
+//                } catch (IOException e) {
+//                    System.out.println(e.getLocalizedMessage());
+//                }
+//            }
+//        }
     }//GEN-LAST:event_exportTableJButtonActionPerformed
 
+    
     private void orfsJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_orfsJMenuItemActionPerformed
         int[] i = analysisTable.getSelectedRows();
         if (i == null || i.length == 0) {
@@ -1716,9 +1773,9 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         autoEstimateCutOffs();
     }
-    
+
     public void autoEstimateCutOffs() {
-        
+
         setSortRatioAscending();
 
         int max = -1;
@@ -1754,20 +1811,35 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-            setLowCutOff(0.85d);
-            lowCutOffJTextField.setText(lowCutOff.toString());
-            lowCutOffJTextField.setCaretPosition(0);
-            setHighCutOff(1.17d);
-            highCutOffJTextField.setText(highCutOff.toString());
-            highCutOffJTextField.setCaretPosition(0);
+        setLowCutOff(0.85d);
+        lowCutOffJTextField.setText(lowCutOff.toString());
+        lowCutOffJTextField.setCaretPosition(0);
+        setHighCutOff(1.17d);
+        highCutOffJTextField.setText(highCutOff.toString());
+        highCutOffJTextField.setCaretPosition(0);
         reSetupData();
-        
+
 // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        excludeJFrame exjf = new excludeJFrame();
+        exjf.setVisible(true);
+        exjf.setDataTable(this);
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        comparisonTable cT = new comparisonTable();
+        cT.balony = balony;
+        cT.setupTable();
+        cT.setIconImage(balony.balloonImage);
+        cT.setVisible(true);
+                
+    }//GEN-LAST:event_jButton7ActionPerformed
 
     public void updatePlots() {
         for (ratioPlot rp : rPs) {
@@ -1777,6 +1849,11 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
 
     @Override
     public void lostOwnership(Clipboard clipboard, Transferable contents) {
+    }
+
+    @Override
+    public boolean isComparisonTable() {
+        return false;
     }
 
     public class compData {
@@ -2165,6 +2242,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
                 case 0:
                 case 1:
                 case 2:
+                case 3:
                     tcm.getColumn(i).setPreferredWidth(50);
                     break;
                 default:
@@ -2771,6 +2849,8 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

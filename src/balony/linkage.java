@@ -281,10 +281,7 @@ public class linkage extends javax.swing.JFrame {
         ArrayList<String> linkedList = new ArrayList<String>();
         
         boolean add = false;
-        for (int i = 0; i < orfList.size(); i++) {
-            
-            String s = orfList.get(i);
-            
+        for (String s : orfList) {
             if (s.equals(oStart)) {
                 add = true;
             }
