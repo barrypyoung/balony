@@ -6519,6 +6519,8 @@ public final class Balony extends javax.swing.JFrame {
                     dt.setVisible(true);
                 }
                 ad.setDt(dt);
+                dt.myAD = ad;
+                
                 aD.put(expname, ad);
                 dataTables.add(dt);
                 currentDT = dt;

@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-/*
+ /*
  * dataTable.java
  *
  * Created on 8-Oct-2009, 12:05:29 PM
@@ -24,8 +24,6 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 import javax.swing.*;
 import javax.swing.Timer;
@@ -43,14 +41,6 @@ import org.apache.commons.math3.exception.NoDataException;
 import org.apache.commons.math3.exception.NullArgumentException;
 import org.apache.commons.math3.exception.NumberIsTooSmallException;
 import org.apache.commons.math3.stat.inference.TestUtils;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -58,6 +48,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class dataTable extends javax.swing.JFrame implements ClipboardOwner, screenCompare {
 
+    public String[][][] orfs;
+    public String[][][] genes;
+    public analysisData myAD;
     public Double minSpotSize;
     public Double maxSpotSize;
     public Double sickCutOff;
@@ -186,6 +179,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner, scr
         refreshTableJButton = new javax.swing.JButton();
         exportTableJButton = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
         filteringPanel = new javax.swing.JPanel();
         linkageJButton = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
@@ -542,6 +536,13 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner, scr
             }
         });
 
+        jButton8.setText("Summarize...");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout commandsPanelLayout = new javax.swing.GroupLayout(commandsPanel);
         commandsPanel.setLayout(commandsPanelLayout);
         commandsPanelLayout.setHorizontalGroup(
@@ -553,19 +554,21 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner, scr
                 .addGroup(commandsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(commandsPanelLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton7)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(commandsPanelLayout.createSequentialGroup()
+                        .addComponent(jButton7))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, commandsPanelLayout.createSequentialGroup()
                         .addGap(8, 8, 8)
-                        .addComponent(exportTableJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(exportTableJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton8)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         commandsPanelLayout.setVerticalGroup(
             commandsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(commandsPanelLayout.createSequentialGroup()
                 .addGroup(commandsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(refreshTableJButton)
-                    .addComponent(jButton7))
+                    .addComponent(jButton7)
+                    .addComponent(jButton8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(commandsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
@@ -776,13 +779,13 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner, scr
             tableSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tableSettingsJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(tableSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(tableSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(tableSettingsJPanelLayout.createSequentialGroup()
                         .addComponent(screenInfoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(filteringPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(commandsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(commandsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(tableSettingsJPanelLayout.createSequentialGroup()
                         .addComponent(lowCutOffPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -796,7 +799,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner, scr
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(descFilterJTextField))
                             .addComponent(spotParamsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         tableSettingsJPanelLayout.setVerticalGroup(
             tableSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -825,14 +828,12 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner, scr
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tableJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 939, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(tableJScrollPane))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(tableSettingsJPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(120, Short.MAX_VALUE))))
+                        .addComponent(tableSettingsJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1597,7 +1598,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner, scr
 //        }
     }//GEN-LAST:event_exportTableJButtonActionPerformed
 
-    
+
     private void orfsJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_orfsJMenuItemActionPerformed
         int[] i = analysisTable.getSelectedRows();
         if (i == null || i.length == 0) {
@@ -1838,8 +1839,20 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner, scr
         cT.setupTable();
         cT.setIconImage(balony.balloonImage);
         cT.setVisible(true);
-                
+
     }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        summarizeJFrame sumFrame = new summarizeJFrame();
+        sumFrame.setIconImage(new ImageIcon(main.class.getResource("/resources/balloon.png")).getImage());
+        sumFrame.myAD = myAD;
+        sumFrame.orfs = orfs;
+        sumFrame.genes = genes;
+        sumFrame.setupData();
+        sumFrame.setTitle("Summary: "+getTitle());
+        sumFrame.jTable1.getRowSorter().toggleSortOrder(sumFrame.COL_GENE);
+        sumFrame.setVisible(true);
+    }//GEN-LAST:event_jButton8ActionPerformed
 
     public void updatePlots() {
         for (ratioPlot rp : rPs) {
@@ -1933,17 +1946,20 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner, scr
     }
 
     public void setupData(Balony b, Double ctrl[][][][], Double exp[][][][], Integer s, Integer p,
-            Integer r, Integer c, String[][][] orf, String[][][] genes) {
+            Integer r, Integer c, String[][][] orf, String[][][] gene) {
         balony = b;
         myCtrl = ctrl;
         myExp = exp;
         myOrfs = orf;
-        myGenes = genes;
+        myGenes = gene;
         sets = s;
         plates = p;
         rows = r;
         cols = c;
         Double ratios[] = new Double[plates * rows * cols + 1];
+        
+        orfs =orf;
+        genes = gene;
 
         model = new MyTableModel();
         mrsl = new MyRowSorterListener();
@@ -2139,12 +2155,10 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner, scr
                     Hit hit = new Hit();
                     if (sl >= lchits && pval < lcpval) {
                         hit.i = 1;
+                    } else if (sr >= hchits && pval < hcpval) {
+                        hit.i = 2;
                     } else {
-                        if (sr >= hchits && pval < hcpval) {
-                            hit.i = 2;
-                        } else {
-                            hit.i = 0;
-                        }
+                        hit.i = 0;
                     }
 
                     tableData[cnt][COL_HIT] = hit;
@@ -2182,10 +2196,8 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner, scr
 
                                     if (b.genomeIndex.containsKey(s2)) {
                                         gI = b.genomeIndex.get(s2);
-                                    } else {
-                                        if (b.genomeIndex.containsKey(s3)) {
-                                            gI = b.genomeIndex.get(s3);
-                                        }
+                                    } else if (b.genomeIndex.containsKey(s3)) {
+                                        gI = b.genomeIndex.get(s3);
                                     }
                                 }
                             }
@@ -2283,10 +2295,8 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner, scr
         Double retval = sz;
         if (sz != null && sz < minSpotSize) {
             retval = minSpotSize;
-        } else {
-            if (sz != null && sz > maxSpotSize) {
-                retval = maxSpotSize;
-            }
+        } else if (sz != null && sz > maxSpotSize) {
+            retval = maxSpotSize;
         }
         return retval;
     }
@@ -2851,6 +2861,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner, scr
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

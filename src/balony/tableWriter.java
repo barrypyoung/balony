@@ -40,24 +40,30 @@ public class tableWriter {
         if (i == JOptionPane.CLOSED_OPTION) {
             return;
         }
+        
+        String[] chars = { ":", "[", "]" ,"/" ,"\\", "?" ,"*"};
+        String fname = parent.getTitle();
+        for(String c : chars) {
+            fname = fname.replace(c, "");
+        }
 
         JFileChooser jfc = new JFileChooser();
         if (i == 0) {
             jfc.setFileFilter(new FileNameExtensionFilter("Tab-delimited text files",
                     "txt"));
-            jfc.setSelectedFile(new File(parent.getTitle().concat(".txt")));
+            jfc.setSelectedFile(new File(fname.concat(".txt")));
         }
 
         if (i == 1) {
             jfc.setFileFilter(new FileNameExtensionFilter("Excel .xls files",
                     "xls"));
-            jfc.setSelectedFile(new File(parent.getTitle().concat(".xls")));
+            jfc.setSelectedFile(new File(fname.concat(".xls")));
         }
 
         if (i == 2) {
             jfc.setFileFilter(new FileNameExtensionFilter("Excel .xlsx files",
                     "xlsx"));
-            jfc.setSelectedFile(new File(parent.getTitle().concat(".xlsx")));
+            jfc.setSelectedFile(new File(fname.concat(".xlsx")));
         }
 
         int rv = jfc.showSaveDialog(parent);
@@ -94,15 +100,8 @@ public class tableWriter {
                     } else {
                         wb = new XSSFWorkbook();
                     }
-
-                    String sheetName = parent.getTitle();
-                    String[] chars = { ":", "[", "]" ,"/" ,"\\", "?" ,"*"};
                     
-                    for(String c : chars) {
-                        sheetName = sheetName.replace(c, "");
-                    }                   
-                    
-                    Sheet sheet = wb.createSheet(sheetName);
+                    Sheet sheet = wb.createSheet(fname);
                     Row r;
                     CellStyle style;
                     sheet.createFreezePane(0, 1);
