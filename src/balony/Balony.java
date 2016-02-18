@@ -939,8 +939,24 @@ public final class Balony extends javax.swing.JFrame {
         altOddRadioButton.setSelected(prefs.getProperty(PREFS_ALT_ODD_EVEN, "1").equals("1"));
         altEvenRadioButton.setSelected(prefs.getProperty(PREFS_ALT_ODD_EVEN, "1").equals("2"));
 
+        for (Component c : ctrlPanel.getComponents()) {
+            if (plateCtrlRadioButton.isSelected()) {
+
+                c.setEnabled(true);
+                altOddRadioButton.setEnabled(false);
+                altEvenRadioButton.setEnabled(false);
+
+            } else {
+                c.setEnabled(false);
+                altOddRadioButton.setEnabled(true);
+                altEvenRadioButton.setEnabled(true);
+            }
+        }
+
         normPlateMedianButton.setSelected(prefs.getProperty(PREFS_NORMALIZATION, "1").equals("1"));
         normORFButton.setSelected(prefs.getProperty(PREFS_NORMALIZATION, "1").equals("2"));
+
+        normButtonPressed();
 
         scoreRCComboBox.setSelectedItem(prefs.getProperty(PREFS_SCORE_NORM,
                 "Median"));
@@ -5080,69 +5096,68 @@ public final class Balony extends javax.swing.JFrame {
 
     public void updateScoreTab() {
         String s = ctrldirTextField.getText();
-        if (s == null || s.isEmpty()) {
-            return;
-        }
+        if (s != null && !s.isEmpty()) {
 
-        File folder = new File(s);
-        File[] listoffiles = folder.listFiles();
-        if (listoffiles != null) {
-            int j = listoffiles.length;
-            ctrlplateData = new platenameData[j];
-            int cnt = 0;
-            for (File myF : listoffiles) {
-                s = myF.getName();
-                if (s.toLowerCase().endsWith(".txt") && myF.length() > 0) {
-                    try {
-                        BufferedReader in = new BufferedReader(new FileReader(myF));
-                        String t = in.readLine();
-                        if (t.equals(BALONY_RAW_DATA)) {
-                            while (!(t = in.readLine()).equals(BEGIN_DATA)) {
-                                if (!t.isEmpty()) {
-                                    if (t.startsWith("Name")) {
-                                        String u = t.substring(6);
-                                        platenameData p = new platenameData();
-                                        int i = 0;
-                                        if (cnt > 0) {
-                                            for (platenameData pd : ctrlplateData) {
-                                                if (pd != null && pd.getName().equals(u)) {
-                                                    p = pd;
-                                                    i = 1;
+            File folder = new File(s);
+            File[] listoffiles = folder.listFiles();
+            if (listoffiles != null) {
+                int j = listoffiles.length;
+                ctrlplateData = new platenameData[j];
+                int cnt = 0;
+                for (File myF : listoffiles) {
+                    s = myF.getName();
+                    if (s.toLowerCase().endsWith(".txt") && myF.length() > 0) {
+                        try {
+                            BufferedReader in = new BufferedReader(new FileReader(myF));
+                            String t = in.readLine();
+                            if (t.equals(BALONY_RAW_DATA)) {
+                                while (!(t = in.readLine()).equals(BEGIN_DATA)) {
+                                    if (!t.isEmpty()) {
+                                        if (t.startsWith("Name")) {
+                                            String u = t.substring(6);
+                                            platenameData p = new platenameData();
+                                            int i = 0;
+                                            if (cnt > 0) {
+                                                for (platenameData pd : ctrlplateData) {
+                                                    if (pd != null && pd.getName().equals(u)) {
+                                                        p = pd;
+                                                        i = 1;
+                                                    }
                                                 }
                                             }
-                                        }
-                                        if (i != 1) {
-                                            ctrlplateData[cnt] = new platenameData();
-                                            ctrlplateData[cnt].setName(u);
-                                            ctrlplateData[cnt].setFiles(new ArrayList<File>());
-                                            ctrlplateData[cnt].getFiles().add(myF);
-                                            cnt++;
-                                        } else {
-                                            p.getFiles().add(myF);
+                                            if (i != 1) {
+                                                ctrlplateData[cnt] = new platenameData();
+                                                ctrlplateData[cnt].setName(u);
+                                                ctrlplateData[cnt].setFiles(new ArrayList<File>());
+                                                ctrlplateData[cnt].getFiles().add(myF);
+                                                cnt++;
+                                            } else {
+                                                p.getFiles().add(myF);
+                                            }
                                         }
                                     }
                                 }
                             }
+                        } catch (IOException e) {
+                            System.out.println(e.getLocalizedMessage());
                         }
-                    } catch (IOException e) {
-                        System.out.println(e.getLocalizedMessage());
                     }
                 }
-            }
 
-            String ct = "";
-            if (ctrlplateComboBox.getSelectedIndex() != -1) {
-                ct = ctrlplateComboBox.getSelectedItem().toString();
-            }
-
-            ctrlplateComboBox.removeAllItems();
-            for (platenameData pd : ctrlplateData) {
-                if (pd != null) {
-                    ctrlplateComboBox.addItem(pd.getName());
+                String ct = "";
+                if (ctrlplateComboBox.getSelectedIndex() != -1) {
+                    ct = ctrlplateComboBox.getSelectedItem().toString();
                 }
-            }
-            if (!ct.isEmpty()) {
-                ctrlplateComboBox.setSelectedItem(ct);
+
+                ctrlplateComboBox.removeAllItems();
+                for (platenameData pd : ctrlplateData) {
+                    if (pd != null) {
+                        ctrlplateComboBox.addItem(pd.getName());
+                    }
+                }
+                if (!ct.isEmpty()) {
+                    ctrlplateComboBox.setSelectedItem(ct);
+                }
             }
         }
 
@@ -5151,8 +5166,8 @@ public final class Balony extends javax.swing.JFrame {
             return;
         }
 
-        folder = new File(s);
-        listoffiles = folder.listFiles();
+        File folder = new File(s);
+        File[] listoffiles = folder.listFiles();
         if (listoffiles == null) {
             return;
         }
@@ -6520,7 +6535,7 @@ public final class Balony extends javax.swing.JFrame {
                 }
                 ad.setDt(dt);
                 dt.myAD = ad;
-                
+
                 aD.put(expname, ad);
                 dataTables.add(dt);
                 currentDT = dt;
@@ -8297,10 +8312,21 @@ public final class Balony extends javax.swing.JFrame {
     }//GEN-LAST:event_ctrlplateComboBoxActionPerformed
 
     public void updateScoringFileName() {
-        if (ctrlplateComboBox.getSelectedItem() != null && expplateComboBox.getSelectedItem() != null) {
-            scorenameTextField.setText(ctrlplateComboBox.getSelectedItem().toString() + "--"
-                    + expplateComboBox.getSelectedItem().toString());
+//        if (ctrlplateComboBox.getSelectedItem() != null && expplateComboBox.getSelectedItem() != null) {
+//            scorenameTextField.setText(ctrlplateComboBox.getSelectedItem().toString() + "--"
+//                    + expplateComboBox.getSelectedItem().toString());
+//        }
+
+        String f = "";
+
+        if (expplateComboBox.getSelectedItem() != null) {
+            if (ctrlplateComboBox.getSelectedItem() != null) {
+                f = ctrlplateComboBox.getSelectedItem().toString().concat("--");
+            }
+            f = f.concat(expplateComboBox.getSelectedItem().toString());
         }
+
+        scorenameTextField.setText(f);
     }
 
     private void plateCtrlRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plateCtrlRadioButtonActionPerformed
@@ -8385,18 +8411,18 @@ public final class Balony extends javax.swing.JFrame {
         if (altColRadioButton.isSelected()) {
             prefs.setProperty(PREFS_CTRL_TYPE, "2");
             JOptionPane.showMessageDialog(this,
-                    "Warning: using alternate  columns as the control means that the\n" +
-                    "scored array will have half the number of columns as the input and\n"+
-                    "this MUST be reflected in the key file.",
+                    "Warning: using alternate  columns as the control means that the\n"
+                    + "scored array will have half the number of columns as the input and\n"
+                    + "this MUST be reflected in the key file.",
                     PLATE, JOptionPane.WARNING_MESSAGE);
         }
 
         if (altRowRadioButton.isSelected()) {
             prefs.setProperty(PREFS_CTRL_TYPE, "3");
             JOptionPane.showMessageDialog(this,
-                    "Warning: using alternate  rows as the control means that the\n" +
-                    "scored array will have half the number of rows as the input and\n"+
-                    "this MUST be reflected in the key file.",
+                    "Warning: using alternate  rows as the control means that the\n"
+                    + "scored array will have half the number of rows as the input and\n"
+                    + "this MUST be reflected in the key file.",
                     PLATE, JOptionPane.WARNING_MESSAGE);
         }
 
@@ -9333,7 +9359,7 @@ public final class Balony extends javax.swing.JFrame {
                         }
                     }
 
-                    // Re-normalize
+                    // Re-normalize (centre)
                     if (normPlateMedianButton.isSelected()) {
                         ArrayList<Double> tmpSpots = new ArrayList<Double>();
                         double median;

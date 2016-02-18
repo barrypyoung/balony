@@ -16,7 +16,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TreeSet;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.table.AbstractTableModel;
@@ -39,17 +38,18 @@ public class summarizeJFrame extends javax.swing.JFrame implements ClipboardOwne
 
     public final int COL_ORF = 0;
     public final int COL_GENE = COL_ORF + 1;
-    public final int COL_N = COL_GENE + 1;
-    public final int COL_CTRL = COL_N + 1;
+    public final int COL_CTRL_N = COL_GENE + 1;
+    public final int COL_CTRL = COL_CTRL_N + 1;
     public final int COL_CTRL_SD = COL_CTRL + 1;
-    public final int COL_EXP = COL_CTRL_SD + 1;
+    public final int COL_EXP_N = COL_CTRL_SD +1;
+    public final int COL_EXP = COL_EXP_N + 1;
     public final int COL_EXP_SD = COL_EXP + 1;
     public final int COL_RATIO = COL_EXP_SD + 1;
     public final int COL_DIFF = COL_RATIO + 1;
     public final int COL_PVAL = COL_DIFF + 1;
 
-    public final String[] columnNames = {"ORF", "Gene", "n",
-        "Ctrl", "Ctrl SD", "Exp", "Exp SD", "Ratio",
+    public final String[] columnNames = {"ORF", "Gene", "Ctrl n",
+        "Ctrl", "Ctrl SD", "Exp n", "Exp", "Exp SD", "Ratio",
         "Diff", "p-value"};
 
     public Object tableData[][];
@@ -267,10 +267,11 @@ public class summarizeJFrame extends javax.swing.JFrame implements ClipboardOwne
             clip=jTextField1.getText().concat("\n");
         }
         
-        for (Object[] tableData1 : tableData) {
-            clip = clip.concat(tableData1[col].toString()).concat("\n");
+        for(int i=0; i<tableData.length; i++) {
+            int j = jTable1.convertRowIndexToModel(i);
+            clip=clip.concat(tableData[j][col].toString().concat("\n"));
         }
-
+        
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(new StringSelection(clip), this);
     }
@@ -376,7 +377,8 @@ public class summarizeJFrame extends javax.swing.JFrame implements ClipboardOwne
 
             tableData[i][COL_ORF] = s;
             tableData[i][COL_GENE] = summaryData.get(s).gene;
-            tableData[i][COL_N] = summaryData.get(s).ctrlSpots.size();
+            tableData[i][COL_CTRL_N] = summaryData.get(s).ctrlSpots.size();
+            tableData[i][COL_EXP_N] = summaryData.get(s).expSpots.size();
 
             ArrayList<Double> c = summaryData.get(s).ctrlSpots;
             int j = c.size();
@@ -404,7 +406,7 @@ public class summarizeJFrame extends javax.swing.JFrame implements ClipboardOwne
             }
 
             tableData[i][COL_EXP] = exp;
-            tableData[i][COL_EXP_SD] = Math.sqrt(StatUtils.variance(ctrls));
+            tableData[i][COL_EXP_SD] = Math.sqrt(StatUtils.variance(exps));
 
             if (ctrl > 0) {
                 ratio = exp / ctrl;
@@ -502,25 +504,10 @@ public class summarizeJFrame extends javax.swing.JFrame implements ClipboardOwne
                 return;
             }
 
-//            if (c == COL_INDEX) {
-//                setForeground(Color.white);
-//                setBackground(Color.black);
-//                setText("#");
-//            }
             if (value instanceof Double) {
                 NumberFormat nf = NumberFormat.getNumberInstance();
                 nf.setMaximumFractionDigits(4);
                 setText(nf.format(value));
-            } else if (value.getClass().equals(new TreeSet<String>().getClass())) {
-                StringBuilder outString = new StringBuilder();
-
-                for (String s : (TreeSet<String>) value) {
-                    outString.append(s).append(", ");
-                }
-
-                if (outString.length() > 2) {
-                    setText(outString.substring(0, outString.length() - 2));
-                }
             } else {
                 setText(value.toString());
             }
