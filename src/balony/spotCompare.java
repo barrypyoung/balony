@@ -76,11 +76,11 @@ public class spotCompare extends javax.swing.JFrame {
     }
     
     public void setScreens(ArrayList<String> screens) {
-        DefaultListModel lmo = (DefaultListModel) jList1.getModel();
+        DefaultListModel<String> lmo = (DefaultListModel<String>) jList1.getModel();
         lmo.clear();
-        for (String s : screens) {
+        screens.stream().forEach((s) -> {
             lmo.addElement(s);
-        }
+        });
     }
     
     public void setPosition(int plate, int row, int column) {
@@ -92,10 +92,10 @@ public class spotCompare extends javax.swing.JFrame {
         jLabel2.setText("Row:  " + row);
         jLabel3.setText("Column: " + column);
         
-        val = new HashMap<String, Double>();
-        err = new HashMap<String, Double>();
-        lowHits = new HashMap<String, String>();
-        highHits = new HashMap<String, String>();
+        val = new HashMap<>();
+        err = new HashMap<>();
+        lowHits = new HashMap<>();
+        highHits = new HashMap<>();
         
         String myOrf = "N/A";
         
@@ -387,7 +387,7 @@ public class spotCompare extends javax.swing.JFrame {
 
         };
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        jList1 = new javax.swing.JList<>();
         jComboBox1 = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -656,8 +656,8 @@ public class spotCompare extends javax.swing.JFrame {
             return;
         }
         
-        DefaultListModel lm = (DefaultListModel) jList1.getModel();
-        Object tmp = lm.getElementAt(sel);
+        DefaultListModel<String> lm = (DefaultListModel<String>) jList1.getModel();
+        String tmp = lm.getElementAt(sel);
         lm.set(sel, lm.getElementAt(sel - 1));
         lm.set(sel - 1, tmp);
         
@@ -676,8 +676,8 @@ public class spotCompare extends javax.swing.JFrame {
             return;
         }
         
-        DefaultListModel lm = (DefaultListModel) jList1.getModel();
-        Object tmp = lm.getElementAt(sel);
+        DefaultListModel<String> lm = (DefaultListModel<String>) jList1.getModel();
+        String tmp = lm.getElementAt(sel);
         lm.set(sel, lm.getElementAt(sel + 1));
         lm.set(sel + 1, tmp);
         
@@ -783,7 +783,7 @@ public class spotCompare extends javax.swing.JFrame {
             return;
         }
         
-        DefaultListModel lmo = (DefaultListModel) jList1.getModel();
+        DefaultListModel<String> lmo = (DefaultListModel<String>) jList1.getModel();
         lmo.remove(jList1.getSelectedIndex());
         jList1.setModel(lmo);
         setPosition(currPlate, currRow, currCol);
@@ -899,20 +899,20 @@ public class spotCompare extends javax.swing.JFrame {
     }//GEN-LAST:event_jEditorPane1MouseEntered
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        ArrayList<String> scr = new ArrayList<String>();
-        DefaultListModel lm = (DefaultListModel) jList1.getModel();
+        ArrayList<String> scr = new ArrayList<>();
+        DefaultListModel<String> lm = (DefaultListModel<String>) jList1.getModel();
         Object[] lst = lm.toArray();
         
         for (Object o : lst) {
             scr.add(o.toString());
         }
 
-        for(String s : balony.aD.keySet()) {
-            if(!scr.contains(s)) {
-                scr.add(s);
-                lm.addElement(s);
-            }
-        }
+        balony.aD.keySet().stream().filter((s) -> (!scr.contains(s))).map((s) -> {
+            scr.add(s);
+            return s;
+        }).forEach((s) -> {
+            lm.addElement(s);
+        });
 
         jList1.setModel(lm);
         
@@ -948,10 +948,8 @@ public class spotCompare extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new spotCompare().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new spotCompare().setVisible(true);
         });
     }
 
@@ -968,7 +966,7 @@ public class spotCompare extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JList jList1;
+    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;

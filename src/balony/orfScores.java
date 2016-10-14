@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
         public void orfScores() {
             setGene("");
-            setVals(new ArrayList<Double>());
+            setVals(new ArrayList<>());
         }
 
         /**

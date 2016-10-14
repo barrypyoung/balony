@@ -219,17 +219,16 @@ public class gridPresets extends javax.swing.JFrame {
         String s = gridnameTextField.getText();
         String outFile = s + Balony.PRESET;
         try {
-            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outFile));
-            Properties p = new Properties();
-            p.setProperty("name", s);
-            p.setProperty("rows", gridrowsTextField.getText());
-            p.setProperty("cols", gridcolsTextField.getText());
-            p.setProperty("dx", griddxTextField.getText());
-            p.setProperty("dy", griddyTextField.getText());
-            p.setProperty("dpi", griddpiTextField.getText());
-            p.storeToXML(out, "");
-
-            out.close();
+            try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outFile))) {
+                Properties p = new Properties();
+                p.setProperty("name", s);
+                p.setProperty("rows", gridrowsTextField.getText());
+                p.setProperty("cols", gridcolsTextField.getText());
+                p.setProperty("dx", griddxTextField.getText());
+                p.setProperty("dy", griddyTextField.getText());
+                p.setProperty("dpi", griddpiTextField.getText());
+                p.storeToXML(out, "");
+            }
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
         }

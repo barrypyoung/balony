@@ -27,7 +27,7 @@ public class MultiFileChooser extends javax.swing.JFrame {
     
     Balony b;
     Long last = System.currentTimeMillis();
-    HashSet<File> newFiles = new HashSet<File>();
+    HashSet<File> newFiles = new HashSet<>();
 
     /**
      * Creates new form MultiFileChooser
@@ -150,19 +150,20 @@ public class MultiFileChooser extends javax.swing.JFrame {
     private void jFileChooser1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jFileChooser1PropertyChange
         
         if (!jCheckBox1.isSelected()) {
-            newFiles = new HashSet<File>();
+            newFiles = new HashSet<>();
             newFiles.addAll(Arrays.asList(jFileChooser1.getSelectedFiles()));
             return;
         }
         
         if (evt.getPropertyName().equals(JFileChooser.SELECTED_FILES_CHANGED_PROPERTY)) {
+            newFiles.addAll(Arrays.asList(jFileChooser1.getSelectedFiles()));
             return;
         }
         
         if (evt.getPropertyName().equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) {
             System.out.println("In loop");
             
-            newFiles = new HashSet<File>();
+            newFiles = new HashSet<>();
             
             File[] files = jFileChooser1.getSelectedFiles();
             
@@ -173,6 +174,7 @@ public class MultiFileChooser extends javax.swing.JFrame {
                     for (File ff : f.getParentFile().listFiles()) {
                         if (ff.getAbsolutePath().startsWith(pre)) {
                             newFiles.add(ff);
+                            System.out.println("Added file: "+ff.getName());
                         }
                     }
                 }
@@ -189,16 +191,13 @@ public class MultiFileChooser extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            
-            @Override
-            public void run() {
-                new MultiFileChooser().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new MultiFileChooser().setVisible(true);
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -20,7 +20,7 @@
         <property name="current-date"  value="C:\Apps\Balony\Balony-latest-${TODAY}.jar" />        
         <copy file="C:\Apps\Balony.jar" tofile="${current-date}" ></copy>
         
-        <taskdef name="jar-bundler" classpath="lib/jarbundler-2.4.0.jar"  classname="net.sourceforge.jarbundler.JarBundler"></taskdef>
+        <taskdef name="jar-bundler" classpath="lib/jarbundler-core-3.3.0.jar"  classname="com.ultramixer.jarbundler.JarBundler"></taskdef>
         <jar-bundler name="Balony"
                      dir="${basedir}"
                      icon="MacOSX_resources/balloon.icns"

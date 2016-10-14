@@ -655,9 +655,7 @@ public class spotInfo extends javax.swing.JFrame {
             Desktop d = Desktop.getDesktop();
             d.browse(new URI("http://www.yeastgenome.org/cgi-bin/locus.fpl?locus="
                     + orfJLabel.getText()));
-        } catch (URISyntaxException e) {
-            System.out.println(e.getLocalizedMessage());
-        } catch (IOException e) {
+        } catch (URISyntaxException | IOException e) {
             System.out.println(e.getLocalizedMessage());
         }
     }//GEN-LAST:event_geneJLabelMouseClicked
@@ -910,7 +908,7 @@ public class spotInfo extends javax.swing.JFrame {
 
             if (end > start) {
                 System.out.println(hover);
-                for (String orf : balony.allSGDInfo.keySet()) {
+                for (String orf : Balony.allSGDInfo.keySet()) {
                     if (orf.toLowerCase().equals(hover.toLowerCase())) {
                         doFind(hover.toLowerCase());
                         return;
@@ -937,10 +935,10 @@ public class spotInfo extends javax.swing.JFrame {
                 hover = hover.substring(0, hover.length() - 1);
             }
 
-            for (String orf : balony.allSGDInfo.keySet()) {
-                String gene = balony.allSGDInfo.get(orf).gene;
+            for (String orf : Balony.allSGDInfo.keySet()) {
+                String gene = Balony.allSGDInfo.get(orf).gene;
                 if (gene.toLowerCase().equals(hover.toLowerCase())) {
-                    doFind(balony.allSGDInfo.get(orf).gene.toLowerCase());
+                    doFind(Balony.allSGDInfo.get(orf).gene.toLowerCase());
                     return;
                 }
             }
@@ -956,7 +954,7 @@ public class spotInfo extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        balony.openSpotCompare(plate, row, column, new ArrayList<String>());
+        balony.openSpotCompare(plate, row, column, new ArrayList<>());
     }//GEN-LAST:event_jButton6ActionPerformed
 
     /**

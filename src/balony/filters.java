@@ -14,6 +14,7 @@ import java.io.File;
 public class filters {
     public class txtFileFilter implements java.io.FileFilter {
 
+        @Override
         public boolean accept(File f) {
             return f.getName().toLowerCase().endsWith(".txt");
         }
@@ -21,6 +22,7 @@ public class filters {
 
     public class jpgFileFilter implements java.io.FileFilter {
 
+        @Override
         public boolean accept(File f) {
             return f.getName().toLowerCase().endsWith(".jpg");
         }

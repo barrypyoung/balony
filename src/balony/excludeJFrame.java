@@ -179,9 +179,7 @@ public class excludeJFrame extends javax.swing.JFrame {
             try {
                 s = (String) contents.getTransferData(DataFlavor.stringFlavor);
                 jTextArea1.setText(s.toUpperCase());
-            } catch (UnsupportedFlavorException ex) {
-                Logger.getLogger(excludeJFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
+            } catch (UnsupportedFlavorException | IOException ex) {
                 Logger.getLogger(excludeJFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
 
@@ -209,7 +207,7 @@ public class excludeJFrame extends javax.swing.JFrame {
             return;
         }
 
-        ArrayList<String> orfs = new ArrayList<String>(Arrays.asList(s.toUpperCase().split("\\n")));
+        ArrayList<String> orfs = new ArrayList<>(Arrays.asList(s.toUpperCase().split("\\n")));
         if (dt != null && !orfs.isEmpty()) {
             dt.excludeORFs(orfs);
         }
@@ -232,23 +230,16 @@ public class excludeJFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(excludeJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(excludeJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(excludeJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(excludeJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        
+        //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new excludeJFrame().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new excludeJFrame().setVisible(true);
         });
     }
 

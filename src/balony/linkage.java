@@ -278,7 +278,7 @@ public class linkage extends javax.swing.JFrame {
     }//GEN-LAST:event_linkageEndJSliderStateChanged
     
     private void applyJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyJButtonActionPerformed
-        ArrayList<String> linkedList = new ArrayList<String>();
+        ArrayList<String> linkedList = new ArrayList<>();
         
         boolean add = false;
         for (String s : orfList) {
@@ -365,7 +365,7 @@ public class linkage extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1KeyReleased
 
     /**
-     * @param args the command line arguments
+     * @param ga
      */
 //    public static void main(String args[]) {
 //        java.awt.EventQueue.invokeLater(new Runnable() {
@@ -395,7 +395,7 @@ public class linkage extends javax.swing.JFrame {
             end = orfList.size() - 1;
         }
         
-        ArrayList<String> aOrfs = new ArrayList<String>();
+        ArrayList<String> aOrfs = new ArrayList<>();
         int i = start;
         
         while (i <= end) {
@@ -426,8 +426,8 @@ public class linkage extends javax.swing.JFrame {
         g.setBackground(Color.white);
         g.clearRect(0, 0, width, height);
         
-        ArrayList<Integer> x = new ArrayList<Integer>();
-        ArrayList<Integer> y = new ArrayList<Integer>();
+        ArrayList<Integer> x = new ArrayList<>();
+        ArrayList<Integer> y = new ArrayList<>();
 
         Rectangle r;
         
@@ -435,7 +435,7 @@ public class linkage extends javax.swing.JFrame {
             
             Double d = orfRatio.get(orfList.get(i));
             
-            ArrayList<Double> ard = new ArrayList<Double>();
+            ArrayList<Double> ard = new ArrayList<>();
             
             int k;
             try {
@@ -601,19 +601,19 @@ public class linkage extends javax.swing.JFrame {
     public void setupLinkage(String orf) {
         
         myOrf = orf;
-        int orfchr = balony.allSGDInfo.get(orf).chr;
+        int orfchr = Balony.allSGDInfo.get(orf).chr;
         oStart = "";
         oEnd = "";
         
         jLabel2.setText("" + orfchr);
 
         // Key is start coord; value is arraylist of all orfs there
-        TreeMap<Integer, String> chrom = new TreeMap<Integer, String>();
+        TreeMap<Integer, String> chrom = new TreeMap<>();
         
-        for (String o : balony.allSGDInfo.keySet()) {
+        Balony.allSGDInfo.keySet().stream().forEach((o) -> {
             try {
-                if (balony.allSGDInfo.get(o).chr == orfchr) {
-                    Integer i = (Integer) balony.allSGDInfo.get(o).startCoord;
+                if (Balony.allSGDInfo.get(o).chr == orfchr) {
+                    Integer i = (Integer) Balony.allSGDInfo.get(o).startCoord;
                     if (!chrom.containsKey(i) && o.startsWith("Y")) {
                         chrom.put(i, o);
                     }
@@ -622,22 +622,22 @@ public class linkage extends javax.swing.JFrame {
             } catch (Exception e) {
                 System.out.println(e.getLocalizedMessage());
             }
-        }
+        });
         
-        orfList = new ArrayList<String>();
+        orfList = new ArrayList<>();
         
-        for (Integer I : chrom.keySet()) {
+        chrom.keySet().stream().forEach((I) -> {
             orfList.add(chrom.get(I));
-        }
+        });
         
-        orfRatio = new HashMap<String, Double>();
+        orfRatio = new HashMap<>();
         
-        for (String s : orfList) {
+        orfList.stream().forEach((s) -> {
             Double d = dt.getRatioByOrf(s);
             if (d != null) {
                 orfRatio.put(s, d);
             }
-        }
+        });
         
         int window;
         try {

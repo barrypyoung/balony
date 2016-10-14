@@ -23,7 +23,9 @@ public class calibrate extends javax.swing.JDialog {
 
     Balony balony;
 
-    /** Creates new form calibrate */
+    /** Creates new form calibrate
+     * @param parent
+     * @param modal */
     public calibrate(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -52,7 +54,7 @@ public class calibrate extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
         jRadioButton2 = new javax.swing.JRadioButton();
-        jComboBox2 = new javax.swing.JComboBox();
+        jComboBox2 = new javax.swing.JComboBox<>();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -111,7 +113,7 @@ public class calibrate extends javax.swing.JDialog {
             }
         });
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox2.setEnabled(false);
 
         jButton2.setText("Use this preset");
@@ -148,7 +150,7 @@ public class calibrate extends javax.swing.JDialog {
                                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(30, 30, 30)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(jTextField1)
@@ -159,7 +161,7 @@ public class calibrate extends javax.swing.JDialog {
                                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGap(18, 18, 18)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                                            .addComponent(jTextField3)
                                             .addComponent(jLabel5))))
                                 .addGap(18, 18, 18))
                             .addGroup(layout.createSequentialGroup()
@@ -259,17 +261,16 @@ public class calibrate extends javax.swing.JDialog {
         String s = jTextField3.getText();
         String outFile = s + Balony.PRESET;
         try {
-            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outFile));
-            Properties p = new Properties();
-            p.setProperty("name", s);
-            p.setProperty("rows", jTextField1.getText());
-            p.setProperty("cols", jTextField2.getText());
-            p.setProperty("dx", "25");
-            p.setProperty("dy", "25");
-            p.setProperty("dpi", "300");
-            p.storeToXML(out, "");
-
-            out.close();
+            try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outFile))) {
+                Properties p = new Properties();
+                p.setProperty("name", s);
+                p.setProperty("rows", jTextField1.getText());
+                p.setProperty("cols", jTextField2.getText());
+                p.setProperty("dx", "25");
+                p.setProperty("dy", "25");
+                p.setProperty("dpi", "300");
+                p.storeToXML(out, "");
+            }
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
         }
@@ -308,20 +309,16 @@ public class calibrate extends javax.swing.JDialog {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                calibrate dialog = new calibrate(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            calibrate dialog = new calibrate(new javax.swing.JFrame(), true);
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            dialog.setVisible(true);
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -329,7 +326,7 @@ public class calibrate extends javax.swing.JDialog {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JComboBox jComboBox1;
-    public javax.swing.JComboBox jComboBox2;
+    public javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

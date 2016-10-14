@@ -188,7 +188,7 @@ public class ratioPlot extends javax.swing.JFrame {
 
         // Build up an ArrayList of the surrounding co-ordinates of each spot
 
-        hotSpot = new ArrayList<HotSpot>();
+        hotSpot = new ArrayList<>();
         for (int ii = 0; ii < rows; ii++) {
             try {
 
@@ -548,19 +548,17 @@ public class ratioPlot extends javax.swing.JFrame {
         int x = evt.getX();
         int y = evt.getY();
 
-        ArrayList<Integer> selRows = new ArrayList<Integer>();
+        ArrayList<Integer> selRows = new ArrayList<>();
 
-        for (HotSpot h : hotSpot) {
-            if (x > h.xmin && x < h.xmax && y > h.ymin && y < h.ymax) {
-                selRows.add(h.row);
-            }
-        }
+        hotSpot.stream().filter((h) -> (x > h.xmin && x < h.xmax && y > h.ymin && y < h.ymax)).forEach((h) -> {
+            selRows.add(h.row);
+        });
 
         if (selRows.size() > 0) {
             ListSelectionModel lm = new DefaultListSelectionModel();
-            for (Integer i : selRows) {
+            selRows.stream().forEach((i) -> {
                 lm.addSelectionInterval(i, i);
-            }
+            });
             dt.analysisTable.setSelectionModel(lm);
             externRefreshPlot();
             dt.analysisTable.scrollRectToVisible(dt.analysisTable.getCellRect(selRows.get(0),

@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-/*
+ /*
  * Balony.java
  *
  * Created on 4-Aug-2009, 4:56:48 PM
@@ -24,7 +24,11 @@ import ij.process.TypeConverter;
 import ij.text.TextWindow;
 import ij.util.Tools;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.*;
 import java.awt.geom.GeneralPath;
@@ -57,7 +61,7 @@ import org.kohsuke.github.PagedIterable;
  *
  * @author Barry Young
  */
-public final class Balony extends javax.swing.JFrame {
+public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
 
     /**
      * Prefs value used to store the last folder accessed from the "Scan" tab.
@@ -652,6 +656,7 @@ public final class Balony extends javax.swing.JFrame {
      *
      */
     public HashSet<arrayDefinition> arrayDefs;
+    public HashSet<summarizeJFrame> sumTables;
 
     /**
      *
@@ -839,6 +844,7 @@ public final class Balony extends javax.swing.JFrame {
      *
      */
     public messageJFrame messageFrame;
+    public File queryArrayFile;
 
     @Override
     public void setFocusable(boolean focusable) {
@@ -955,6 +961,7 @@ public final class Balony extends javax.swing.JFrame {
 
         normPlateMedianButton.setSelected(prefs.getProperty(PREFS_NORMALIZATION, "1").equals("1"));
         normORFButton.setSelected(prefs.getProperty(PREFS_NORMALIZATION, "1").equals("2"));
+        normNoneButton.setSelected(prefs.getProperty(PREFS_NORMALIZATION, "1").equals("3"));
 
         normButtonPressed();
 
@@ -998,6 +1005,8 @@ public final class Balony extends javax.swing.JFrame {
             BalonyVersion = "Unknown";
         }
 
+        System.out.println("Prefs loaded");
+
         latestVersionJLabel.setText(prefs.getProperty(PREFS_BALONYLATESTVERSION, "Unknown"));
 
         if (prefs.containsKey(PREFS_IMAGE_PRESET)) {
@@ -1024,8 +1033,8 @@ public final class Balony extends javax.swing.JFrame {
                 try {
                     @SuppressWarnings("unchecked")
                     java.util.List<File> fileList = (java.util.List<File>) support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
-                    ArrayList<File> myFiles = new ArrayList<File>();
-                    for (File f : fileList) {
+                    ArrayList<File> myFiles = new ArrayList<>();
+                    fileList.stream().forEach((f) -> {
                         if (f.isDirectory()) {
                             File ftmp[] = f.listFiles();
                             for (File ff : ftmp) {
@@ -1033,25 +1042,20 @@ public final class Balony extends javax.swing.JFrame {
                                     myFiles.add(ff);
                                 }
                             }
-                        } else {
-                            if (!f.getAbsolutePath().contains("autocheck_images")) {
-                                myFiles.add(f);
-                            }
+                        } else if (!f.getAbsolutePath().contains("autocheck_images")) {
+                            myFiles.add(f);
                         }
-                    }
-                    ArrayList<File> fFiles = new ArrayList<File>();
-                    for (File myF : myFiles) {
+                    });
+                    ArrayList<File> fFiles = new ArrayList<>();
+                    myFiles.stream().forEach((myF) -> {
                         String fn = myF.getName().toLowerCase();
                         if ((fn.endsWith(".jpg") || fn.endsWith(".png") || fn.endsWith(".tif")
                                 || fn.endsWith(".jpeg")) && !fn.startsWith(".")) {
                             fFiles.add(myF);
                         }
-                    }
-                    loadImageFileList(fFiles.toArray());
-                } catch (UnsupportedFlavorException ex) {
-                    Logger.getLogger(Balony.class.getName()).log(Level.SEVERE, null, ex);
-                    return false;
-                } catch (IOException ex) {
+                    });
+                    loadImageFileList((File[]) fFiles.toArray(new File[fFiles.size()]));
+                } catch (UnsupportedFlavorException | IOException ex) {
                     Logger.getLogger(Balony.class.getName()).log(Level.SEVERE, null, ex);
                     return false;
                 }
@@ -1060,11 +1064,12 @@ public final class Balony extends javax.swing.JFrame {
         });
 
 //        iSet = new HashMap<File, imageSettings>();
-        allArraysMap = new TreeMap<String, plateArray>();
-        keyFiles = new HashMap<String, File>();
-        dataTables = new HashSet<dataTable>();
-        aD = new HashMap<String, analysisData>();
-        arrayDefs = new HashSet<arrayDefinition>();
+        allArraysMap = new TreeMap<>();
+        keyFiles = new HashMap<>();
+        dataTables = new HashSet<>();
+        sumTables = new HashSet<>();
+        aD = new HashMap<>();
+        arrayDefs = new HashSet<>();
         loadPresets();
         loadKeyFiles();
         autoCheckPos = -1;
@@ -1095,16 +1100,11 @@ public final class Balony extends javax.swing.JFrame {
         }
 
         // Change listeners:
-        ChangeListener scoreChangeListener = new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                JTabbedPane jpane = (JTabbedPane) e.getSource();
-                if (jpane.getSelectedComponent().equals(scoringtabaPanel)) {
-                    updateScoreTab();
-                }
+        ChangeListener scoreChangeListener = (ChangeEvent e) -> {
+            JTabbedPane jpane = (JTabbedPane) e.getSource();
+            if (jpane.getSelectedComponent().equals(scoringtabaPanel)) {
+                updateScoreTab();
             }
-
         };
 
         tabPane.addChangeListener(scoreChangeListener);
@@ -1149,7 +1149,7 @@ public final class Balony extends javax.swing.JFrame {
      *
      * @param files
      */
-    public void loadImageFileList(Object[] files) {
+    public void loadImageFileList(File[] files) {
         imageFileJList.removeAll();
         fileListCellRenderer flcr = new fileListCellRenderer();
         flcr.quantP = quantP;
@@ -1206,8 +1206,8 @@ public final class Balony extends javax.swing.JFrame {
                     return;
                 }
             }
-            allSGDInfo = new HashMap<String, sgdInfo>();
-            genomeIndex = new HashMap<String, Integer>();
+            allSGDInfo = new HashMap<>();
+            genomeIndex = new HashMap<>();
             try {
                 BufferedReader in = new BufferedReader(new FileReader(f));
                 String t;
@@ -1221,7 +1221,7 @@ public final class Balony extends javax.swing.JFrame {
                         sgdi.strand = sg[11];
                         sgdi.desc = sg[15];
                         if (sg[5].length() > 0) {
-                            sgdi.aliases = new ArrayList<String>(Arrays.asList(sg[5].split("\\|")));
+                            sgdi.aliases = new ArrayList<>(Arrays.asList(sg[5].split("\\|")));
                         }
                         try {
                             sgdi.chr = Integer.parseInt(sg[8]);
@@ -1231,9 +1231,9 @@ public final class Balony extends javax.swing.JFrame {
                         }
                         int gI = sgdi.chr * 10000000 + sgdi.startCoord;
                         if (sgdi.aliases != null && sgdi.aliases.size() > 0) {
-                            for (String s : sgdi.aliases) {
+                            sgdi.aliases.stream().forEach((s) -> {
                                 genomeIndex.put(s, gI);
-                            }
+                            });
                         }
                         genomeIndex.put(sg[3], gI);
                         allSGDInfo.put(sg[3], sgdi);
@@ -1253,7 +1253,7 @@ public final class Balony extends javax.swing.JFrame {
         spc.setIconImage(balloonImage);
         spc.setTitle("Spot Compare");
 
-        ArrayList<String> ads = new ArrayList<String>();
+        ArrayList<String> ads = new ArrayList<>();
 
         if (screens.isEmpty()) {
             for (int i = 0; i < dataTablesComboBox.getItemCount(); i++) {
@@ -1268,6 +1268,11 @@ public final class Balony extends javax.swing.JFrame {
         spc.setPosition(plate, row, column);
         spc.setVisible(true);
         return spc;
+    }
+
+    @Override
+    public void lostOwnership(Clipboard clipboard, Transferable contents) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -1375,7 +1380,7 @@ public final class Balony extends javax.swing.JFrame {
             }
         }
         scoreKeysComboBox.removeAllItems();
-        for (String k : new TreeSet<String>(keyFiles.keySet())) {
+        new TreeSet<>(keyFiles.keySet()).stream().forEach((k) -> {
             try {
                 if (new File(keyFiles.get(k).toString()).exists()) {
                     scoreKeysComboBox.addItem(k);
@@ -1383,7 +1388,7 @@ public final class Balony extends javax.swing.JFrame {
             } catch (Exception e) {
                 System.out.println(e.getLocalizedMessage());
             }
-        }
+        });
         if (keyName2 != null && !keyName2.equals("")) {
             scoreKeysComboBox.setSelectedItem(keyName2);
         }
@@ -1416,15 +1421,17 @@ public final class Balony extends javax.swing.JFrame {
                         p.setXstp(Float.parseFloat(pr.getProperty("dx")));
                         p.setYstp(Float.parseFloat(pr.getProperty("dy")));
                         allArraysMap.put(p.getName(), p);
-                    } catch (IOException e) {
-                        System.out.println(e.getLocalizedMessage());
-                    } catch (NumberFormatException e) {
+                    } catch (IOException | NumberFormatException e) {
                         System.out.println(e.getLocalizedMessage());
                     }
                 }
             }
         }
-        gridChoicejComboBox.setModel(new DefaultComboBoxModel(allArraysMap.keySet().toArray()));
+
+        String[] aamka = (String[]) allArraysMap.keySet().toArray(new String[allArraysMap.size()]);
+
+        DefaultComboBoxModel<String> dcbm = new DefaultComboBoxModel<>(aamka);
+        gridChoicejComboBox.setModel(dcbm);
         if (o != null) {
             gridChoicejComboBox.setSelectedItem(o);
         }
@@ -1444,7 +1451,7 @@ public final class Balony extends javax.swing.JFrame {
         buttonGroup1 = new javax.swing.ButtonGroup();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         analysisArrayPanel = new javax.swing.JPanel();
-        analysisArrayComboBox = new javax.swing.JComboBox();
+        analysisArrayComboBox = new javax.swing.JComboBox<>();
         buttonGroup2 = new javax.swing.ButtonGroup();
         scanprocessButton = new javax.swing.JButton();
         scoreRCComboBox = new javax.swing.JComboBox();
@@ -1504,7 +1511,7 @@ public final class Balony extends javax.swing.JFrame {
         scanprocessallButton = new javax.swing.JButton();
         scanFolderJTextField = new javax.swing.JTextField();
         scanFileJScrollPane = new javax.swing.JScrollPane();
-        scanFileJList = new javax.swing.JList();
+        scanFileJList = new javax.swing.JList<>();
         scanFilenameHelpJButton = new javax.swing.JButton();
         scanSelectAllButton = new javax.swing.JButton();
         scanPreviewPanel = new javax.swing.JPanel();
@@ -1555,11 +1562,11 @@ public final class Balony extends javax.swing.JFrame {
         advancedPanel = new javax.swing.JPanel();
         imageShowParamsButton = new javax.swing.JButton();
         imageFileJListScrollPane = new javax.swing.JScrollPane();
-        imageFileJList = new javax.swing.JList();
+        imageFileJList = new javax.swing.JList<>();
         folderJTextField = new javax.swing.JTextField();
         autoGridButton = new javax.swing.JButton();
         presetPanel = new javax.swing.JPanel();
-        gridChoicejComboBox = new javax.swing.JComboBox();
+        gridChoicejComboBox = new javax.swing.JComboBox<>();
         imageShowPresetsButton = new javax.swing.JButton();
         imageStopButton = new javax.swing.JButton();
         toggleInputOutputButton = new javax.swing.JButton();
@@ -1571,14 +1578,17 @@ public final class Balony extends javax.swing.JFrame {
         normalPanel = new javax.swing.JPanel();
         scoreRCJCheckBox = new javax.swing.JCheckBox();
         scoreSpatialJCheckBox = new javax.swing.JCheckBox();
+        scoreUndergrowthJCheckBox = new javax.swing.JCheckBox();
+        scoreNormPercentileLabel = new javax.swing.JLabel();
+        scoreNormPercentileTextField = new javax.swing.JTextField();
         ctrlPanel = new javax.swing.JPanel();
         ctrldirTextField = new javax.swing.JTextField(40);
         ctrldirButton = new javax.swing.JButton();
-        ctrlplateComboBox = new javax.swing.JComboBox();
+        ctrlplateComboBox = new javax.swing.JComboBox<>();
         expPanel = new javax.swing.JPanel();
         expButton = new javax.swing.JButton();
         expdirTextField = new javax.swing.JTextField(40);
-        expplateComboBox = new javax.swing.JComboBox();
+        expplateComboBox = new javax.swing.JComboBox<>();
         savescorePanel = new javax.swing.JPanel();
         saveScoreButton = new javax.swing.JButton();
         scorenameTextField = new javax.swing.JTextField(40);
@@ -1588,8 +1598,11 @@ public final class Balony extends javax.swing.JFrame {
         autoAnalyzeJCheckBox = new javax.swing.JCheckBox();
         scoreKeyfilePanel = new javax.swing.JPanel();
         scoreArraykeyLabel = new javax.swing.JLabel();
-        scoreKeysComboBox = new javax.swing.JComboBox();
+        scoreKeysComboBox = new javax.swing.JComboBox<>();
         keyFileLoadButton = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
+        useQueryKeyJCheckBox = new javax.swing.JCheckBox();
         scoringRefreshButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         plateCtrlRadioButton = new javax.swing.JRadioButton();
@@ -1601,14 +1614,16 @@ public final class Balony extends javax.swing.JFrame {
         normPlateMedianButton = new javax.swing.JRadioButton();
         normORFButton = new javax.swing.JRadioButton();
         normORFJTextField = new javax.swing.JTextField();
+        normNoneButton = new javax.swing.JRadioButton();
         analysistabPanel = new javax.swing.JPanel();
         analysisTablesPanel = new javax.swing.JPanel();
         analysisLoadButton = new javax.swing.JButton();
-        dataTablesComboBox = new javax.swing.JComboBox();
+        dataTablesComboBox = new javax.swing.JComboBox<>();
         analysisOpenDataTablesJCheckBox = new javax.swing.JCheckBox();
         restoreTableButton = new javax.swing.JButton();
         wizardModeJCheckBox = new javax.swing.JCheckBox();
-        jButton3 = new javax.swing.JButton();
+        analysisTableRemoveButton = new javax.swing.JButton();
+        analysisTableShowButton = new javax.swing.JButton();
         sgdFeaturesJPanel = new javax.swing.JPanel();
         analysisOverrideKeyFileCheckBox = new javax.swing.JCheckBox();
         downloadSGDInfoButton = new javax.swing.JButton();
@@ -1625,6 +1640,15 @@ public final class Balony extends javax.swing.JFrame {
         jLabel28 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         maxSpotSizeJTextField = new javax.swing.JTextField();
+        analysisSummaryPanel = new javax.swing.JPanel();
+        analysisGenerateSummaryTablesHiddenButton = new javax.swing.JButton();
+        analysisGenerateSummaryTablesVisibleButton = new javax.swing.JButton();
+        analysisShowSummaryTables = new javax.swing.JButton();
+        analysisSummaryClipboardCopyTypeComboBox = new javax.swing.JComboBox();
+        analysisSummaryDefaultsPanel = new javax.swing.JPanel();
+        analysisSummaryMedianCheckBox = new javax.swing.JCheckBox();
+        analysisSummaryPairedSpotsCheckBox = new javax.swing.JCheckBox();
+        analysisSummaryCopyAllClipboardButton = new javax.swing.JButton();
         optionsPanel = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         javaLAFJRadioButton = new javax.swing.JRadioButton();
@@ -1647,7 +1671,7 @@ public final class Balony extends javax.swing.JFrame {
 
         analysisArrayPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Array"));
 
-        analysisArrayComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Load..." }));
+        analysisArrayComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Load..." }));
         analysisArrayComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 analysisArrayComboBoxActionPerformed(evt);
@@ -3072,27 +3096,56 @@ public final class Balony extends javax.swing.JFrame {
             }
         });
 
-        scoreSpatialJCheckBox.setText("Spatial");
+        scoreSpatialJCheckBox.setText("LOESS smoothing");
+        scoreSpatialJCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                scoreSpatialJCheckBoxActionPerformed(evt);
+            }
+        });
+
+        scoreUndergrowthJCheckBox.setText("Also adjust for under-growth");
+
+        scoreNormPercentileLabel.setText("Normalization percentile:");
+
+        scoreNormPercentileTextField.setText("50");
 
         org.jdesktop.layout.GroupLayout normalPanelLayout = new org.jdesktop.layout.GroupLayout(normalPanel);
         normalPanel.setLayout(normalPanelLayout);
         normalPanelLayout.setHorizontalGroup(
             normalPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(normalPanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .add(normalPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(scoreRCJCheckBox)
-                    .add(scoreSpatialJCheckBox))
-                .addContainerGap(102, Short.MAX_VALUE))
+                    .add(normalPanelLayout.createSequentialGroup()
+                        .add(normalPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(normalPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .add(scoreRCJCheckBox))
+                            .add(normalPanelLayout.createSequentialGroup()
+                                .add(15, 15, 15)
+                                .add(scoreNormPercentileLabel)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                                .add(scoreNormPercentileTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                        .add(0, 9, Short.MAX_VALUE))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, normalPanelLayout.createSequentialGroup()
+                        .add(0, 0, Short.MAX_VALUE)
+                        .add(normalPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(scoreSpatialJCheckBox)
+                            .add(scoreUndergrowthJCheckBox))))
+                .addContainerGap())
         );
         normalPanelLayout.setVerticalGroup(
             normalPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(normalPanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .add(scoreRCJCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(normalPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(scoreNormPercentileLabel)
+                    .add(scoreNormPercentileTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(scoreUndergrowthJCheckBox)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(scoreSpatialJCheckBox)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
 
         ctrlPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Control Plates"));
@@ -3277,6 +3330,17 @@ public final class Balony extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setText("Query Key:");
+
+        jButton3.setText("Load...");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        useQueryKeyJCheckBox.setText("Use Query Key");
+
         org.jdesktop.layout.GroupLayout scoreKeyfilePanelLayout = new org.jdesktop.layout.GroupLayout(scoreKeyfilePanel);
         scoreKeyfilePanel.setLayout(scoreKeyfilePanelLayout);
         scoreKeyfilePanelLayout.setHorizontalGroup(
@@ -3286,22 +3350,33 @@ public final class Balony extends javax.swing.JFrame {
                 .add(scoreKeyfilePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(scoreKeysComboBox, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(scoreKeyfilePanelLayout.createSequentialGroup()
-                        .add(scoreArraykeyLabel)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(keyFileLoadButton)
-                        .add(0, 47, Short.MAX_VALUE)))
+                        .add(scoreKeyfilePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(scoreKeyfilePanelLayout.createSequentialGroup()
+                                .add(scoreArraykeyLabel)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                                .add(keyFileLoadButton))
+                            .add(scoreKeyfilePanelLayout.createSequentialGroup()
+                                .add(jLabel6)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(jButton3))
+                            .add(useQueryKeyJCheckBox))
+                        .add(0, 44, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         scoreKeyfilePanelLayout.setVerticalGroup(
             scoreKeyfilePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(scoreKeyfilePanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .add(scoreKeyfilePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(scoreArraykeyLabel)
                     .add(keyFileLoadButton))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(scoreKeysComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(useQueryKeyJCheckBox)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(scoreKeyfilePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel6)
+                    .add(jButton3)))
         );
 
         scoringRefreshButton.setText("Refresh Data");
@@ -3412,6 +3487,14 @@ public final class Balony extends javax.swing.JFrame {
 
         normORFJTextField.setEnabled(false);
 
+        normButtonGroup.add(normNoneButton);
+        normNoneButton.setText("None");
+        normNoneButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                normNoneButtonActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -3423,7 +3506,8 @@ public final class Balony extends javax.swing.JFrame {
                     .add(jPanel2Layout.createSequentialGroup()
                         .add(normORFButton)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(normORFJTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 82, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                        .add(normORFJTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 82, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(normNoneButton))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -3435,7 +3519,9 @@ public final class Balony extends javax.swing.JFrame {
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(normORFButton)
                     .add(normORFJTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(normNoneButton)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         org.jdesktop.layout.GroupLayout scoringtabaPanelLayout = new org.jdesktop.layout.GroupLayout(scoringtabaPanel);
@@ -3478,11 +3564,11 @@ public final class Balony extends javax.swing.JFrame {
                 .add(scoringRefreshButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(scoringtabaPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(scoreKeyfilePanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(normalPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .add(normalPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(scoreKeyfilePanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(savescorePanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(43, 43, 43))
+                .addContainerGap())
         );
 
         tabPane.addTab("Scoring", scoringtabaPanel);
@@ -3529,10 +3615,17 @@ public final class Balony extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Remove");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        analysisTableRemoveButton.setText("Remove");
+        analysisTableRemoveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                analysisTableRemoveButtonActionPerformed(evt);
+            }
+        });
+
+        analysisTableShowButton.setText("Show");
+        analysisTableShowButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                analysisTableShowButtonActionPerformed(evt);
             }
         });
 
@@ -3542,17 +3635,23 @@ public final class Balony extends javax.swing.JFrame {
             analysisTablesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(analysisTablesPanelLayout.createSequentialGroup()
                 .add(analysisTablesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(dataTablesComboBox, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, analysisTablesPanelLayout.createSequentialGroup()
                         .add(analysisLoadButton)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(analysisOpenDataTablesJCheckBox)
                         .add(18, 18, 18)
                         .add(restoreTableButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .add(analysisTablesPanelLayout.createSequentialGroup()
-                        .add(wizardModeJCheckBox)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(jButton3)))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, analysisTablesPanelLayout.createSequentialGroup()
+                        .add(analysisTablesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(analysisTablesPanelLayout.createSequentialGroup()
+                                .add(wizardModeJCheckBox)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .add(analysisTablesPanelLayout.createSequentialGroup()
+                                .add(dataTablesComboBox, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .add(18, 18, 18)))
+                        .add(analysisTablesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                            .add(analysisTableShowButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .add(analysisTableRemoveButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         analysisTablesPanelLayout.setVerticalGroup(
@@ -3563,11 +3662,13 @@ public final class Balony extends javax.swing.JFrame {
                     .add(analysisOpenDataTablesJCheckBox)
                     .add(restoreTableButton))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(dataTablesComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(analysisTablesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(dataTablesComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(analysisTableShowButton))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(analysisTablesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(wizardModeJCheckBox)
-                    .add(jButton3))
+                    .add(analysisTableRemoveButton))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -3738,6 +3839,113 @@ public final class Balony extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        analysisSummaryPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Summary Tables"));
+
+        analysisGenerateSummaryTablesHiddenButton.setText("Generate Summary Tables (hidden)");
+        analysisGenerateSummaryTablesHiddenButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                analysisGenerateSummaryTablesHiddenButtonActionPerformed(evt);
+            }
+        });
+
+        analysisGenerateSummaryTablesVisibleButton.setText("Generate Summary Tables (visible)");
+        analysisGenerateSummaryTablesVisibleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                analysisGenerateSummaryTablesVisibleButtonActionPerformed(evt);
+            }
+        });
+
+        analysisShowSummaryTables.setText("Show Summary Tables");
+        analysisShowSummaryTables.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                analysisShowSummaryTablesActionPerformed(evt);
+            }
+        });
+
+        analysisSummaryClipboardCopyTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ctrls", "Exps", "Ratios", "Diffs", "p-values" }));
+        analysisSummaryClipboardCopyTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                analysisSummaryClipboardCopyTypeComboBoxActionPerformed(evt);
+            }
+        });
+
+        analysisSummaryDefaultsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Defaults"));
+
+        analysisSummaryMedianCheckBox.setSelected(true);
+        analysisSummaryMedianCheckBox.setText("Use median values");
+        analysisSummaryMedianCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                analysisSummaryMedianCheckBoxActionPerformed(evt);
+            }
+        });
+
+        analysisSummaryPairedSpotsCheckBox.setSelected(true);
+        analysisSummaryPairedSpotsCheckBox.setText("Paired spots");
+
+        org.jdesktop.layout.GroupLayout analysisSummaryDefaultsPanelLayout = new org.jdesktop.layout.GroupLayout(analysisSummaryDefaultsPanel);
+        analysisSummaryDefaultsPanel.setLayout(analysisSummaryDefaultsPanelLayout);
+        analysisSummaryDefaultsPanelLayout.setHorizontalGroup(
+            analysisSummaryDefaultsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(analysisSummaryDefaultsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(analysisSummaryDefaultsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(analysisSummaryMedianCheckBox)
+                    .add(analysisSummaryPairedSpotsCheckBox))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        analysisSummaryDefaultsPanelLayout.setVerticalGroup(
+            analysisSummaryDefaultsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(analysisSummaryDefaultsPanelLayout.createSequentialGroup()
+                .add(analysisSummaryMedianCheckBox)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(analysisSummaryPairedSpotsCheckBox))
+        );
+
+        analysisSummaryCopyAllClipboardButton.setText("Copy to clipboard all:");
+        analysisSummaryCopyAllClipboardButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                analysisSummaryCopyAllClipboardButtonActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout analysisSummaryPanelLayout = new org.jdesktop.layout.GroupLayout(analysisSummaryPanel);
+        analysisSummaryPanel.setLayout(analysisSummaryPanelLayout);
+        analysisSummaryPanelLayout.setHorizontalGroup(
+            analysisSummaryPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(analysisSummaryPanelLayout.createSequentialGroup()
+                .add(analysisSummaryPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(analysisSummaryPanelLayout.createSequentialGroup()
+                        .add(analysisSummaryPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                            .add(analysisShowSummaryTables, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .add(analysisSummaryCopyAllClipboardButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(analysisSummaryClipboardCopyTypeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(analysisSummaryDefaultsPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(analysisSummaryPanelLayout.createSequentialGroup()
+                        .add(analysisGenerateSummaryTablesHiddenButton)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(analysisGenerateSummaryTablesVisibleButton)
+                        .add(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        analysisSummaryPanelLayout.setVerticalGroup(
+            analysisSummaryPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(analysisSummaryPanelLayout.createSequentialGroup()
+                .add(analysisSummaryPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(analysisGenerateSummaryTablesHiddenButton)
+                    .add(analysisGenerateSummaryTablesVisibleButton))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(analysisSummaryPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(analysisSummaryPanelLayout.createSequentialGroup()
+                        .add(analysisShowSummaryTables)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(analysisSummaryPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(analysisSummaryClipboardCopyTypeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(analysisSummaryCopyAllClipboardButton)))
+                    .add(analysisSummaryDefaultsPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+        );
+
         org.jdesktop.layout.GroupLayout analysistabPanelLayout = new org.jdesktop.layout.GroupLayout(analysistabPanel);
         analysistabPanel.setLayout(analysistabPanelLayout);
         analysistabPanelLayout.setHorizontalGroup(
@@ -3747,19 +3955,22 @@ public final class Balony extends javax.swing.JFrame {
                 .add(analysistabPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, defaultTableSettingsJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, analysisTablesPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(sgdFeaturesJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .add(sgdFeaturesJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(analysisSummaryPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         analysistabPanelLayout.setVerticalGroup(
             analysistabPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(analysistabPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(analysisTablesPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(analysisTablesPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(analysisSummaryPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(5, 5, 5)
                 .add(defaultTableSettingsJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(sgdFeaturesJPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(274, 274, 274))
+                .add(249, 249, 249))
         );
 
         tabPane.addTab("Analysis", analysistabPanel);
@@ -4051,7 +4262,7 @@ public final class Balony extends javax.swing.JFrame {
             autoGridSetting = autoGridJCheckBox.isSelected();
             // First time run - calibrate image
             calibrate calib = new calibrate(this, true);
-            calib.jComboBox2.setModel(gridChoicejComboBox.getModel());
+            calib.jComboBox2.setModel((ComboBoxModel<String>) gridChoicejComboBox.getModel());
             calib.setVisible(true);
         }
         threshed = false;
@@ -4083,7 +4294,7 @@ public final class Balony extends javax.swing.JFrame {
             loadedIm = new ImagePlus(currFile.getAbsolutePath(), ip);
         }
         if (autoNameJCheckBox.isSelected()) {
-            String ss = currFile.getName().toLowerCase(), t = "";
+            String ss = currFile.getName().toLowerCase(), t;
             int i, j, k;
             i = ss.lastIndexOf(PLATE);
             j = ss.lastIndexOf(".");
@@ -4094,6 +4305,7 @@ public final class Balony extends javax.swing.JFrame {
                 currPlate = Integer.parseInt(getOnlyNumerics(t));
             } else {
                 messageText.append("\nCan't decipher plate number.");
+                currPlate = 1;
             }
 
             if (j != -1 && k != -1 && i != 1 && i > k && j > k) {
@@ -4102,6 +4314,7 @@ public final class Balony extends javax.swing.JFrame {
 
             } else {
                 messageText.append("\nCan't decipher set number.");
+                currSet = 1;
             }
 
             if (k != -1) {
@@ -4112,15 +4325,19 @@ public final class Balony extends javax.swing.JFrame {
                     tt = t.charAt(t.length() - 1);
                 }
 
-            } else {
-                if (i != -1) {
-                    t = currFile.getName().substring(0, i - 1);
-                    char tt = t.charAt(t.length() - 1);
-                    while (tt == ' ' || tt == '_' || tt == '-') {
-                        t = t.substring(0, t.length() - 2);
-                        tt = t.charAt(t.length() - 1);
-                    }
+            } else if (i != -1) {
+                t = currFile.getName().substring(0, i - 1);
+                char tt = t.charAt(t.length() - 1);
+                while (tt == ' ' || tt == '_' || tt == '-') {
+                    t = t.substring(0, t.length() - 2);
+                    tt = t.charAt(t.length() - 1);
                 }
+//                System.out.println("Name: " + t);
+            } else if (j != -1) {
+//                System.out.println("Using default name");
+                t = currFile.getName().substring(0, j);
+            } else {
+                t = currFile.getName();
             }
 
             setNumberJTextField.setText(currSet.toString());
@@ -4170,23 +4387,19 @@ public final class Balony extends javax.swing.JFrame {
         } else {
             if (autoThreshJCheckBox.isSelected() && rethresh < 1) {
                 doThresh();
-            } else {
-                if (rethresh > 0) {
-                    loadedIm.getProcessor().threshold(lastThresh - 5 * rethresh);
-                    threshed = true;
-                    loadedIm.repaintWindow();
-                }
+            } else if (rethresh > 0) {
+                loadedIm.getProcessor().threshold(lastThresh - 5 * rethresh);
+                threshed = true;
+                loadedIm.repaintWindow();
             }
             if (threshed && autoGridJCheckBox.isSelected() && resetGrid) {
                 gw = new gridWorker();
                 gw.execute();
-            } else {
-                if (threshed && gridded && autoQuantJCheckBox.isSelected()) {
-                    drawGrid(loadedIm.getCanvas(), Color.green);
-                    if (autoQuantJCheckBox.isSelected() && quant == false) {
-                        qw = new quantWorker();
-                        qw.execute();
-                    }
+            } else if (threshed && gridded && autoQuantJCheckBox.isSelected()) {
+                drawGrid(loadedIm.getCanvas(), Color.green);
+                if (autoQuantJCheckBox.isSelected() && quant == false) {
+                    qw = new quantWorker();
+                    qw.execute();
                 }
             }
         }
@@ -4274,10 +4487,10 @@ public final class Balony extends javax.swing.JFrame {
         int c = 0;
         messageText.append("\nAssigning grid positions...");
         oriCp.setLineWidth(2);
-        grOval = new HashMap<String, Integer[]>();
-        mgOval = new HashMap<String, Integer[]>();
-        yeOval = new ArrayList<Integer[]>();
-        redRect = new HashMap<String, Integer[]>();
+        grOval = new HashMap<>();
+        mgOval = new HashMap<>();
+        yeOval = new ArrayList<>();
+        redRect = new HashMap<>();
 
         for (int i = 0; i < xs.length; i++) {
             Integer ov[] = new Integer[4];
@@ -4372,47 +4585,41 @@ public final class Balony extends javax.swing.JFrame {
             messageText.append("\nWarning: ").append(badSpots).append(" bad spots found.");
             if (norethresh) {
                 norethresh = false;
-            } else {
-                if (quantP.reThreshJCheckBox.isSelected() && rethresh < 10) {
-                    if (badSpots < bestSpots || bestSpots == -1) {
-                        System.out.println("Best spots: " + badSpots);
-                        bestSpots = badSpots;
-                        bestThresh = rethresh;
-                    }
-                    rethresh++;
-                    messageText.append("\nAttempting with lower threshold (").append(lastThresh - (5 * rethresh)).append(").");
-                    if (loadedIm != null) {
-                        loadedIm.changes = false;
-                        loadedIm.close();
-                    }
-                    resetGrid = false;
-                    loadedIm.setImage(oriCp.createImage());
-                    switchToInputImage();
-                    imageLoad2();
-                    return;
-                } else {
-                    if (quantP.reThreshJCheckBox.isSelected()) {
-                        messageText.append("\nUsing best threshold.");
-                        rethresh = bestThresh;
-                        norethresh = true;
-                        if (loadedIm != null) {
-                            loadedIm.changes = false;
-                            loadedIm.close();
-                        }
-                        resetGrid = false;
-                        loadedIm = new ImagePlus(currFile.getName(), oriCp.duplicate());
-                        switchToInputImage();
-                        imageLoad2();
-                    }
+            } else if (quantP.reThreshJCheckBox.isSelected() && rethresh < 10) {
+                if (badSpots < bestSpots || bestSpots == -1) {
+//                    System.out.println("Best spots: " + badSpots);
+                    bestSpots = badSpots;
+                    bestThresh = rethresh;
                 }
+                rethresh++;
+                messageText.append("\nAttempting with lower threshold (").append(lastThresh - (5 * rethresh)).append(").");
+                if (loadedIm != null) {
+                    loadedIm.changes = false;
+                    loadedIm.close();
+                }
+                resetGrid = false;
+                loadedIm.setImage(oriCp.createImage());
+                switchToInputImage();
+                imageLoad2();
+                return;
+            } else if (quantP.reThreshJCheckBox.isSelected()) {
+                messageText.append("\nUsing best threshold.");
+                rethresh = bestThresh;
+                norethresh = true;
+                if (loadedIm != null) {
+                    loadedIm.changes = false;
+                    loadedIm.close();
+                }
+                resetGrid = false;
+                loadedIm = new ImagePlus(currFile.getName(), oriCp.duplicate());
+                switchToInputImage();
+                imageLoad2();
             }
 
+        } else if (badSpots == 0) {
+            messageText.append("\nNo bad spots found.");
         } else {
-            if (badSpots == 0) {
-                messageText.append("\nNo bad spots found.");
-            } else {
-                messageText.append("\n").append(badSpots).append(" bad spots found (permissible).");
-            }
+            messageText.append("\n").append(badSpots).append(" bad spots found (permissible).");
         }
         rethresh = 0;
         quant = true;
@@ -4432,7 +4639,7 @@ public final class Balony extends javax.swing.JFrame {
         }
 
         if (leftCol == 0 || rightCol == 0 || topRow == 0 || botRow == 0) {
-            System.out.println("Missing row/col!");
+//            System.out.println("Missing row/col!");
             drawGrid(oIm.getCanvas(), Color.red);
             final String STR_LEFT = "Left";
             final String STR_RIGHT = "Right";
@@ -4498,7 +4705,7 @@ public final class Balony extends javax.swing.JFrame {
     public void doQuant2(boolean lowStrin, float circ, float snap, int minpix) {
         float as[], ws[], hs[], xs[], ys[];
 
-        redRect = new HashMap<String, Integer[]>();
+        redRect = new HashMap<>();
         badSpots = 0;
         ResultsTable rt;
         ParticleAnalyzer pa;
@@ -4607,27 +4814,31 @@ public final class Balony extends javax.swing.JFrame {
         Overlay o = new Overlay();
 
         if (!yeOval.isEmpty()) {
-            for (Integer[] ii : yeOval) {
-                Roi r = new OvalRoi(ii[0], ii[1], ii[2], ii[3]);
+            yeOval.stream().map((ii) -> new OvalRoi(ii[0], ii[1], ii[2], ii[3])).map((r) -> {
                 r.setStrokeColor(Color.yellow);
+                return r;
+            }).forEach((r) -> {
                 o.add(r);
-            }
+            });
         }
-        for (Integer[] ii : grOval.values()) {
-            Roi r = new OvalRoi(ii[0], ii[1], ii[2], ii[3]);
+        grOval.values().stream().map((ii) -> new OvalRoi(ii[0], ii[1], ii[2], ii[3])).map((r) -> {
             r.setStrokeColor(Color.green);
+            return r;
+        }).forEach((r) -> {
             o.add(r);
-        }
-        for (Integer[] ii : mgOval.values()) {
-            Roi r = new OvalRoi(ii[0], ii[1], ii[2], ii[3]);
+        });
+        mgOval.values().stream().map((ii) -> new OvalRoi(ii[0], ii[1], ii[2], ii[3])).map((r) -> {
             r.setStrokeColor(Color.magenta);
+            return r;
+        }).forEach((r) -> {
             o.add(r);
-        }
-        for (Integer[] ii : redRect.values()) {
-            Roi r = new Roi(ii[0], ii[1], ii[2], ii[3]);
+        });
+        redRect.values().stream().map((ii) -> new Roi(ii[0], ii[1], ii[2], ii[3])).map((r) -> {
             r.setStrokeColor(Color.red);
+            return r;
+        }).forEach((r) -> {
             o.add(r);
-        }
+        });
         oIm.setOverlay(o);
     }
 
@@ -4693,7 +4904,7 @@ public final class Balony extends javax.swing.JFrame {
         File folder = new File(s);
         File[] listoffiles = folder.listFiles();
         int cnt = 0;
-        ArrayList<File> vFiles = new ArrayList<File>();
+        ArrayList<File> vFiles = new ArrayList<>();
 
         for (File myF : listoffiles) {
             String fn = myF.getName().toLowerCase();
@@ -4704,7 +4915,7 @@ public final class Balony extends javax.swing.JFrame {
             }
         }
 
-        loadImageFileList(vFiles.toArray());
+        loadImageFileList((File[]) vFiles.toArray(new File[vFiles.size()]));
         messageText.append("\nFound ").append(cnt).append(" image files.");
     }//GEN-LAST:event_choosefolderButtonActionPerformed
 
@@ -4858,59 +5069,59 @@ public final class Balony extends javax.swing.JFrame {
                 }
             }
 
-            BufferedWriter out = new BufferedWriter(new FileWriter(outFile));
-            out.write(BALONY_RAW_DATA);
-            out.newLine();
-            DateFormat sdf = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            Date d = new Date();
-            out.write("Date: " + sdf.format(d));
-            out.newLine();
-            out.write("Rows: " + Integer.toString(rows));
-            out.newLine();
-            out.write("Cols: " + Integer.toString(cols));
-            out.newLine();
-            out.write("Name: " + plateNameJTextField.getText());
-            out.newLine();
-            out.write("Set: " + Integer.toString(currSet));
-            out.newLine();
-            out.write("Plate: " + Integer.toString(currPlate));
-            out.newLine();
-            out.write("Source file: " + currFile.getAbsolutePath());
-            out.newLine();
-            if (badSpots > 0) {
-                out.write("Bad spots: " + badSpots);
+            try (BufferedWriter out = new BufferedWriter(new FileWriter(outFile))) {
+                out.write(BALONY_RAW_DATA);
                 out.newLine();
-            }
-            out.write("minX: " + minX);
-            out.newLine();
-            out.write("minY: " + minY);
-            out.newLine();
-            out.write("stepX: " + stepX);
-            out.newLine();
-            out.write("stepY: " + stepY);
-            out.newLine();
-            out.write("dpi: " + dpi);
-            out.newLine();
-            out.newLine();
-            out.write(BEGIN_DATA);
-            out.newLine();
-            out.write("Row\tCol\tArea\tx\ty\twidth\theight");
-            out.newLine();
-            int i, j;
-            for (i = 1; i <= rows; i++) {
-                for (j = 1; j <= cols; j++) {
-                    out.write(Integer.toString(i) + "\t" + Integer.toString(j)
-                            + "\t" + Integer.toString(Area[j][i])
-                            + "\t" + Integer.toString(xCoord[j][i])
-                            + "\t" + Integer.toString(yCoord[j][i])
-                            + "\t" + Integer.toString(width[j][i])
-                            + "\t" + Integer.toString(height[j][i]));
+                DateFormat sdf = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                Date d = new Date();
+                out.write("Date: " + sdf.format(d));
+                out.newLine();
+                out.write("Rows: " + Integer.toString(rows));
+                out.newLine();
+                out.write("Cols: " + Integer.toString(cols));
+                out.newLine();
+                out.write("Name: " + plateNameJTextField.getText());
+                out.newLine();
+                out.write("Set: " + Integer.toString(currSet));
+                out.newLine();
+                out.write("Plate: " + Integer.toString(currPlate));
+                out.newLine();
+                out.write("Source file: " + currFile.getAbsolutePath());
+                out.newLine();
+                if (badSpots > 0) {
+                    out.write("Bad spots: " + badSpots);
                     out.newLine();
                 }
+                out.write("minX: " + minX);
+                out.newLine();
+                out.write("minY: " + minY);
+                out.newLine();
+                out.write("stepX: " + stepX);
+                out.newLine();
+                out.write("stepY: " + stepY);
+                out.newLine();
+                out.write("dpi: " + dpi);
+                out.newLine();
+                out.newLine();
+                out.write(BEGIN_DATA);
+                out.newLine();
+                out.write("Row\tCol\tArea\tx\ty\twidth\theight");
+                out.newLine();
+                int i, j;
+                for (i = 1; i <= rows; i++) {
+                    for (j = 1; j <= cols; j++) {
+                        out.write(Integer.toString(i) + "\t" + Integer.toString(j)
+                                + "\t" + Integer.toString(Area[j][i])
+                                + "\t" + Integer.toString(xCoord[j][i])
+                                + "\t" + Integer.toString(yCoord[j][i])
+                                + "\t" + Integer.toString(width[j][i])
+                                + "\t" + Integer.toString(height[j][i]));
+                        out.newLine();
+                    }
+                }
+                messageText.append("done.");
+                saveAutoCheckImage();
             }
-            messageText.append("done.");
-            saveAutoCheckImage();
-            out.close();
             fileMod = false;
         } catch (IOException e) {
             System.out.println(e.getLocalizedMessage());
@@ -5128,7 +5339,7 @@ public final class Balony extends javax.swing.JFrame {
                                             if (i != 1) {
                                                 ctrlplateData[cnt] = new platenameData();
                                                 ctrlplateData[cnt].setName(u);
-                                                ctrlplateData[cnt].setFiles(new ArrayList<File>());
+                                                ctrlplateData[cnt].setFiles(new ArrayList<>());
                                                 ctrlplateData[cnt].getFiles().add(myF);
                                                 cnt++;
                                             } else {
@@ -5199,7 +5410,7 @@ public final class Balony extends javax.swing.JFrame {
                                     if (i != 1) {
                                         expplateData[cnt] = new platenameData();
                                         expplateData[cnt].setName(u);
-                                        expplateData[cnt].setFiles(new ArrayList<File>());
+                                        expplateData[cnt].setFiles(new ArrayList<>());
                                         expplateData[cnt].getFiles().add(myF);
                                         cnt++;
                                     } else {
@@ -5242,6 +5453,56 @@ public final class Balony extends javax.swing.JFrame {
         doAddCtrl();
         doAddExp();
 
+        ArrayList<String> myQueries = new ArrayList<>();
+        boolean queryKey = useQueryKeyJCheckBox.isSelected();
+
+        String[][][] queryArray;
+        queryArray = new String[maxExpPlate + 1][expData.getRows() + 1][expData.getCols() + 1];
+
+        if (queryKey) {
+
+            // Read in query array file
+            System.out.println("Plates: " + expData.getPlates());
+
+            if (queryArrayFile == null) {
+                return;
+            }
+
+            try {
+                int p, r, c;
+                BufferedReader in = new BufferedReader(new FileReader(queryArrayFile));
+                String s;
+                System.out.println("QAF: " + queryArrayFile.getAbsolutePath());
+                while ((s = in.readLine()) != null) {
+                    System.out.println("Inloop");
+                    p = -1;
+                    r = -1;
+                    c = -1;
+                    String[] d = s.split("\t");
+                    if (d.length > 3) {
+                        try {
+                            p = Integer.parseInt(d[0]);
+                            r = Integer.parseInt(d[1]);
+                            c = Integer.parseInt(d[2]);
+
+                            if (p > -1 && c > -1 && r > -1) {
+                                queryArray[p][r][c] = d[3];
+                                if (!myQueries.contains(d[3])) {
+                                    myQueries.add(d[3]);
+                                }
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println(e.getLocalizedMessage());
+                        }
+
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println(e.getLocalizedMessage());
+            }
+
+        }
+
         if (scorenameTextField.getText() == null || scorenameTextField.getText().isEmpty()) {
             return;
         }
@@ -5259,173 +5520,204 @@ public final class Balony extends javax.swing.JFrame {
         }
 
         File[] f = new File[maxCtrlSet - minCtrlSet + 1];
-        if (scoreByArrayPosRadioButton.isSelected()) {
-            // One data file per set - assume all sets in range are present
-            for (int s = minCtrlSet; s <= maxCtrlSet; s++) {
-                try {
-                    String outFile = ss + scorenameTextField.getText()
-                            + "_set-" + Integer.toString(s) + ".txt";
-                    BufferedWriter out = new BufferedWriter(new FileWriter(outFile));
-                    f[s - minCtrlSet] = new File(outFile);
-                    out.write(SCORE_HEADER);
-                    out.newLine();
-                    for (int p = minCtrlPlate; p
-                            <= maxCtrlPlate; p++) {
-                        for (int i = 1; i
-                                <= ctrlData.getRows(); i++) {
-                            for (int j = 1; j
-                                    <= ctrlData.getCols(); j++) {
-                                if (ctrlData.getNormArea()[s][p][1][1] == null
-                                        || expData.getNormArea()[s][p][1][1] == null) {
-                                    JOptionPane.showMessageDialog(this, "Data missing for plate.",
-                                            "Warning", JOptionPane.WARNING_MESSAGE);
-                                    return;
-                                }
-                                out.write(scorenameTextField.getText() + "\t");
-                                if (keyOrfs != null && keyOrfs.length > 0) {
-                                    try {
-                                        String orf = keyOrfs[p][i][j];
-                                        out.write(orf);
-                                    } catch (Exception e) {
-                                        System.out.println(e.getLocalizedMessage());
-                                    }
-                                }
-                                out.write("\t");
-                                if (keyGenes != null && keyGenes.length > 0) {
-                                    try {
-                                        String gene = keyGenes[p][i][j];
-                                        out.write(gene);
-                                    } catch (Exception e) {
-                                        System.out.println(e.getLocalizedMessage());
-                                    }
-                                }
-                                out.write("\t");
-                                out.write(Integer.toString(p));
-                                out.write("\t");
-                                out.write(Integer.toString(i));
-                                out.write("\t");
-                                out.write(Integer.toString(j));
-                                out.write("\t");
-                                out.write("\t\t\t\t\t");
-                                out.write(Double.toString(ctrlData.getNormArea()[s][p][i][j]));
-                                out.write("\t\t");
-                                out.write(Double.toString(expData.getNormArea()[s][p][i][j]));
-                                out.write("\t\t");
-                                out.write(Double.toString(ctrlData.getNormArea()[s][p][i][j]
-                                        - expData.getNormArea()[s][p][i][j]));
+
+        if (queryKey) {
+
+            for (String currentQuery : myQueries) {
+
+                if (scoreByArrayPosRadioButton.isSelected()) {
+                    // One data file per set - assume all sets in range are present
+                    for (int s = minCtrlSet; s <= maxCtrlSet; s++) {
+                        try {
+
+                            String outFile = ss + scorenameTextField.getText()
+                                    + "_set-" + Integer.toString(s) + ".txt";
+
+                            if (queryKey) {
+                                outFile = ss + currentQuery
+                                        + "_set-" + Integer.toString(s) + ".txt";
+                            }
+
+                            try (BufferedWriter out = new BufferedWriter(new FileWriter(outFile))) {
+                                f[s - minCtrlSet] = new File(outFile);
+                                out.write(SCORE_HEADER);
                                 out.newLine();
-                            }
-                        }
-                    }
-                    out.close();
-                } catch (IOException e) {
-                    System.out.println(e.getLocalizedMessage());
-                }
-            }
-            messageText.append("\nScored data saved.");
-        } else {
-            // No key file? Abort.
-            if (keyOrfs == null || keyOrfs.length == 0) {
-                messageText.append("\nKey File required for output by ORF.");
-                return;
-            }
-            HashMap<String, orfScores> cOrfs = new HashMap<String, orfScores>();
-            HashMap<String, orfScores> eOrfs = new HashMap<String, orfScores>();
-            for (int s = minCtrlSet; s
-                    <= maxCtrlSet; s++) {
-                for (int p = minCtrlPlate; p
-                        <= maxCtrlPlate; p++) {
-                    for (int i = 1; i
-                            <= ctrlData.getRows(); i++) {
-                        for (int j = 1; j
-                                <= ctrlData.getCols(); j++) {
-                            try {
-                                if (keyOrfs[p][i][j] != null) {
-                                    String orf = keyOrfs[p][i][j];
-                                    if (cOrfs.size() > 0 && cOrfs.keySet().contains(orf)) {
-                                        orfScores os = cOrfs.get(orf);
-                                        os.getVals().add(ctrlData.getNormArea()[s][p][i][j]);
-                                        cOrfs.put(orf, os);
-                                        os = eOrfs.get(orf);
-                                        os.getVals().add(expData.getNormArea()[s][p][i][j]);
-                                        eOrfs.put(orf, os);
-                                    } else {
-                                        orfScores os = new orfScores();
-                                        os.setVals(new ArrayList<Double>());
-                                        os.setGene(keyGenes[p][i][j]);
-                                        os.getVals().add(ctrlData.getNormArea()[s][p][i][j]);
-                                        cOrfs.put(orf, os);
-                                        os = new orfScores();
-                                        os.setVals(new ArrayList<Double>());
-                                        os.setGene(keyGenes[p][i][j]);
-                                        os.getVals().add(expData.getNormArea()[s][p][i][j]);
-                                        eOrfs.put(orf, os);
+                                for (int p = minCtrlPlate; p
+                                        <= maxCtrlPlate; p++) {
+                                    for (int i = 1; i
+                                            <= ctrlData.getRows(); i++) {
+                                        for (int j = 1; j
+                                                <= ctrlData.getCols(); j++) {
+                                            if (ctrlData.getNormArea()[s][p][1][1] == null
+                                                    || expData.getNormArea()[s][p][1][1] == null) {
+                                                JOptionPane.showMessageDialog(this, "Data missing for plate.",
+                                                        "Warning", JOptionPane.WARNING_MESSAGE);
+                                                return;
+                                            }
+                                            out.write(scorenameTextField.getText() + "\t");
+                                            if (keyOrfs != null && keyOrfs.length > 0) {
+                                                try {
+                                                    String orf = keyOrfs[p][i][j];
+                                                    out.write(orf);
+                                                } catch (Exception e) {
+                                                    System.out.println(e.getLocalizedMessage());
+                                                }
+                                            }
+                                            out.write("\t");
+                                            if (keyGenes != null && keyGenes.length > 0) {
+                                                try {
+                                                    String gene = keyGenes[p][i][j];
+                                                    out.write(gene);
+                                                } catch (Exception e) {
+                                                    System.out.println(e.getLocalizedMessage());
+                                                }
+                                            }
+                                            out.write("\t");
+                                            out.write(Integer.toString(p));
+                                            out.write("\t");
+                                            out.write(Integer.toString(i));
+                                            out.write("\t");
+                                            out.write(Integer.toString(j));
+                                            out.write("\t");
+                                            out.write("\t\t\t\t\t");
+                                            if (!queryKey || currentQuery.equals(queryArray[p][i][j])) {
+                                                out.write(Double.toString(ctrlData.getNormArea()[s][p][i][j]));
+                                            } else {
+                                                out.write("0");
+                                            }
+
+                                            out.write("\t\t");
+                                            if (!queryKey || currentQuery.equals(queryArray[p][i][j])) {
+                                                out.write(Double.toString(expData.getNormArea()[s][p][i][j]));
+                                            } else {
+                                                out.write("0");
+                                            }
+
+                                            out.write("\t\t");
+
+                                            if (!queryKey || currentQuery.equals(queryArray[p][i][j])) {
+
+                                                out.write(Double.toString(ctrlData.getNormArea()[s][p][i][j]
+                                                        - expData.getNormArea()[s][p][i][j]));
+                                            } else {
+                                                out.write("0");
+                                            }
+
+                                            out.newLine();
+                                        }
                                     }
                                 }
-                            } catch (Exception e) {
-                                System.out.println(e.getLocalizedMessage());
                             }
+                        } catch (IOException e) {
+                            System.out.println(e.getLocalizedMessage());
                         }
                     }
-                }
-                try {
-                    String outFile = ss + scorenameTextField.getText() + "_set-"
-                            + Integer.toString(s) + ".txt";
-                    BufferedWriter out = new BufferedWriter(new FileWriter(outFile));
-                    out.write(SCORE_HEADER);
-                    out.newLine();
-                    TreeSet<String> allOrfs = new TreeSet<String>(cOrfs.keySet());
-                    for (String orf : allOrfs) {
-                        out.write(scorenameTextField.getText() + "\t");
-                        out.write(orf);
-                        out.write("\t");
-                        out.write(keyOrfList.get(orf));
-                        out.write("\t\t\t\t\t\t\t\t\t");
-
-                        // Ctrl:
-                        ArrayList<Double> v = cOrfs.get(orf).getVals();
-                        Double d1 = 0d;
-                        for (Double vd : v) {
-                            d1 += vd;
-                        }
-                        d1 /= v.size();
-                        out.write(d1.toString());
-                        out.write("\t");
-
-                        double sum = 0d, sd = 0d;
-                        if (v.size() > 1) {
-                            for (Double dd : v) {
-                                double dtmp = dd - d1;
-                                sum += dtmp * dtmp;
-                            }
-                            sd = Math.sqrt(sum / v.size());
-                            out.write(Double.toString(sd));
-                        }
-                        out.write("\t");
-                        v = eOrfs.get(orf).getVals();
-                        Double d2 = 0d;
-                        for (Double vd : v) {
-                            d2 += vd;
-                        }
-                        d2 /= v.size();
-                        out.write(d2.toString());
-                        out.write("\t");
-                        sum = 0d;
-                        if (v.size() > 1) {
-                            for (Double dd : v) {
-                                double dtmp = dd - d2;
-                                sum += dtmp * dtmp;
-                            }
-                            sd = Math.sqrt(sum / v.size());
-                            out.write(Double.toString(sd));
-                        }
-                        out.write("\t");
-                        out.write(Double.toString(d1 - d2));
-                        out.newLine();
+                    messageText.append("\nScored data saved.");
+                } else {
+                    // No key file? Abort.
+                    if (keyOrfs == null || keyOrfs.length == 0) {
+                        messageText.append("\nKey File required for output by ORF.");
+                        return;
                     }
-                    out.close();
-                } catch (Exception e) {
-                    System.out.println(e.getLocalizedMessage());
+                    HashMap<String, orfScores> cOrfs = new HashMap<>();
+                    HashMap<String, orfScores> eOrfs = new HashMap<>();
+                    for (int s = minCtrlSet; s
+                            <= maxCtrlSet; s++) {
+                        for (int p = minCtrlPlate; p
+                                <= maxCtrlPlate; p++) {
+                            for (int i = 1; i
+                                    <= ctrlData.getRows(); i++) {
+                                for (int j = 1; j
+                                        <= ctrlData.getCols(); j++) {
+                                    try {
+                                        if (keyOrfs[p][i][j] != null) {
+                                            String orf = keyOrfs[p][i][j];
+                                            if (cOrfs.size() > 0 && cOrfs.keySet().contains(orf)) {
+                                                orfScores os = cOrfs.get(orf);
+                                                os.getVals().add(ctrlData.getNormArea()[s][p][i][j]);
+                                                cOrfs.put(orf, os);
+                                                os = eOrfs.get(orf);
+                                                os.getVals().add(expData.getNormArea()[s][p][i][j]);
+                                                eOrfs.put(orf, os);
+                                            } else {
+                                                orfScores os = new orfScores();
+                                                os.setVals(new ArrayList<>());
+                                                os.setGene(keyGenes[p][i][j]);
+                                                os.getVals().add(ctrlData.getNormArea()[s][p][i][j]);
+                                                cOrfs.put(orf, os);
+                                                os = new orfScores();
+                                                os.setVals(new ArrayList<>());
+                                                os.setGene(keyGenes[p][i][j]);
+                                                os.getVals().add(expData.getNormArea()[s][p][i][j]);
+                                                eOrfs.put(orf, os);
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        System.out.println(e.getLocalizedMessage());
+                                    }
+                                }
+                            }
+                        }
+                        try {
+                            String outFile = ss + scorenameTextField.getText() + "_set-"
+                                    + Integer.toString(s) + ".txt";
+                            try (BufferedWriter out = new BufferedWriter(new FileWriter(outFile))) {
+                                out.write(SCORE_HEADER);
+                                out.newLine();
+                                TreeSet<String> allOrfs = new TreeSet<>(cOrfs.keySet());
+                                for (String orf : allOrfs) {
+                                    out.write(scorenameTextField.getText() + "\t");
+                                    out.write(orf);
+                                    out.write("\t");
+                                    out.write(keyOrfList.get(orf));
+                                    out.write("\t\t\t\t\t\t\t\t\t");
+
+                                    // Ctrl:
+                                    ArrayList<Double> v = cOrfs.get(orf).getVals();
+                                    Double d1 = 0d;
+                                    for (Double vd : v) {
+                                        d1 += vd;
+                                    }
+                                    d1 /= v.size();
+                                    out.write(d1.toString());
+                                    out.write("\t");
+
+                                    double sum = 0d, sd;
+                                    if (v.size() > 1) {
+                                        for (Double dd : v) {
+                                            double dtmp = dd - d1;
+                                            sum += dtmp * dtmp;
+                                        }
+                                        sd = Math.sqrt(sum / v.size());
+                                        out.write(Double.toString(sd));
+                                    }
+                                    out.write("\t");
+                                    v = eOrfs.get(orf).getVals();
+                                    Double d2 = 0d;
+                                    for (Double vd : v) {
+                                        d2 += vd;
+                                    }
+                                    d2 /= v.size();
+                                    out.write(d2.toString());
+                                    out.write("\t");
+                                    sum = 0d;
+                                    if (v.size() > 1) {
+                                        for (Double dd : v) {
+                                            double dtmp = dd - d2;
+                                            sum += dtmp * dtmp;
+                                        }
+                                        sd = Math.sqrt(sum / v.size());
+                                        out.write(Double.toString(sd));
+                                    }
+                                    out.write("\t");
+                                    out.write(Double.toString(d1 - d2));
+                                    out.newLine();
+                                }
+                            }
+                        } catch (Exception e) {
+                            System.out.println(e.getLocalizedMessage());
+                        }
+                    }
                 }
             }
         }
@@ -5908,7 +6200,7 @@ public final class Balony extends javax.swing.JFrame {
         File folder = new File(s);
         File[] listoffiles = folder.listFiles();
 
-        ArrayList<File> f = new ArrayList<File>();
+        ArrayList<File> f = new ArrayList<>();
         int cnt = 0;
         for (File myF : listoffiles) {
             String fn = myF.getName().toLowerCase();
@@ -5919,7 +6211,7 @@ public final class Balony extends javax.swing.JFrame {
             }
         }
         scanFileJList.removeAll();
-        scanFileJList.setListData(f.toArray());
+        scanFileJList.setListData((File[]) f.toArray(new File[f.size()]));
         scanFileJList.setCellRenderer(new fileList2CellRenderer());
         if (cnt > 0) {
             messageText.append("\nFound ").append(cnt).append(" image file").append(cnt > 1 ? "s" : "").append(".");
@@ -5963,10 +6255,6 @@ public final class Balony extends javax.swing.JFrame {
             int indices[] = scanFileJList.getSelectedIndices();
             if (indices.length == 0) {
                 return "";
-            }
-
-            for (int i : indices) {
-                System.out.println("Index " + i);
             }
 
             messageText.append("\nStarting to process ").append(indices.length).append(" files.");
@@ -6042,7 +6330,7 @@ public final class Balony extends javax.swing.JFrame {
         @Override
         public String doInBackground() {
             long t1 = System.currentTimeMillis();
-            int k = imageFileJList.getSelectedValues().length;
+            int k = imageFileJList.getSelectedValuesList().size();
             if (k > 1) {
                 choosefolderButton.setEnabled(false);
                 thresholdButton.setEnabled(false);
@@ -6068,7 +6356,7 @@ public final class Balony extends javax.swing.JFrame {
                 }
 
                 if (!isCancelled()) {
-                    File f = (File) imageFileJList.getSelectedValues()[i];
+                    File f = (File) imageFileJList.getSelectedValuesList().toArray()[i];
                     rotated = false;
                     rethresh = 0;
                     bestSpots = -1;
@@ -6105,9 +6393,9 @@ public final class Balony extends javax.swing.JFrame {
             try {
                 String s = messageFrame.messageJTextArea.getText();
                 String outFile = currFolder.getAbsolutePath() + File.separator + File.separator + AUTO_ANALYZE_LOG;
-                BufferedWriter out = new BufferedWriter(new FileWriter(outFile));
-                out.write(s);
-                out.close();
+                try (BufferedWriter out = new BufferedWriter(new FileWriter(outFile))) {
+                    out.write(s);
+                }
             } catch (IOException e) {
                 System.out.println(e.getLocalizedMessage());
                 choosefolderButton.setEnabled(true);
@@ -6323,12 +6611,17 @@ public final class Balony extends javax.swing.JFrame {
     }
 
     public void loadAnalysisFiles(File[] f) {
+        StringBuilder sb = new StringBuilder();
+        for (File ff : f) {
+            sb.append(ff.getName()).append(";");
+        }
+//        System.out.println("Files: " + sb);
         prefs.setProperty(PREFS_ANALYSISFOLDER, f[0].getParent());
         savePrefs();
         String orfs[][][];
         String genes[][][];
         analysisData ad;
-        HashSet<File> goodFiles = new HashSet<File>();
+        HashSet<File> goodFiles = new HashSet<>();
 
         for (File myF : f) {
             ad = null;
@@ -6395,10 +6688,7 @@ public final class Balony extends javax.swing.JFrame {
                         }
                     }
                 }
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-                baddata = true;
-            } catch (NumberFormatException e) {
+            } catch (IOException | NumberFormatException e) {
                 System.out.println(e.getMessage());
                 baddata = true;
             }
@@ -6468,9 +6758,7 @@ public final class Balony extends javax.swing.JFrame {
                     temp = Double.parseDouble(d[13]);
                     ad.expSpots[s][p][r][c] = temp;
                 }
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            } catch (NumberFormatException e) {
+            } catch (IOException | NumberFormatException e) {
                 System.out.println(e.getMessage());
             }
 
@@ -6492,8 +6780,8 @@ public final class Balony extends javax.swing.JFrame {
                 comar[com] = ad.getSets() - com;
             }
 
-            dt.lcHitsJComboBox.setModel(new DefaultComboBoxModel(comar));
-            dt.hcHitsJComboBox.setModel(new DefaultComboBoxModel(comar));
+            dt.lcHitsJComboBox.setModel(new DefaultComboBoxModel<>(comar));
+            dt.hcHitsJComboBox.setModel(new DefaultComboBoxModel<>(comar));
 
             Double d;
             if (ad != null) {
@@ -6551,23 +6839,25 @@ public final class Balony extends javax.swing.JFrame {
                 }
             }
         }
-        for (dataTable dt0 : dataTables) {
+        dataTables.stream().map((dt0) -> {
             dt0.compareJMenu.removeAll();
-            for (dataTable dt1 : dataTables) {
+            return dt0;
+        }).forEach((dt0) -> {
+            dataTables.stream().map((dt1) -> {
                 final compMenu m = new compMenu();
                 m.setText(dt1.getTitle());
                 m.thisTable = dt0;
                 m.compTable = dt1;
+                return m;
+            }).map((m) -> {
                 dt0.compareJMenu.add(m);
-                m.addActionListener(new java.awt.event.ActionListener() {
-                    @Override
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        m.thisTable.doComp(m.compTable);
-                    }
+                return m;
+            }).forEach((m) -> {
+                m.addActionListener((java.awt.event.ActionEvent evt) -> {
+                    m.thisTable.doComp(m.compTable);
                 });
-
-            }
-        }
+            });
+        });
 
         if (wizardModeJCheckBox.isSelected()) {
             wizardJFrame wfj = new wizardJFrame();
@@ -6599,11 +6889,11 @@ public final class Balony extends javax.swing.JFrame {
         }
     }
     private void dataTablesComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dataTablesComboBoxActionPerformed
-        dataTable ob = (dataTable) dataTablesComboBox.getSelectedItem();
-        if (ob != null) {
-            ob.setVisible(true);
-            currentDT = ob;
-        }
+//        dataTable ob = (dataTable) dataTablesComboBox.getSelectedItem();
+//        if (ob != null) {
+//            ob.setVisible(true);
+//            currentDT = ob;
+//        }
     }//GEN-LAST:event_dataTablesComboBoxActionPerformed
 
     /**
@@ -6729,11 +7019,7 @@ public final class Balony extends javax.swing.JFrame {
 
                 arrayDefs.add(ardef);
                 analysisArrayComboBox.addItem(ardef.getName());
-            } catch (HeadlessException e) {
-                System.out.println(e.getLocalizedMessage());
-            } catch (IOException e) {
-                System.out.println(e.getLocalizedMessage());
-            } catch (NumberFormatException e) {
+            } catch (HeadlessException | IOException | NumberFormatException e) {
                 System.out.println(e.getLocalizedMessage());
             }
         }
@@ -6767,64 +7053,64 @@ public final class Balony extends javax.swing.JFrame {
 
             try {
                 String outFile = ss + scorenameTextField.getText() + ".txt";
-                BufferedWriter out = new BufferedWriter(new FileWriter(outFile));
-                out.write(SCORE_HEADER);
-                out.newLine();
-                for (int p = minCtrlPlate; p
-                        <= maxCtrlPlate; p++) {
-                    for (int i = 1; i
-                            <= ctrlData.getRows(); i++) {
-                        for (int j = 1; j
-                                <= ctrlData.getCols(); j++) {
-                            out.write(scorenameTextField.getText() + "\t\t\t");
-                            out.write(Integer.toString(p));
-                            out.write("\t");
-                            out.write(Integer.toString(i));
-                            out.write("\t");
-                            out.write(Integer.toString(j));
-                            out.write("\t");
-                            out.write("\t\t\t\t\t");
-                            double d = 0d;
-                            for (int s = minCtrlSet; s
-                                    <= maxCtrlSet; s++) {
-                                d += ctrlData.getNormArea()[s][p][i][j];
-                            }
-                            d /= (maxCtrlSet - minCtrlSet + 1);
-                            double d1 = d;
-                            out.write(Double.toString(d));
-                            double sum = 0d, sd;
-                            if (maxCtrlSet > minCtrlSet) {
+                try (BufferedWriter out = new BufferedWriter(new FileWriter(outFile))) {
+                    out.write(SCORE_HEADER);
+                    out.newLine();
+                    for (int p = minCtrlPlate; p
+                            <= maxCtrlPlate; p++) {
+                        for (int i = 1; i
+                                <= ctrlData.getRows(); i++) {
+                            for (int j = 1; j
+                                    <= ctrlData.getCols(); j++) {
+                                out.write(scorenameTextField.getText() + "\t\t\t");
+                                out.write(Integer.toString(p));
+                                out.write("\t");
+                                out.write(Integer.toString(i));
+                                out.write("\t");
+                                out.write(Integer.toString(j));
+                                out.write("\t");
+                                out.write("\t\t\t\t\t");
+                                double d = 0d;
                                 for (int s = minCtrlSet; s
                                         <= maxCtrlSet; s++) {
-                                    double v = ctrlData.getNormArea()[s][p][i][j] - d;
-                                    sum += v * v;
+                                    d += ctrlData.getNormArea()[s][p][i][j];
                                 }
-                            }
-                            sd = Math.sqrt(sum / (maxCtrlSet - minCtrlSet + 1));
-                            out.write("\t" + Double.toString(sd) + "\t");
-                            d = 0d;
-                            for (int s = minExpSet; s
-                                    <= maxExpSet; s++) {
-                                d += expData.getNormArea()[s][p][i][j];
-                            }
-                            d /= (maxExpSet - minExpSet + 1);
-                            out.write(Double.toString(d));
-                            sum = 0d;
-                            if (maxExpSet > minExpSet) {
+                                d /= (maxCtrlSet - minCtrlSet + 1);
+                                double d1 = d;
+                                out.write(Double.toString(d));
+                                double sum = 0d, sd;
+                                if (maxCtrlSet > minCtrlSet) {
+                                    for (int s = minCtrlSet; s
+                                            <= maxCtrlSet; s++) {
+                                        double v = ctrlData.getNormArea()[s][p][i][j] - d;
+                                        sum += v * v;
+                                    }
+                                }
+                                sd = Math.sqrt(sum / (maxCtrlSet - minCtrlSet + 1));
+                                out.write("\t" + Double.toString(sd) + "\t");
+                                d = 0d;
                                 for (int s = minExpSet; s
                                         <= maxExpSet; s++) {
-                                    double v = expData.getNormArea()[s][p][i][j] - d;
-                                    sum += v * v;
+                                    d += expData.getNormArea()[s][p][i][j];
                                 }
+                                d /= (maxExpSet - minExpSet + 1);
+                                out.write(Double.toString(d));
+                                sum = 0d;
+                                if (maxExpSet > minExpSet) {
+                                    for (int s = minExpSet; s
+                                            <= maxExpSet; s++) {
+                                        double v = expData.getNormArea()[s][p][i][j] - d;
+                                        sum += v * v;
+                                    }
+                                }
+                                sd = Math.sqrt(sum / (maxCtrlSet - minCtrlSet + 1));
+                                out.write("\t" + Double.toString(sd) + "\t");
+                                out.write(Double.toString(d1 - d));
+                                out.newLine();
                             }
-                            sd = Math.sqrt(sum / (maxCtrlSet - minCtrlSet + 1));
-                            out.write("\t" + Double.toString(sd) + "\t");
-                            out.write(Double.toString(d1 - d));
-                            out.newLine();
                         }
                     }
                 }
-                out.close();
             } catch (IOException e) {
                 System.out.println(e.getLocalizedMessage());
             }
@@ -6850,8 +7136,8 @@ public final class Balony extends javax.swing.JFrame {
                 return;
             }
 
-            HashMap<String, orfScores> cOrfs = new HashMap<String, orfScores>();
-            HashMap<String, orfScores> eOrfs = new HashMap<String, orfScores>();
+            HashMap<String, orfScores> cOrfs = new HashMap<>();
+            HashMap<String, orfScores> eOrfs = new HashMap<>();
             for (int p = minCtrlPlate; p
                     <= maxCtrlPlate; p++) {
                 for (int i = 1; i
@@ -6869,7 +7155,7 @@ public final class Balony extends javax.swing.JFrame {
                                         cOrfs.put(orf, os);
                                     } else {
                                         orfScores os = new orfScores();
-                                        os.setVals(new ArrayList<Double>());
+                                        os.setVals(new ArrayList<>());
                                         os.setGene(keyGenes[p][i][j]);
                                         os.getVals().add(ctrlData.getNormArea()[s][p][i][j]);
                                         cOrfs.put(orf, os);
@@ -6886,7 +7172,7 @@ public final class Balony extends javax.swing.JFrame {
                                         eOrfs.put(orf, os);
                                     } else {
                                         orfScores os = new orfScores();
-                                        os.setVals(new ArrayList<Double>());
+                                        os.setVals(new ArrayList<>());
                                         os.setGene(keyGenes[p][i][j]);
                                         os.getVals().add(expData.getNormArea()[s][p][i][j]);
                                         eOrfs.put(orf, os);
@@ -6901,56 +7187,56 @@ public final class Balony extends javax.swing.JFrame {
             }
             try {
                 String outFile = ss + scorenameTextField.getText() + ".txt";
-                BufferedWriter out = new BufferedWriter(new FileWriter(outFile));
-                out.write(SCORE_HEADER);
-                out.newLine();
-                TreeSet<String> allOrfs = new TreeSet<String>(cOrfs.keySet());
-                for (String orf : allOrfs) {
-                    out.write(scorenameTextField.getText() + "\t");
-                    out.write(orf);
-                    out.write("\t");
-                    out.write(keyOrfList.get(orf));
-                    out.write("\t\t\t\t\t\t\t\t\t");
-                    ArrayList<Double> v = cOrfs.get(orf).getVals();
-                    Double d1 = 0d;
-                    for (Double vd : v) {
-                        d1 += vd;
-                    }
-                    d1 /= v.size();
-                    out.write(d1.toString());
-                    out.write("\t");
-                    double sum = 0d, sd;
-                    if (v.size() > 1) {
-                        for (Double dd : v) {
-                            double dtmp = dd - d1;
-                            sum += dtmp * dtmp;
-                        }
-                        sd = Math.sqrt(sum / v.size());
-                        out.write(Double.toString(sd));
-                    }
-                    out.write("\t");
-                    v = eOrfs.get(orf).getVals();
-                    Double d2 = 0d;
-                    for (Double vd : v) {
-                        d2 += vd;
-                    }
-                    d2 /= v.size();
-                    out.write(d2.toString());
-                    out.write("\t");
-                    sum = 0d;
-                    if (v.size() > 1) {
-                        for (Double dd : v) {
-                            double dtmp = dd - d2;
-                            sum += dtmp * dtmp;
-                        }
-                        sd = Math.sqrt(sum / v.size());
-                        out.write(Double.toString(sd));
-                    }
-                    out.write("\t");
-                    out.write(Double.toString(d1 - d2));
+                try (BufferedWriter out = new BufferedWriter(new FileWriter(outFile))) {
+                    out.write(SCORE_HEADER);
                     out.newLine();
+                    TreeSet<String> allOrfs = new TreeSet<>(cOrfs.keySet());
+                    for (String orf : allOrfs) {
+                        out.write(scorenameTextField.getText() + "\t");
+                        out.write(orf);
+                        out.write("\t");
+                        out.write(keyOrfList.get(orf));
+                        out.write("\t\t\t\t\t\t\t\t\t");
+                        ArrayList<Double> v = cOrfs.get(orf).getVals();
+                        Double d1 = 0d;
+                        for (Double vd : v) {
+                            d1 += vd;
+                        }
+                        d1 /= v.size();
+                        out.write(d1.toString());
+                        out.write("\t");
+                        double sum = 0d, sd;
+                        if (v.size() > 1) {
+                            for (Double dd : v) {
+                                double dtmp = dd - d1;
+                                sum += dtmp * dtmp;
+                            }
+                            sd = Math.sqrt(sum / v.size());
+                            out.write(Double.toString(sd));
+                        }
+                        out.write("\t");
+                        v = eOrfs.get(orf).getVals();
+                        Double d2 = 0d;
+                        for (Double vd : v) {
+                            d2 += vd;
+                        }
+                        d2 /= v.size();
+                        out.write(d2.toString());
+                        out.write("\t");
+                        sum = 0d;
+                        if (v.size() > 1) {
+                            for (Double dd : v) {
+                                double dtmp = dd - d2;
+                                sum += dtmp * dtmp;
+                            }
+                            sd = Math.sqrt(sum / v.size());
+                            out.write(Double.toString(sd));
+                        }
+                        out.write("\t");
+                        out.write(Double.toString(d1 - d2));
+                        out.newLine();
+                    }
                 }
-                out.close();
             } catch (Exception e) {
                 System.out.println(e.getLocalizedMessage());
             }
@@ -7186,7 +7472,7 @@ public final class Balony extends javax.swing.JFrame {
         }
         keyFiles.put(keyName, f);
         scoreKeysComboBox.removeAllItems();
-        for (String k : new TreeSet<String>(keyFiles.keySet())) {
+        new TreeSet<>(keyFiles.keySet()).stream().forEach((k) -> {
             try {
                 if (new File(keyFiles.get(k).toString()).exists()) {
                     scoreKeysComboBox.addItem(k);
@@ -7194,7 +7480,7 @@ public final class Balony extends javax.swing.JFrame {
             } catch (Exception e) {
                 System.out.println(e.getLocalizedMessage());
             }
-        }
+        });
         scoreKeysComboBox.setSelectedItem(keyName);
     }
 
@@ -7235,7 +7521,7 @@ public final class Balony extends javax.swing.JFrame {
         if (maxP > 0 && maxR > 0 && maxC > 0) {
             keyGenes = new String[maxP + 1][maxR + 1][maxC + 1];
             keyOrfs = new String[maxP + 1][maxR + 1][maxC + 1];
-            keyOrfList = new HashMap<String, String>();
+            keyOrfList = new HashMap<>();
             try {
                 int p, r, c;
                 in = new BufferedReader(new FileReader(f));
@@ -7262,7 +7548,7 @@ public final class Balony extends javax.swing.JFrame {
                 prefs.setProperty(PREFS_SCORE_KEYFILE, f.getAbsolutePath());
                 savePrefs();
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println(e.getLocalizedMessage());
             }
         }
 
@@ -7347,11 +7633,7 @@ public final class Balony extends javax.swing.JFrame {
             dt.setIconImage(balloonImage);
             dt.setVisible(true);
             ois.close();
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "File read error.", "Warning",
-                    JOptionPane.WARNING_MESSAGE);
-            System.out.println(ex.getLocalizedMessage());
-        } catch (ClassNotFoundException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(this, "File read error.", "Warning",
                     JOptionPane.WARNING_MESSAGE);
             System.out.println(ex.getLocalizedMessage());
@@ -7569,10 +7851,8 @@ public final class Balony extends javax.swing.JFrame {
     public void doToggleInputOutput() {
         if (imWin != null && imWin.getImagePlus() != loadedIm) {
             switchToInputImage();
-        } else {
-            if (imWin != null && imWin.getImagePlus() != oIm) {
-                switchToOutputImage();
-            }
+        } else if (imWin != null && imWin.getImagePlus() != oIm) {
+            switchToOutputImage();
         }
     }//GEN-LAST:event_toggleInputOutputButtonActionPerformed
 
@@ -7581,7 +7861,7 @@ public final class Balony extends javax.swing.JFrame {
     }//GEN-LAST:event_selectAllButtonActionPerformed
 
     private void showQuantButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showQuantButtonActionPerformed
-        Object[] o = imageFileJList.getSelectedValues();
+        Object[] o = imageFileJList.getSelectedValuesList().toArray();
         int x = 0;
         int y = 0;
         for (Object oo : o) {
@@ -7664,13 +7944,13 @@ public final class Balony extends javax.swing.JFrame {
     }//GEN-LAST:event_imageFileJListValueChanged
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
-        ArrayList<Object> al = new ArrayList<Object>();
+        ArrayList<File> al = new ArrayList<>();
         for (int i = 0; i < imageFileJList.getModel().getSize(); i++) {
             if (!imageFileJList.isSelectedIndex(i)) {
                 al.add(imageFileJList.getModel().getElementAt(i));
             }
         }
-        imageFileJList.setListData(al.toArray());
+        imageFileJList.setListData((File[]) al.toArray(new File[al.size()]));
 
     }//GEN-LAST:event_removeButtonActionPerformed
 
@@ -7732,7 +8012,7 @@ public final class Balony extends javax.swing.JFrame {
         }
 
         String s = (String) ctrlplateComboBox.getSelectedItem();
-        ArrayList<File> files = new ArrayList<File>();
+        ArrayList<File> files = new ArrayList<>();
         for (platenameData pd : ctrlplateData) {
             if (pd != null) {
                 if (pd.getName().equals(s)) {
@@ -7841,7 +8121,7 @@ public final class Balony extends javax.swing.JFrame {
         }
 
         String s = (String) expplateComboBox.getSelectedItem();
-        ArrayList<File> files = new ArrayList<File>();
+        ArrayList<File> files = new ArrayList<>();
         for (platenameData pd : expplateData) {
             if (pd != null) {
                 if (pd.getName().equals(s)) {
@@ -8289,17 +8569,13 @@ public final class Balony extends javax.swing.JFrame {
         savePrefs();
     }//GEN-LAST:event_wizardModeJCheckBoxActionPerformed
 
-    private void scoreRCJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scoreRCJCheckBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_scoreRCJCheckBoxActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void analysisTableRemoveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisTableRemoveButtonActionPerformed
         String scr = dataTablesComboBox.getSelectedItem().toString();
         dataTables.remove(aD.get(scr).getDt());
         dataTablesComboBox.removeItem(aD.get(scr).getDt());
         aD.get(scr).getDt().dispose();
         aD.remove(scr);
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_analysisTableRemoveButtonActionPerformed
 
     private void updateCheckJCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateCheckJCheckBox1ActionPerformed
         prefs.setProperty(PREFS_OPTIONS_UPDATE_BETA_CHECK,
@@ -8361,6 +8637,167 @@ public final class Balony extends javax.swing.JFrame {
         oddEvenChanged();
     }//GEN-LAST:event_altEvenRadioButtonActionPerformed
 
+    private void scoreSpatialJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scoreSpatialJCheckBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_scoreSpatialJCheckBoxActionPerformed
+
+    private void scoreRCJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scoreRCJCheckBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_scoreRCJCheckBoxActionPerformed
+
+    private void normNoneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_normNoneButtonActionPerformed
+        normButtonPressed();
+    }//GEN-LAST:event_normNoneButtonActionPerformed
+
+    private void analysisGenerateSummaryTablesHiddenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisGenerateSummaryTablesHiddenButtonActionPerformed
+        dataTables.stream().forEach((dt) -> {
+            dt.makeSummaryTable(false);
+        });
+    }//GEN-LAST:event_analysisGenerateSummaryTablesHiddenButtonActionPerformed
+
+    private void analysisGenerateSummaryTablesVisibleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisGenerateSummaryTablesVisibleButtonActionPerformed
+        dataTables.stream().forEach((dt) -> {
+            dt.makeSummaryTable(true);
+        });
+    }//GEN-LAST:event_analysisGenerateSummaryTablesVisibleButtonActionPerformed
+
+    private void analysisShowSummaryTablesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisShowSummaryTablesActionPerformed
+        sumTables.stream().forEach((sjf) -> {
+            sjf.setVisible(true);
+        });
+    }//GEN-LAST:event_analysisShowSummaryTablesActionPerformed
+
+    private void analysisSummaryClipboardCopyTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisSummaryClipboardCopyTypeComboBoxActionPerformed
+        // Get list of summary frames
+        // Create 2-d array [frame][value]
+        // For each frame {
+        //   Create array of string values
+        //   First value is header
+        //   Get values from frame (func in frame?)
+        // }
+        // stringbuilder:
+        //  Outer loop increasing value ref 
+        //    Inner loop through 2-d array [frame][value] - append +"\t"
+        //                            [frame+1][value] - append +"\t"
+        //  Outer loop append + "\n"
+        // Add to clipboard
+    }//GEN-LAST:event_analysisSummaryClipboardCopyTypeComboBoxActionPerformed
+
+    private void analysisSummaryMedianCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisSummaryMedianCheckBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_analysisSummaryMedianCheckBoxActionPerformed
+
+    private void analysisTableShowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisTableShowButtonActionPerformed
+        dataTable ob = (dataTable) dataTablesComboBox.getSelectedItem();
+        if (ob != null) {
+            ob.setVisible(true);
+            currentDT = ob;
+        }
+    }//GEN-LAST:event_analysisTableShowButtonActionPerformed
+
+    private void analysisSummaryCopyAllClipboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisSummaryCopyAllClipboardButtonActionPerformed
+
+        summarizeJFrame stmp = new summarizeJFrame();
+        int myCol = 1;
+
+        if (analysisSummaryClipboardCopyTypeComboBox.getSelectedItem().toString().equals("Ctrls")) {
+            myCol = stmp.COL_CTRL;
+        }
+
+        if (analysisSummaryClipboardCopyTypeComboBox.getSelectedItem().toString().equals("Exps")) {
+            myCol = stmp.COL_EXP;
+        }
+
+        if (analysisSummaryClipboardCopyTypeComboBox.getSelectedItem().toString().equals("Ratios")) {
+            myCol = stmp.COL_RATIO;
+        }
+
+        if (analysisSummaryClipboardCopyTypeComboBox.getSelectedItem().toString().equals("Diffs")) {
+            myCol = stmp.COL_DIFF;
+        }
+
+        if (analysisSummaryClipboardCopyTypeComboBox.getSelectedItem().toString().equals("p-values")) {
+            myCol = stmp.COL_PVAL;
+        }
+
+        int sumRows = 1;
+        for (summarizeJFrame sfj : sumTables) {
+            sumRows = sfj.tableData.length;
+        }
+
+        Object[][] sumData = new Object[sumTables.size() + 1][sumRows + 1];
+        sumData[0][0] = "GENE";
+
+        int i = 0;
+        for (summarizeJFrame sfj : sumTables) {
+
+//            sfj.jTable1.setRowSorter(new RowSorter<TableModel>);
+            sfj.setSortByGene();
+            if (i < 1) {
+                for (int j = 1; j < sumRows + 1; j++) {
+                    sumData[0][j] = sfj.jTable1.getValueAt(j - 1, sfj.COL_GENE);
+                }
+
+                i = 1;
+            }
+
+            sumData[i][0] = sfj.getHeader();
+            for (int j = 1; j < sumRows + 1; j++) {
+                sumData[i][j] = sfj.jTable1.getValueAt(j - 1, myCol);
+            }
+
+            i++;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+//        System.out.println(sumData.length + "," + sumData[0].length);
+        for (int j = 0; j < sumData[0].length; j++) {
+            for (Object[] sumData1 : sumData) {
+                if (sumData1[j] != null) {
+                    sb.append(sumData1[j].toString()).append("\t");
+                }
+            }
+            sb.append("\n");
+        }
+
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(new StringSelection(sb.toString()), this);
+
+//        System.out.println(sb.toString());
+        // Get list of summary frames
+        // Create 2-d array [frame][value]
+        // For each frame {
+        //   Create array of string values
+        //   First value is header
+        //   Get values from frame (func in frame?)
+        // }
+        // stringbuilder:
+        //  Outer loop increasing value ref 
+        //    Inner loop through 2-d array [frame][value] - append +"\t"
+        //                            [frame+1][value] - append +"\t"
+        //  Outer loop append + "\n"
+        // Add to clipboard
+    }//GEN-LAST:event_analysisSummaryCopyAllClipboardButtonActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        JFileChooser jfc = new JFileChooser();
+        jfc.setFileFilter(new FileNameExtensionFilter("Array Key Files (*.key)", "key"));
+        jfc.showOpenDialog(this);
+        File f = jfc.getSelectedFile();
+        if (f != null) {
+            queryArrayFile = f;
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    public boolean summaryTableMedian() {
+        return analysisSummaryMedianCheckBox.isSelected();
+    }
+
+    public boolean summaryTablePaired() {
+        return analysisSummaryPairedSpotsCheckBox.isSelected();
+    }
+
     public void oddEvenChanged() {
         if (altOddRadioButton.isSelected()) {
             prefs.setProperty(PREFS_ALT_ODD_EVEN, "1");
@@ -8384,8 +8821,12 @@ public final class Balony extends javax.swing.JFrame {
             prefs.setProperty(PREFS_NORMALIZATION, "2");
         }
 
-        savePrefs();
+        if (normNoneButton.isSelected()) {
+            normORFJTextField.setEnabled(false);
+            prefs.setProperty(PREFS_NORMALIZATION, "3");
+        }
 
+        savePrefs();
     }
 
     private void ctrlTypeChanged() {
@@ -8458,7 +8899,7 @@ public final class Balony extends javax.swing.JFrame {
             String recenturl = "";
             boolean prereleaseOk = updateCheckJCheckBox1.isSelected();
             try {
-                System.out.println("Starting update check");
+//                System.out.println("Starting update check");
                 GitHub github = GitHub.connectAnonymously();
                 GHRepository repo = github.getRepository("barrypyoung/balony");
                 PagedIterable<GHRelease> releases = repo.listReleases();
@@ -8513,44 +8954,40 @@ public final class Balony extends javax.swing.JFrame {
 
                 }
 
-            } catch (IOException ex) {
-                System.out.println(ex.getLocalizedMessage());
-            } catch (HeadlessException ex) {
+            } catch (IOException | HeadlessException ex) {
                 System.out.println(ex.getLocalizedMessage());
             }
 
             if (newjar != null) {
-                System.out.println("Starting update process");
+//                System.out.println("Starting update process");
                 try {
 
                     URL balonyURL = new URL(newjar.replace(" ", "%20"));
-                    InputStream in = balonyURL.openStream();
-                    int size = balonyURL.openConnection().getContentLength();
+                    FileOutputStream out;
+                    try (InputStream in = balonyURL.openStream()) {
+                        int size = balonyURL.openConnection().getContentLength();
+                        out = new FileOutputStream("Balony.jar");
+                        byte[] buffer = new byte[1024];
+                        int len = in.read(buffer);
+                        currVersionJLabel.setText("Update in progress, do not quit.");
+                        messageText.append("\nInstalling new Balony.jar\nDownloading");
+                        int cnt = 0;
+                        int done = 0;
+                        while (len >= 0) {
 
-                    FileOutputStream out = new FileOutputStream("Balony.jar");
-                    byte[] buffer = new byte[1024];
-                    int len = in.read(buffer);
-                    currVersionJLabel.setText("Update in progress, do not quit.");
-                    messageText.append("\nInstalling new Balony.jar\nDownloading");
+                            cnt++;
+                            if (cnt == size / 4096) {
+                                done += 25;
+                                messageText.append(done).append("%");
+                                cnt = 0;
+                            } else if (cnt % (size / 16384) == 0) {
+                                messageText.append(".");
+                            }
 
-                    int cnt = 0;
-                    int done = 0;
-                    while (len >= 0) {
-
-                        cnt++;
-                        if (cnt == size / 4096) {
-                            done += 25;
-                            messageText.append(done).append("%");
-                            cnt = 0;
-                        } else if (cnt % (size / 16384) == 0) {
-                            messageText.append(".");
+                            out.write(buffer, 0, len);
+                            len = in.read(buffer);
                         }
-
-                        out.write(buffer, 0, len);
-                        len = in.read(buffer);
                     }
-
-                    in.close();
                     out.close();
                     JOptionPane.showMessageDialog(getParent(), "Restart Balony to use the new version.");
                     currVersionJLabel.setText("Update complete; restart required.");
@@ -8559,13 +8996,7 @@ public final class Balony extends javax.swing.JFrame {
                     prefs.setProperty(PREFS_BALONYVERSION, BalonyVersion);
                     savePrefs();
 
-                } catch (IOException e) {
-                    JOptionPane.showMessageDialog(getParent(),
-                            "Update failed - check your internet connection and "
-                            + "that you have write permission to the installation "
-                            + "folder.");
-                    System.out.println(e.getLocalizedMessage());
-                } catch (HeadlessException e) {
+                } catch (IOException | HeadlessException e) {
                     JOptionPane.showMessageDialog(getParent(),
                             "Update failed - check your internet connection and "
                             + "that you have write permission to the installation "
@@ -8647,7 +9078,7 @@ public final class Balony extends javax.swing.JFrame {
             ymn += ys[j];
         }
         float maxy = (float) Tools.getMinMax(ys)[1];
-        System.out.println("MaxY: " + maxy);
+//        System.out.println("MaxY: " + maxy);
         xmn /= xs.length;
         ymn /= ys.length;
         boolean xok;
@@ -8663,10 +9094,10 @@ public final class Balony extends javax.swing.JFrame {
         boolean pass2 = false;
         while (!ok && myTry < 25 && (fullAutoWorker == null ? true
                 : !fullAutoWorker.isCancelled()) && !stopped) {
-            System.out.println("My try: " + myTry);
+//            System.out.println("My try: " + myTry);
             if (myTry == 99 && !pass2) {
 
-                System.out.println("Second pass");
+//                System.out.println("Second pass");
                 pass2 = true;
                 myTry = 0;
                 rt = new ResultsTable();
@@ -8727,12 +9158,12 @@ public final class Balony extends javax.swing.JFrame {
                     y_min += yf;
                     float x_max = x_min + (cols + 1) * dx;
                     float y_max = y_min + (rows + 1) * dy;
-                    System.out.println("xmin:" + x_min);
-                    System.out.println("ymin:" + y_min);
+//                    System.out.println("xmin:" + x_min);
+//                    System.out.println("ymin:" + y_min);
                     ArrayList<Float> alX, alY, alA;
-                    alX = new ArrayList<Float>();
-                    alY = new ArrayList<Float>();
-                    alA = new ArrayList<Float>();
+                    alX = new ArrayList<>();
+                    alY = new ArrayList<>();
+                    alA = new ArrayList<>();
                     float totArea = 0;
                     for (int count = 0; count < rt.getColumn(0).length; count++) {
                         if (xs[count] > x_min && xs[count] < x_max
@@ -8747,8 +9178,8 @@ public final class Balony extends javax.swing.JFrame {
                     maxX = (float) BalonyTools.getMinMax(alX.toArray())[1];
                     minY = (float) BalonyTools.getMinMax(alY.toArray())[0];
                     maxY = (float) BalonyTools.getMinMax(alY.toArray())[1];
-                    System.out.println("minY: " + minY);
-                    System.out.println("maxY: " + maxY);
+//                    System.out.println("minY: " + minY);
+//                    System.out.println("maxY: " + maxY);
                     stepX = (maxX - minX) / (cols - 1);
                     stepY = (maxY - minY) / (rows - 1);
                     if (totArea > maxArea) {
@@ -8756,29 +9187,25 @@ public final class Balony extends javax.swing.JFrame {
                     }
                     // x-check
                     int xoff = 0;
-                    for (float xx : alX) {
+                    xoff = alX.stream().map((xx) -> {
                         int x1 = Math.round(((xx - minX) / stepX) + 1);
                         float xm = Math.abs(((xx - minX) / stepX) + 1 - x1);
-                        if (xm > 0.3) {
-                            xoff++;
-                        }
-                    }
+                        return xm;
+                    }).filter((xm) -> (xm > 0.3)).map((_item) -> 1).reduce(xoff, Integer::sum);
                     xok = xoff <= (alX.size() / 10);
                     // y-check
                     int yoff = 0;
-                    for (float yy : alY) {
+                    yoff = alY.stream().map((yy) -> {
                         int y1 = Math.round(((yy - minY) / stepY) + 1);
                         float ym = Math.abs(((yy - minY) / stepY) + 1 - y1);
-                        if (ym > 0.3) {
-                            yoff++;
-                        }
-                    }
+                        return ym;
+                    }).filter((ym) -> (ym > 0.3)).map((_item) -> 1).reduce(yoff, Integer::sum);
                     yok = yoff <= (alY.size() / 10);
-                    System.out.println("Tot area: " + totArea);
-                    System.out.println("xratio: " + (stepX / dx));
-                    System.out.println("yratio: " + (stepY / dy));
-                    System.out.println("xok? " + xok);
-                    System.out.println("yok? " + yok);
+//                    System.out.println("Tot area: " + totArea);
+//                    System.out.println("xratio: " + (stepX / dx));
+//                    System.out.println("yratio: " + (stepY / dy));
+//                    System.out.println("xok? " + xok);
+//                    System.out.println("yok? " + yok);
                     if (stepX < (dx * 1.05) && stepY < (dy * 1.05)
                             && stepX > (dx / 1.05) && stepY > (dy / 1.05) && xok && yok
                             && (totArea / maxArea) > 0.99f) {
@@ -8786,7 +9213,7 @@ public final class Balony extends javax.swing.JFrame {
                         // Check for empty rows/cols?                        
                         ok = true;
                         // Average out min/max x; min/max y
-                        ArrayList<Float> xv = new ArrayList<Float>();
+                        ArrayList<Float> xv = new ArrayList<>();
                         for (Float alX1 : alX) {
                             if (Math.round((alX1 - minX) / stepX) == 0) {
                                 xv.add(alX1);
@@ -8797,7 +9224,7 @@ public final class Balony extends javax.swing.JFrame {
                             xav += o;
                         }
                         xav /= xv.size();
-                        xv = new ArrayList<Float>();
+                        xv = new ArrayList<>();
                         for (Float alX1 : alX) {
                             if (Math.round((alX1 - minX) / stepX) == (cols - 1)) {
                                 xv.add(alX1);
@@ -8808,7 +9235,7 @@ public final class Balony extends javax.swing.JFrame {
                             xav2 += o;
                         }
                         xav2 /= xv.size();
-                        xv = new ArrayList<Float>();
+                        xv = new ArrayList<>();
                         for (Float alY1 : alY) {
                             if (Math.round((alY1 - minY) / stepY) == 0) {
                                 xv.add(alY1);
@@ -8819,7 +9246,7 @@ public final class Balony extends javax.swing.JFrame {
                             yav += o;
                         }
                         yav /= xv.size();
-                        xv = new ArrayList<Float>();
+                        xv = new ArrayList<>();
                         for (Float alY1 : alY) {
                             if (Math.round((alY1 - minY) / stepY) == (rows - 1)) {
                                 xv.add(alY1);
@@ -9238,7 +9665,7 @@ public final class Balony extends javax.swing.JFrame {
 
         if (normORFButton.isSelected()) {
             String ctrlORF = normORFJTextField.getText().toUpperCase().trim();
-            ArrayList<Integer> ctrlSpots = new ArrayList<Integer>();
+            ArrayList<Integer> ctrlSpots = new ArrayList<>();
             for (int i = 1; i <= data.getRows(); i++) {
                 for (int j = 1; j <= data.getCols(); j++) {
                     if (keyOrfs[p][i][j].toUpperCase().equals(ctrlORF)
@@ -9251,8 +9678,7 @@ public final class Balony extends javax.swing.JFrame {
             }
 
             if (ctrlSpots.isEmpty()) {
-                messageText.append("\nError on plate " + p
-                        + " - no control spots found; using plate median.");
+                messageText.append("\nError on plate ").append(p).append(" - no control spots found; using plate median.");
                 forceMedian = true;
             } else {
                 Collections.sort(ctrlSpots);
@@ -9263,7 +9689,7 @@ public final class Balony extends javax.swing.JFrame {
         if (normPlateMedianButton.isSelected() || forceMedian) {
             // Get median value for plate
 
-            ArrayList<Integer> tmpSpots = new ArrayList<Integer>();
+            ArrayList<Integer> tmpSpots = new ArrayList<>();
             for (int i = 1; i <= data.getRows(); i++) {
                 for (int j = 1; j <= data.getCols(); j++) {
                     if (data.getArea()[s][p][i][j] == null) {
@@ -9280,6 +9706,10 @@ public final class Balony extends javax.swing.JFrame {
             Collections.sort(tmpSpots);
             median = tmpSpots.get((tmpSpots.size() - 1) / 2);
 
+        }
+
+        if (normNoneButton.isSelected()) {
+            median = 1;
         }
 
         if (median != 0) {
@@ -9313,11 +9743,25 @@ public final class Balony extends javax.swing.JFrame {
         if (scoreRCJCheckBox.isSelected()) {
             // Row/column correction
 
+            String np = scoreNormPercentileTextField.getText();
+            int normPerc;
+
+            try {
+                normPerc = Integer.parseInt(np);
+            } catch (NumberFormatException e) {
+                normPerc = 50;
+            }
+
+            if (normPerc < 1 || normPerc > 100) {
+                normPerc = 50;
+                scoreNormPercentileTextField.setText("50");
+            }
+
             for (int s = minSet; s <= maxSet; s++) {
                 for (int p = minPlate; p <= maxPlate; p++) {
                     double normFactor[][] = new double[data.getRows() + 1][data.getCols() + 1];
                     for (int i = 1; i <= data.getRows(); i++) {
-                        ArrayList<Double> mdn2 = new ArrayList<Double>();
+                        ArrayList<Double> mdn2 = new ArrayList<>();
                         for (int j = 1; j <= data.getCols(); j++) {
                             if (data.getNormArea()[s][p][i][j] != 0) {
                                 mdn2.add(data.getNormArea()[s][p][i][j]);
@@ -9325,17 +9769,23 @@ public final class Balony extends javax.swing.JFrame {
                         }
                         if (mdn2.size() > 0) {
                             Collections.sort(mdn2);
-                            rav = mdn2.get(((mdn2.size() - 1) / 2));
-                            if (rav < 1.0) {
-                                rav = 1.0;
+                            int percentile = (mdn2.size() * normPerc) / 100;
+                            rav = mdn2.get(percentile);
+                            if (!scoreUndergrowthJCheckBox.isSelected()) {
+                                if (rav < 1.0) {
+                                    rav = 1.0;
+                                }
                             }
+//                            System.out.println(rav);
+
                             for (int j = 1; j <= data.getCols(); j++) {
                                 normFactor[i][j] = rav;
                             }
+
                         }
                     }
                     for (int i = 1; i <= data.getCols(); i++) {
-                        ArrayList<Double> mdn2 = new ArrayList<Double>();
+                        ArrayList<Double> mdn2 = new ArrayList<>();
                         for (int j = 1; j <= data.getRows(); j++) {
                             if (data.getNormArea()[s][p][j][i] != 0) {
                                 mdn2.add(data.getNormArea()[s][p][j][i]);
@@ -9343,12 +9793,17 @@ public final class Balony extends javax.swing.JFrame {
                         }
                         if (mdn2.size() > 0) {
                             Collections.sort(mdn2);
-                            rav = mdn2.get(((mdn2.size() - 1) / 2));
-                            if (rav < 1.0) {
-                                rav = 1.0;
+                            int percentile = (mdn2.size() * normPerc) / 100;
+                            rav = mdn2.get(percentile);
+                            if (!scoreUndergrowthJCheckBox.isSelected()) {
+                                if (rav < 1.0) {
+                                    rav = 1.0;
+                                }
+//                                System.out.println(rav);
                             }
                             for (int j = 1; j <= data.getRows(); j++) {
                                 normFactor[j][i] *= rav;
+
                             }
                         }
                     }
@@ -9361,7 +9816,7 @@ public final class Balony extends javax.swing.JFrame {
 
                     // Re-normalize (centre)
                     if (normPlateMedianButton.isSelected()) {
-                        ArrayList<Double> tmpSpots = new ArrayList<Double>();
+                        ArrayList<Double> tmpSpots = new ArrayList<>();
                         double median;
                         for (int i = 1; i <= data.getRows(); i++) {
                             for (int j = 1; j <= data.getCols(); j++) {
@@ -9561,19 +10016,20 @@ public final class Balony extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public void main(final String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-//                Balony b = new Balony();
-                pack();
-                setVisible(true);
-                if (args[0].equals("1")) {
+        java.awt.EventQueue.invokeLater(() -> {
+            //                Balony b = new Balony();
+            pack();
+            setVisible(true);
+            switch (args[0]) {
+                case "1":
                     osLAFJRadioButton.setSelected(true);
-                } else if (args[0].equals("2")) {
+                    break;
+                case "2":
                     nimbusLAFJRadioButton.setSelected(true);
-                } else {
+                    break;
+                default:
                     javaLAFJRadioButton.setSelected(true);
-                }
+                    break;
             }
         });
     }
@@ -10589,12 +11045,23 @@ public final class Balony extends javax.swing.JFrame {
     private javax.swing.JRadioButton altEvenRadioButton;
     private javax.swing.JRadioButton altOddRadioButton;
     private javax.swing.JRadioButton altRowRadioButton;
-    private javax.swing.JComboBox analysisArrayComboBox;
+    private javax.swing.JComboBox<String> analysisArrayComboBox;
     private javax.swing.JPanel analysisArrayPanel;
+    private javax.swing.JButton analysisGenerateSummaryTablesHiddenButton;
+    private javax.swing.JButton analysisGenerateSummaryTablesVisibleButton;
     private javax.swing.JButton analysisLoadButton;
     private javax.swing.JCheckBox analysisOpenDataTablesJCheckBox;
     private javax.swing.JCheckBox analysisOverrideKeyFileCheckBox;
+    private javax.swing.JButton analysisShowSummaryTables;
     private javax.swing.JComboBox analysisSickFliterJComboBox;
+    private javax.swing.JComboBox analysisSummaryClipboardCopyTypeComboBox;
+    private javax.swing.JButton analysisSummaryCopyAllClipboardButton;
+    private javax.swing.JPanel analysisSummaryDefaultsPanel;
+    private javax.swing.JCheckBox analysisSummaryMedianCheckBox;
+    private javax.swing.JCheckBox analysisSummaryPairedSpotsCheckBox;
+    private javax.swing.JPanel analysisSummaryPanel;
+    private javax.swing.JButton analysisTableRemoveButton;
+    private javax.swing.JButton analysisTableShowButton;
     private javax.swing.JPanel analysisTablesPanel;
     private javax.swing.JPanel analysistabPanel;
     private javax.swing.JCheckBox autoAnalyzeJCheckBox;
@@ -10620,23 +11087,23 @@ public final class Balony extends javax.swing.JFrame {
     private javax.swing.JPanel ctrlPanel;
     private javax.swing.JButton ctrldirButton;
     private javax.swing.JTextField ctrldirTextField;
-    private javax.swing.JComboBox ctrlplateComboBox;
+    private javax.swing.JComboBox<String> ctrlplateComboBox;
     private javax.swing.JLabel currVersionJLabel;
-    private javax.swing.JComboBox dataTablesComboBox;
+    private javax.swing.JComboBox<dataTable> dataTablesComboBox;
     private javax.swing.JPanel defaultTableSettingsJPanel;
     private javax.swing.JButton definegridButton;
     private javax.swing.JButton downloadSGDInfoButton;
     private javax.swing.JButton expButton;
     private javax.swing.JPanel expPanel;
     private javax.swing.JTextField expdirTextField;
-    private javax.swing.JComboBox expplateComboBox;
+    private javax.swing.JComboBox<String> expplateComboBox;
     private javax.swing.JTextField folderJTextField;
     private javax.swing.JButton fullautoButton;
     private javax.swing.JButton gridCentreButton;
-    public javax.swing.JComboBox gridChoicejComboBox;
+    public javax.swing.JComboBox<String> gridChoicejComboBox;
     private javax.swing.JPanel gridPanel;
     private javax.swing.JButton gridclearButton;
-    private javax.swing.JList imageFileJList;
+    private javax.swing.JList<File> imageFileJList;
     private javax.swing.JScrollPane imageFileJListScrollPane;
     private javax.swing.JLabel imageFolderJLabel;
     private javax.swing.JPanel imagePanel;
@@ -10670,6 +11137,7 @@ public final class Balony extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -10685,6 +11153,7 @@ public final class Balony extends javax.swing.JFrame {
     private javax.swing.JTextField minSpotSizeJTextField;
     public javax.swing.JRadioButton nimbusLAFJRadioButton;
     private javax.swing.ButtonGroup normButtonGroup;
+    private javax.swing.JRadioButton normNoneButton;
     private javax.swing.JRadioButton normORFButton;
     private javax.swing.JTextField normORFJTextField;
     private javax.swing.JRadioButton normPlateMedianButton;
@@ -10721,7 +11190,7 @@ public final class Balony extends javax.swing.JFrame {
     private javax.swing.JComboBox scanDComboBox;
     private javax.swing.JPanel scanDPanel;
     private javax.swing.JTextField scanDTextField;
-    private javax.swing.JList scanFileJList;
+    private javax.swing.JList<File> scanFileJList;
     private javax.swing.JScrollPane scanFileJScrollPane;
     private javax.swing.JButton scanFilenameHelpJButton;
     private javax.swing.JTextField scanFolderJTextField;
@@ -10757,11 +11226,14 @@ public final class Balony extends javax.swing.JFrame {
     private javax.swing.JRadioButton scoreByOrfRadioButton;
     private javax.swing.JCheckBox scoreCompetitionJCheckBox;
     private javax.swing.JPanel scoreKeyfilePanel;
-    private javax.swing.JComboBox scoreKeysComboBox;
+    private javax.swing.JComboBox<String> scoreKeysComboBox;
+    private javax.swing.JLabel scoreNormPercentileLabel;
+    private javax.swing.JTextField scoreNormPercentileTextField;
     private javax.swing.JComboBox scoreRCComboBox;
     private javax.swing.JCheckBox scoreRCJCheckBox;
     private javax.swing.ButtonGroup scoreSaveButtonGroup;
     private javax.swing.JCheckBox scoreSpatialJCheckBox;
+    private javax.swing.JCheckBox scoreUndergrowthJCheckBox;
     private javax.swing.JTextField scorenameTextField;
     private javax.swing.JButton scoringRefreshButton;
     private javax.swing.JPanel scoringtabaPanel;
@@ -10783,6 +11255,7 @@ public final class Balony extends javax.swing.JFrame {
     private javax.swing.JCheckBox updateCheckJCheckBox1;
     private javax.swing.JPanel updaterJPanel;
     private javax.swing.JTextField upperCutOffJTextField;
+    private javax.swing.JCheckBox useQueryKeyJCheckBox;
     private javax.swing.JButton viewLogButton;
     private javax.swing.JCheckBox wizardModeJCheckBox;
     private javax.swing.JPanel zoomPanel;

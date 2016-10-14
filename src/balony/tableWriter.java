@@ -73,22 +73,22 @@ public class tableWriter {
             try {
 
                 if (i == 0) {
-                    BufferedWriter out = new BufferedWriter(new FileWriter(f));
-                    for (String columnName : colNames) {
-                        out.write(columnName);
-                        out.write("\t");
-                    }
-                    out.newLine();
-                    for (Object[] tableData1 : tableData) {
-                        for (int k = 0; k < colNames.length; k++) {
-                            if (tableData1[k] != null) {
-                                out.write(tableData1[k].toString());
-                            }
+                    try (BufferedWriter out = new BufferedWriter(new FileWriter(f))) {
+                        for (String columnName : colNames) {
+                            out.write(columnName);
                             out.write("\t");
                         }
                         out.newLine();
+                        for (Object[] tableData1 : tableData) {
+                            for (int k = 0; k < colNames.length; k++) {
+                                if (tableData1[k] != null) {
+                                    out.write(tableData1[k].toString());
+                                }
+                                out.write("\t");
+                            }
+                            out.newLine();
+                        }
                     }
-                    out.close();
                 }
 
                 if (i > 0) {
@@ -146,9 +146,9 @@ public class tableWriter {
                         c.setCellValue(colNames[k]);
                     }
 
-                    FileOutputStream fos = new FileOutputStream(f);
-                    wb.write(fos);
-                    fos.close();
+                    try (FileOutputStream fos = new FileOutputStream(f)) {
+                        wb.write(fos);
+                    }
                 }
 
             } catch (Exception ex) {

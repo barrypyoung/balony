@@ -17,7 +17,9 @@ package balony;
  */
 public class filenameHelp extends javax.swing.JDialog {
 
-    /** Creates new form filenameHelp */
+    /** Creates new form filenameHelp
+     * @param parent
+     * @param modal */
     public filenameHelp(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();

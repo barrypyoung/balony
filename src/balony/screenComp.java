@@ -143,7 +143,7 @@ public class screenComp extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     /**
-     * @param args the command line arguments
+     * @param ga
      */
 //    public static void main(String args[]) {
 //    }
@@ -163,19 +163,14 @@ public class screenComp extends javax.swing.JFrame {
         g.clearRect(0, 0, jPanel1.getWidth(), jPanel1.getHeight());
         jPanel1.setBorder(new LineBorder(Color.BLACK));
 
-        for (Integer[] i : cmp.keySet()) {
-            dataTable.compData c = cmp.get(i);
-
+        cmp.keySet().stream().map((i) -> cmp.get(i)).forEach((c) -> {
             Double c1 = Balony.mean(c.ctrl1);
             Double c2 = Balony.mean(c.ctrl2);
             Double e1 = Balony.mean(c.exp1);
             Double e2 = Balony.mean(c.exp2);
-
             Double r1 = (c1 > 0 ? e1 / c1 : 0);
             Double r2 = (c2 > 0 ? e2 / c2 : 0);
-
             int n = jComboBox2.getSelectedIndex();
-
             if (n == 0) {
                 g.setColor(Color.black);
                 g.drawLine(0, height / 2, width, height / 2);
@@ -190,7 +185,6 @@ public class screenComp extends javax.swing.JFrame {
 //                j.setToolTipText(c.gene);
 //                j.setBounds((int)(r1*width/2)-5,(int)(height-r2*height/2)-5,10,10);
             }
-
             if (n == 1) {
 
                 r1 = Math.log(r1) / l2;
@@ -204,7 +198,6 @@ public class screenComp extends javax.swing.JFrame {
                         (int) (r1 * (width / 10) + width / 2), (int) ((height / 2) - r2 * (height / 10)));
 
             }
-
             if (n == 2) {
                 r1 = Math.log(r1);
                 r2 = Math.log(r2);
@@ -216,7 +209,7 @@ public class screenComp extends javax.swing.JFrame {
                 g.drawLine((int) (r1 * width / 3 + width / 2), (int) (height / 2 - r2 * width / 3),
                         (int) (r1 * width / 3 + width / 2), (int) (height / 2 - r2 * width / 3));
             }
-        }
+        });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox jComboBox1;

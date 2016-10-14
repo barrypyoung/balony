@@ -102,9 +102,9 @@ public class comparisonTable extends javax.swing.JFrame implements screenCompare
             }
         };
         jPanel1 = new javax.swing.JPanel();
-        jComboBox2 = new javax.swing.JComboBox();
+        jComboBox2 = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
-        jComboBox1 = new javax.swing.JComboBox();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -129,7 +129,7 @@ public class comparisonTable extends javax.swing.JFrame implements screenCompare
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Screen 1"));
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox2ActionPerformed(evt);
@@ -149,7 +149,7 @@ public class comparisonTable extends javax.swing.JFrame implements screenCompare
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Screen 2"));
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -221,7 +221,7 @@ public class comparisonTable extends javax.swing.JFrame implements screenCompare
             int p = (Integer) jTable1.getValueAt(i, 1);
             int r = (Integer) jTable1.getValueAt(i, 2);
             int c = (Integer) jTable1.getValueAt(i, 3);
-            ArrayList<String> scr = new ArrayList<String>();
+            ArrayList<String> scr = new ArrayList<>();
             scr.add(jComboBox2.getSelectedItem().toString());
             scr.add(jComboBox1.getSelectedItem().toString());
 
@@ -250,30 +250,23 @@ public class comparisonTable extends javax.swing.JFrame implements screenCompare
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(comparisonTable.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(comparisonTable.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(comparisonTable.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(comparisonTable.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        
+        //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new comparisonTable().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new comparisonTable().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -295,11 +288,11 @@ public class comparisonTable extends javax.swing.JFrame implements screenCompare
         String s2 = jComboBox1.getSelectedItem().toString();
 
         if (!s.contains(s1) || !s.contains(s2)) {
-            setTitle(SCREEN__COMPARISON);
+            setTitle(SCREEN_COMPARISON);
             return;
         }
 
-        setTitle(SCREEN__COMPARISON + " - " + s1 + "vs. " + s2);
+        setTitle(SCREEN_COMPARISON + " - " + s1 + "vs. " + s2);
 
         Object[][] t1 = balony.aD.get(s1).getDt().tableData;
         Object[][] t2 = balony.aD.get(s2).getDt().tableData;
@@ -356,7 +349,7 @@ public class comparisonTable extends javax.swing.JFrame implements screenCompare
 //        jTable1.setAutoCreateRowSorter(true);
 
         TableRowSorter<myTableModel> sorter;
-        sorter = new TableRowSorter<myTableModel>(model);
+        sorter = new TableRowSorter<>(model);
         for (int i = 0; i < jTable1.getModel().getColumnCount(); i++) {
             sorter.setComparator(i, (Comparator<?>) new EmptyRowComparator(sorter, i));
         }
@@ -382,22 +375,28 @@ public class comparisonTable extends javax.swing.JFrame implements screenCompare
         jTable1.repaint();
 
     }
-    public static final String SCREEN__COMPARISON = "Screen Comparison";
+    public static final String SCREEN_COMPARISON = "Screen Comparison";
 
     public class myTableModel extends AbstractTableModel {
 
         @Override
         public Class<?> getColumnClass(int c) {
 
-            if (c == COL_RATIO_1 || c == COL_RATIO_2 || c == COL_RATIO_DIFF //                        || c == COL_RATIO_1_SD || c == COL_RATIO_2_SD
-                    ) {
-                return Double.class;
-            } else if (c == COL_PLATE || c == COL_ROW || c == COL_COL) {
-                return Integer.class;
-            } else if (c == COL_ORF || c == COL_GENE) {
-                return String.class;
-            } else {
-                return Object.class;
+            switch (c) {
+                case COL_RATIO_1:
+                case COL_RATIO_2:
+                case COL_RATIO_DIFF //                        || c == COL_RATIO_1_SD || c == COL_RATIO_2_SD
+                        :
+                    return Double.class;
+                case COL_PLATE:
+                case COL_ROW:
+                case COL_COL:
+                    return Integer.class;
+                case COL_ORF:
+                case COL_GENE:
+                    return String.class;
+                default:
+                    return Object.class;
             }
         }
 
