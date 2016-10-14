@@ -5521,206 +5521,209 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
 
         File[] f = new File[maxCtrlSet - minCtrlSet + 1];
 
-        if (queryKey) {
+        if(!queryKey) {
+            myQueries = new ArrayList<>();
+            myQueries.add(scorenameTextField.getText());
+        }
+        
+        for (String currentQuery : myQueries) {
 
-            for (String currentQuery : myQueries) {
+            if (scoreByArrayPosRadioButton.isSelected()) {
+                // One data file per set - assume all sets in range are present
+                for (int s = minCtrlSet; s <= maxCtrlSet; s++) {
+                    try {
 
-                if (scoreByArrayPosRadioButton.isSelected()) {
-                    // One data file per set - assume all sets in range are present
-                    for (int s = minCtrlSet; s <= maxCtrlSet; s++) {
-                        try {
+                        String outFile = ss + scorenameTextField.getText()
+                                + "_set-" + Integer.toString(s) + ".txt";
 
-                            String outFile = ss + scorenameTextField.getText()
+                        if (queryKey) {
+                            outFile = ss + currentQuery
                                     + "_set-" + Integer.toString(s) + ".txt";
+                        }
 
-                            if (queryKey) {
-                                outFile = ss + currentQuery
-                                        + "_set-" + Integer.toString(s) + ".txt";
-                            }
-
-                            try (BufferedWriter out = new BufferedWriter(new FileWriter(outFile))) {
-                                f[s - minCtrlSet] = new File(outFile);
-                                out.write(SCORE_HEADER);
-                                out.newLine();
-                                for (int p = minCtrlPlate; p
-                                        <= maxCtrlPlate; p++) {
-                                    for (int i = 1; i
-                                            <= ctrlData.getRows(); i++) {
-                                        for (int j = 1; j
-                                                <= ctrlData.getCols(); j++) {
-                                            if (ctrlData.getNormArea()[s][p][1][1] == null
-                                                    || expData.getNormArea()[s][p][1][1] == null) {
-                                                JOptionPane.showMessageDialog(this, "Data missing for plate.",
-                                                        "Warning", JOptionPane.WARNING_MESSAGE);
-                                                return;
-                                            }
-                                            out.write(scorenameTextField.getText() + "\t");
-                                            if (keyOrfs != null && keyOrfs.length > 0) {
-                                                try {
-                                                    String orf = keyOrfs[p][i][j];
-                                                    out.write(orf);
-                                                } catch (Exception e) {
-                                                    System.out.println(e.getLocalizedMessage());
-                                                }
-                                            }
-                                            out.write("\t");
-                                            if (keyGenes != null && keyGenes.length > 0) {
-                                                try {
-                                                    String gene = keyGenes[p][i][j];
-                                                    out.write(gene);
-                                                } catch (Exception e) {
-                                                    System.out.println(e.getLocalizedMessage());
-                                                }
-                                            }
-                                            out.write("\t");
-                                            out.write(Integer.toString(p));
-                                            out.write("\t");
-                                            out.write(Integer.toString(i));
-                                            out.write("\t");
-                                            out.write(Integer.toString(j));
-                                            out.write("\t");
-                                            out.write("\t\t\t\t\t");
-                                            if (!queryKey || currentQuery.equals(queryArray[p][i][j])) {
-                                                out.write(Double.toString(ctrlData.getNormArea()[s][p][i][j]));
-                                            } else {
-                                                out.write("0");
-                                            }
-
-                                            out.write("\t\t");
-                                            if (!queryKey || currentQuery.equals(queryArray[p][i][j])) {
-                                                out.write(Double.toString(expData.getNormArea()[s][p][i][j]));
-                                            } else {
-                                                out.write("0");
-                                            }
-
-                                            out.write("\t\t");
-
-                                            if (!queryKey || currentQuery.equals(queryArray[p][i][j])) {
-
-                                                out.write(Double.toString(ctrlData.getNormArea()[s][p][i][j]
-                                                        - expData.getNormArea()[s][p][i][j]));
-                                            } else {
-                                                out.write("0");
-                                            }
-
-                                            out.newLine();
+                        try (BufferedWriter out = new BufferedWriter(new FileWriter(outFile))) {
+                            f[s - minCtrlSet] = new File(outFile);
+                            out.write(SCORE_HEADER);
+                            out.newLine();
+                            for (int p = minCtrlPlate; p
+                                    <= maxCtrlPlate; p++) {
+                                for (int i = 1; i
+                                        <= ctrlData.getRows(); i++) {
+                                    for (int j = 1; j
+                                            <= ctrlData.getCols(); j++) {
+                                        if (ctrlData.getNormArea()[s][p][1][1] == null
+                                                || expData.getNormArea()[s][p][1][1] == null) {
+                                            JOptionPane.showMessageDialog(this, "Data missing for plate.",
+                                                    "Warning", JOptionPane.WARNING_MESSAGE);
+                                            return;
                                         }
+                                        out.write(scorenameTextField.getText() + "\t");
+                                        if (keyOrfs != null && keyOrfs.length > 0) {
+                                            try {
+                                                String orf = keyOrfs[p][i][j];
+                                                out.write(orf);
+                                            } catch (Exception e) {
+                                                System.out.println(e.getLocalizedMessage());
+                                            }
+                                        }
+                                        out.write("\t");
+                                        if (keyGenes != null && keyGenes.length > 0) {
+                                            try {
+                                                String gene = keyGenes[p][i][j];
+                                                out.write(gene);
+                                            } catch (Exception e) {
+                                                System.out.println(e.getLocalizedMessage());
+                                            }
+                                        }
+                                        out.write("\t");
+                                        out.write(Integer.toString(p));
+                                        out.write("\t");
+                                        out.write(Integer.toString(i));
+                                        out.write("\t");
+                                        out.write(Integer.toString(j));
+                                        out.write("\t");
+                                        out.write("\t\t\t\t\t");
+                                        if (!queryKey || currentQuery.equals(queryArray[p][i][j])) {
+                                            out.write(Double.toString(ctrlData.getNormArea()[s][p][i][j]));
+                                        } else {
+                                            out.write("0");
+                                        }
+
+                                        out.write("\t\t");
+                                        if (!queryKey || currentQuery.equals(queryArray[p][i][j])) {
+                                            out.write(Double.toString(expData.getNormArea()[s][p][i][j]));
+                                        } else {
+                                            out.write("0");
+                                        }
+
+                                        out.write("\t\t");
+
+                                        if (!queryKey || currentQuery.equals(queryArray[p][i][j])) {
+
+                                            out.write(Double.toString(ctrlData.getNormArea()[s][p][i][j]
+                                                    - expData.getNormArea()[s][p][i][j]));
+                                        } else {
+                                            out.write("0");
+                                        }
+
+                                        out.newLine();
                                     }
                                 }
                             }
-                        } catch (IOException e) {
-                            System.out.println(e.getLocalizedMessage());
+                        }
+                    } catch (IOException e) {
+                        System.out.println(e.getLocalizedMessage());
+                    }
+                }
+                messageText.append("\nScored data saved.");
+            } else {
+                // No key file? Abort.
+                if (keyOrfs == null || keyOrfs.length == 0) {
+                    messageText.append("\nKey File required for output by ORF.");
+                    return;
+                }
+                HashMap<String, orfScores> cOrfs = new HashMap<>();
+                HashMap<String, orfScores> eOrfs = new HashMap<>();
+                for (int s = minCtrlSet; s
+                        <= maxCtrlSet; s++) {
+                    for (int p = minCtrlPlate; p
+                            <= maxCtrlPlate; p++) {
+                        for (int i = 1; i
+                                <= ctrlData.getRows(); i++) {
+                            for (int j = 1; j
+                                    <= ctrlData.getCols(); j++) {
+                                try {
+                                    if (keyOrfs[p][i][j] != null) {
+                                        String orf = keyOrfs[p][i][j];
+                                        if (cOrfs.size() > 0 && cOrfs.keySet().contains(orf)) {
+                                            orfScores os = cOrfs.get(orf);
+                                            os.getVals().add(ctrlData.getNormArea()[s][p][i][j]);
+                                            cOrfs.put(orf, os);
+                                            os = eOrfs.get(orf);
+                                            os.getVals().add(expData.getNormArea()[s][p][i][j]);
+                                            eOrfs.put(orf, os);
+                                        } else {
+                                            orfScores os = new orfScores();
+                                            os.setVals(new ArrayList<>());
+                                            os.setGene(keyGenes[p][i][j]);
+                                            os.getVals().add(ctrlData.getNormArea()[s][p][i][j]);
+                                            cOrfs.put(orf, os);
+                                            os = new orfScores();
+                                            os.setVals(new ArrayList<>());
+                                            os.setGene(keyGenes[p][i][j]);
+                                            os.getVals().add(expData.getNormArea()[s][p][i][j]);
+                                            eOrfs.put(orf, os);
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    System.out.println(e.getLocalizedMessage());
+                                }
+                            }
                         }
                     }
-                    messageText.append("\nScored data saved.");
-                } else {
-                    // No key file? Abort.
-                    if (keyOrfs == null || keyOrfs.length == 0) {
-                        messageText.append("\nKey File required for output by ORF.");
-                        return;
-                    }
-                    HashMap<String, orfScores> cOrfs = new HashMap<>();
-                    HashMap<String, orfScores> eOrfs = new HashMap<>();
-                    for (int s = minCtrlSet; s
-                            <= maxCtrlSet; s++) {
-                        for (int p = minCtrlPlate; p
-                                <= maxCtrlPlate; p++) {
-                            for (int i = 1; i
-                                    <= ctrlData.getRows(); i++) {
-                                for (int j = 1; j
-                                        <= ctrlData.getCols(); j++) {
-                                    try {
-                                        if (keyOrfs[p][i][j] != null) {
-                                            String orf = keyOrfs[p][i][j];
-                                            if (cOrfs.size() > 0 && cOrfs.keySet().contains(orf)) {
-                                                orfScores os = cOrfs.get(orf);
-                                                os.getVals().add(ctrlData.getNormArea()[s][p][i][j]);
-                                                cOrfs.put(orf, os);
-                                                os = eOrfs.get(orf);
-                                                os.getVals().add(expData.getNormArea()[s][p][i][j]);
-                                                eOrfs.put(orf, os);
-                                            } else {
-                                                orfScores os = new orfScores();
-                                                os.setVals(new ArrayList<>());
-                                                os.setGene(keyGenes[p][i][j]);
-                                                os.getVals().add(ctrlData.getNormArea()[s][p][i][j]);
-                                                cOrfs.put(orf, os);
-                                                os = new orfScores();
-                                                os.setVals(new ArrayList<>());
-                                                os.setGene(keyGenes[p][i][j]);
-                                                os.getVals().add(expData.getNormArea()[s][p][i][j]);
-                                                eOrfs.put(orf, os);
-                                            }
-                                        }
-                                    } catch (Exception e) {
-                                        System.out.println(e.getLocalizedMessage());
-                                    }
+                    try {
+                        String outFile = ss + scorenameTextField.getText() + "_set-"
+                                + Integer.toString(s) + ".txt";
+                        try (BufferedWriter out = new BufferedWriter(new FileWriter(outFile))) {
+                            out.write(SCORE_HEADER);
+                            out.newLine();
+                            TreeSet<String> allOrfs = new TreeSet<>(cOrfs.keySet());
+                            for (String orf : allOrfs) {
+                                out.write(scorenameTextField.getText() + "\t");
+                                out.write(orf);
+                                out.write("\t");
+                                out.write(keyOrfList.get(orf));
+                                out.write("\t\t\t\t\t\t\t\t\t");
+
+                                // Ctrl:
+                                ArrayList<Double> v = cOrfs.get(orf).getVals();
+                                Double d1 = 0d;
+                                for (Double vd : v) {
+                                    d1 += vd;
                                 }
-                            }
-                        }
-                        try {
-                            String outFile = ss + scorenameTextField.getText() + "_set-"
-                                    + Integer.toString(s) + ".txt";
-                            try (BufferedWriter out = new BufferedWriter(new FileWriter(outFile))) {
-                                out.write(SCORE_HEADER);
+                                d1 /= v.size();
+                                out.write(d1.toString());
+                                out.write("\t");
+
+                                double sum = 0d, sd;
+                                if (v.size() > 1) {
+                                    for (Double dd : v) {
+                                        double dtmp = dd - d1;
+                                        sum += dtmp * dtmp;
+                                    }
+                                    sd = Math.sqrt(sum / v.size());
+                                    out.write(Double.toString(sd));
+                                }
+                                out.write("\t");
+                                v = eOrfs.get(orf).getVals();
+                                Double d2 = 0d;
+                                for (Double vd : v) {
+                                    d2 += vd;
+                                }
+                                d2 /= v.size();
+                                out.write(d2.toString());
+                                out.write("\t");
+                                sum = 0d;
+                                if (v.size() > 1) {
+                                    for (Double dd : v) {
+                                        double dtmp = dd - d2;
+                                        sum += dtmp * dtmp;
+                                    }
+                                    sd = Math.sqrt(sum / v.size());
+                                    out.write(Double.toString(sd));
+                                }
+                                out.write("\t");
+                                out.write(Double.toString(d1 - d2));
                                 out.newLine();
-                                TreeSet<String> allOrfs = new TreeSet<>(cOrfs.keySet());
-                                for (String orf : allOrfs) {
-                                    out.write(scorenameTextField.getText() + "\t");
-                                    out.write(orf);
-                                    out.write("\t");
-                                    out.write(keyOrfList.get(orf));
-                                    out.write("\t\t\t\t\t\t\t\t\t");
-
-                                    // Ctrl:
-                                    ArrayList<Double> v = cOrfs.get(orf).getVals();
-                                    Double d1 = 0d;
-                                    for (Double vd : v) {
-                                        d1 += vd;
-                                    }
-                                    d1 /= v.size();
-                                    out.write(d1.toString());
-                                    out.write("\t");
-
-                                    double sum = 0d, sd;
-                                    if (v.size() > 1) {
-                                        for (Double dd : v) {
-                                            double dtmp = dd - d1;
-                                            sum += dtmp * dtmp;
-                                        }
-                                        sd = Math.sqrt(sum / v.size());
-                                        out.write(Double.toString(sd));
-                                    }
-                                    out.write("\t");
-                                    v = eOrfs.get(orf).getVals();
-                                    Double d2 = 0d;
-                                    for (Double vd : v) {
-                                        d2 += vd;
-                                    }
-                                    d2 /= v.size();
-                                    out.write(d2.toString());
-                                    out.write("\t");
-                                    sum = 0d;
-                                    if (v.size() > 1) {
-                                        for (Double dd : v) {
-                                            double dtmp = dd - d2;
-                                            sum += dtmp * dtmp;
-                                        }
-                                        sd = Math.sqrt(sum / v.size());
-                                        out.write(Double.toString(sd));
-                                    }
-                                    out.write("\t");
-                                    out.write(Double.toString(d1 - d2));
-                                    out.newLine();
-                                }
                             }
-                        } catch (Exception e) {
-                            System.out.println(e.getLocalizedMessage());
                         }
+                    } catch (Exception e) {
+                        System.out.println(e.getLocalizedMessage());
                     }
                 }
             }
         }
+
         if (autoAnalyzeJCheckBox.isSelected()) {
             loadAnalysisFiles(f);
         }
