@@ -653,7 +653,7 @@ public class spotInfo extends javax.swing.JFrame {
     private void geneJLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_geneJLabelMouseClicked
         try {
             Desktop d = Desktop.getDesktop();
-            d.browse(new URI("http://www.yeastgenome.org/cgi-bin/locus.fpl?locus="
+            d.browse(new URI("https://www.yeastgenome.org/locus/"
                     + orfJLabel.getText()));
         } catch (URISyntaxException | IOException e) {
             System.out.println(e.getLocalizedMessage());

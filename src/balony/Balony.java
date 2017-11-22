@@ -343,11 +343,6 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
     /**
      *
      */
-    public static final String BALONY_GOOGLECODE_FEED = "https://code.google.com/feeds/p/balony/downloads/basic";
-
-    /**
-     *
-     */
     public static final String BALONY_RAW_DATA = "Balony raw data";
 
     /**
@@ -1284,7 +1279,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
          *
          */
         public static final String SGD_FEATURES_URL
-                = "http://downloads.yeastgenome.org/curation/chromosomal_feature/SGD_features.tab";
+                = "https://downloads.yeastgenome.org/curation/chromosomal_feature/SGD_features.tab";
 
         @Override
         protected String doInBackground() throws Exception {
@@ -1297,6 +1292,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
 
                 buf = new BufferedInputStream(sgdURL.openStream());
                 int size = sgdURL.openConnection().getContentLength();
+                System.out.println("Size of SGD_features.tab: " + size);
 
                 final String filename = get_sgdfile_name();
                 fos = new FileOutputStream(filename);
@@ -1649,6 +1645,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         analysisSummaryMedianCheckBox = new javax.swing.JCheckBox();
         analysisSummaryPairedSpotsCheckBox = new javax.swing.JCheckBox();
         analysisSummaryCopyAllClipboardButton = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
         optionsPanel = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         javaLAFJRadioButton = new javax.swing.JRadioButton();
@@ -3862,7 +3859,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             }
         });
 
-        analysisSummaryClipboardCopyTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ctrls", "Exps", "Ratios", "Diffs", "p-values" }));
+        analysisSummaryClipboardCopyTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ctrls", "Ctrl SDs", "Ctrl n", "Exps", "Exp SDs", "Exp n", "Ratios", "Ratio SDs", "Diffs", "Diff SDs", "p-values" }));
         analysisSummaryClipboardCopyTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 analysisSummaryClipboardCopyTypeComboBoxActionPerformed(evt);
@@ -3908,6 +3905,8 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             }
         });
 
+        jButton4.setText("Consolidate (Excel)");
+
         org.jdesktop.layout.GroupLayout analysisSummaryPanelLayout = new org.jdesktop.layout.GroupLayout(analysisSummaryPanel);
         analysisSummaryPanel.setLayout(analysisSummaryPanelLayout);
         analysisSummaryPanelLayout.setHorizontalGroup(
@@ -3917,7 +3916,8 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
                     .add(analysisSummaryPanelLayout.createSequentialGroup()
                         .add(analysisSummaryPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                             .add(analysisShowSummaryTables, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(analysisSummaryCopyAllClipboardButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .add(analysisSummaryCopyAllClipboardButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .add(jButton4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(analysisSummaryClipboardCopyTypeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -3938,12 +3938,16 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(analysisSummaryPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(analysisSummaryPanelLayout.createSequentialGroup()
+                        .add(analysisSummaryDefaultsPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .add(analysisSummaryPanelLayout.createSequentialGroup()
                         .add(analysisShowSummaryTables)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(analysisSummaryPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                             .add(analysisSummaryClipboardCopyTypeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(analysisSummaryCopyAllClipboardButton)))
-                    .add(analysisSummaryDefaultsPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                            .add(analysisSummaryCopyAllClipboardButton))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(jButton4))))
         );
 
         org.jdesktop.layout.GroupLayout analysistabPanelLayout = new org.jdesktop.layout.GroupLayout(analysistabPanel);
@@ -3966,11 +3970,11 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
                 .add(analysisTablesPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(analysisSummaryPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(5, 5, 5)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(defaultTableSettingsJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(sgdFeaturesJPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(249, 249, 249))
+                .add(237, 237, 237))
         );
 
         tabPane.addTab("Analysis", analysistabPanel);
@@ -5521,11 +5525,11 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
 
         File[] f = new File[maxCtrlSet - minCtrlSet + 1];
 
-        if(!queryKey) {
+        if (!queryKey) {
             myQueries = new ArrayList<>();
             myQueries.add(scorenameTextField.getText());
         }
-        
+
         for (String currentQuery : myQueries) {
 
             if (scoreByArrayPosRadioButton.isSelected()) {
@@ -8707,16 +8711,40 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             myCol = stmp.COL_CTRL;
         }
 
+        if (analysisSummaryClipboardCopyTypeComboBox.getSelectedItem().toString().equals("Ctrl SDs")) {
+            myCol = stmp.COL_CTRL_SD;
+        }
+
+        if (analysisSummaryClipboardCopyTypeComboBox.getSelectedItem().toString().equals("Ctrl n")) {
+            myCol = stmp.COL_CTRL_N;
+        }
+
         if (analysisSummaryClipboardCopyTypeComboBox.getSelectedItem().toString().equals("Exps")) {
             myCol = stmp.COL_EXP;
+        }
+
+        if (analysisSummaryClipboardCopyTypeComboBox.getSelectedItem().toString().equals("Exp SDs")) {
+            myCol = stmp.COL_EXP_SD;
+        }
+
+        if (analysisSummaryClipboardCopyTypeComboBox.getSelectedItem().toString().equals("Exp n")) {
+            myCol = stmp.COL_EXP_N;
         }
 
         if (analysisSummaryClipboardCopyTypeComboBox.getSelectedItem().toString().equals("Ratios")) {
             myCol = stmp.COL_RATIO;
         }
 
+        if (analysisSummaryClipboardCopyTypeComboBox.getSelectedItem().toString().equals("Ratio SDs")) {
+            myCol = stmp.COL_RATIO_SD;
+        }
+
         if (analysisSummaryClipboardCopyTypeComboBox.getSelectedItem().toString().equals("Diffs")) {
             myCol = stmp.COL_DIFF;
+        }
+
+        if (analysisSummaryClipboardCopyTypeComboBox.getSelectedItem().toString().equals("Diff SDs")) {
+            myCol = stmp.COL_DIFF_SD;
         }
 
         if (analysisSummaryClipboardCopyTypeComboBox.getSelectedItem().toString().equals("p-values")) {
@@ -11117,6 +11145,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

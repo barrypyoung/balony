@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-/*
+ /*
  * dataTable.java
  *
  * Created on 8-Oct-2009, 12:05:29 PM
@@ -931,6 +931,7 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner, scr
 
     public void updateSpotInfo(spotInfo sI, int row) {
 
+        System.out.println("Update spot info");
         if (row < 0) {
             return;
         }
@@ -1220,12 +1221,11 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner, scr
 
         }
     }
-    
+
 //    public TreeSet<String> getExclData(Object o) {
 //        if(o.getClass().equals(new TreeSet<String>().getClass())) { return (TreeSet<String>) o; }
 //        return new TreeSet<String>();
 //    }
-
     @SuppressWarnings("unchecked")
     private void includeJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_includeJMenuItemActionPerformed
         int[] i = analysisTable.getSelectedRows();
@@ -1967,6 +1967,8 @@ public class dataTable extends javax.swing.JFrame implements ClipboardOwner, scr
 
     public void setupData(Balony b, Double ctrl[][][][], Double exp[][][][], Integer s, Integer p,
             Integer r, Integer c, String[][][] orf, String[][][] gene) {
+        System.out.println("Setting up table data");
+        
         balony = b;
         myCtrl = ctrl;
         myExp = exp;

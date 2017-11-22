@@ -24,13 +24,15 @@
       <key>MainClass</key>
       <string>balony.main</string>
       <key>JVMVersion</key>
-      <string>1.3+</string>
+      <string>1.8+</string>
       <key>ClassPath</key>
       <array>
         <string>$JAVAROOT/1536 RePad 300 dpi.preset</string>
         <string>$JAVAROOT/1536 RePad 600 dpi.preset</string>
         <string>$JAVAROOT/384 RePad 300 dpi.preset</string>
         <string>$JAVAROOT/6144 RePad 600 dpi.preset</string>
+        <string>$JAVAROOT/Balony-manual.docx</string>
+        <string>$JAVAROOT/Balony-manual.pdf</string>
         <string>$JAVAROOT/Loewen Lab 1536 RePad 300 dpi.preset</string>
         <string>$JAVAROOT/SGD_features.tab</string>
         <string>$JAVAROOT/Tetrad 9x9.preset</string>
@@ -39,14 +41,9 @@
         <string>$JAVAROOT/Balony.jar</string>
       </array>
       <key>VMOptions</key>
-      <string>-Xmx1024M</string>
+      <string>-Xmx2048M</string>
       <key>WorkingDirectory</key>
       <string>$APP_PACKAGE/Contents/Resources/Java/</string>
-      <key>Properties</key>
-      <dict>
-        <key>com.apple.mrj.application.apple.menu.about.name</key>
-        <string>Balony</string>
-      </dict>
     </dict>
   </dict>
 </plist>
