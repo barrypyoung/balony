@@ -1,5 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
+/*//GEN-FIRST:event_scanbaseTextFieldKeyReleased
+ * To change this template, choose Tools | Templates//GEN-LAST:event_scanbaseTextFieldKeyReleased
  * and open the template in the editor.
  */
 
@@ -49,6 +49,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import org.apache.commons.lang.StringUtils;
+
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.math3.analysis.interpolation.LoessInterpolator;
 import org.kohsuke.github.GHAsset;
@@ -56,6 +58,11 @@ import org.kohsuke.github.GHRelease;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.PagedIterable;
+import org.intermine.metadata.Model;
+import org.intermine.pathquery.Constraints;
+import org.intermine.pathquery.PathQuery;
+import org.intermine.webservice.client.core.ServiceFactory;
+import org.intermine.webservice.client.services.QueryService;
 
 /**
  *
@@ -833,7 +840,8 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
     /**
      *
      */
-    public static final String SGD_FEATURES_FILE = "SGD_features.tab";
+//    public static final String SGD_FEATURES_FILE = "SGD_features.tab";
+    public static final String SGD_FEATURES_YM = "SGD_features_ym.tab";
 
     /**
      *
@@ -1175,7 +1183,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
      * @return
      */
     public String get_sgdfile_name() {
-        return SGD_FEATURES_FILE;
+        return SGD_FEATURES_YM;
     }
 
     /**
@@ -1187,7 +1195,8 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
     }
 
     private void loadSGDInfo() {
-        File f = new File(get_sgdfile_name());
+//        File f = new File(get_sgdfile_name());
+        File f = new File(SGD_FEATURES_YM);
 
         if (f.exists()) {
             Long l = f.lastModified();
@@ -1213,13 +1222,30 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
                         sgdi.sgdID = sg[0];
                         sgdi.qualifier = sg[2];
                         sgdi.gene = sg[4];
+
                         sgdi.strand = sg[11];
+
+                        if (sg[11].equals("-1")) {
+                            sgdi.strand = "C";
+                        }
+
+                        if (sg[11].equals("")) {
+                            sgdi.strand = "W";
+                        }
+
                         sgdi.desc = sg[15];
                         if (sg[5].length() > 0) {
                             sgdi.aliases = new ArrayList<>(Arrays.asList(sg[5].split("\\|")));
                         }
                         try {
-                            sgdi.chr = Integer.parseInt(sg[8]);
+                            if (sg[8].equals("chrmt")) {
+                                sgdi.chr = 17;
+                            } else if (sg[8].startsWith("chr")) {
+                                System.out.println(sg[8].substring(3));
+                                sgdi.chr = BalonyTools.romanValueOf(sg[8].substring(3));
+                            } else {
+                                sgdi.chr = Integer.parseInt(sg[8]);
+                            }
                             sgdi.startCoord = Integer.parseInt(sg[9]);
                             sgdi.stopCoord = Integer.parseInt(sg[10]);
                         } catch (NumberFormatException e) {
@@ -1278,53 +1304,101 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         /**
          *
          */
-        public static final String SGD_FEATURES_URL
-                = "https://downloads.yeastgenome.org/curation/chromosomal_feature/SGD_features.tab";
+//        public static final String SGD_FEATURES_URL
+//                = "https://downloads.yeastgenome.org/curation/chromosomal_feature/SGD_features.tab";
+
+        private static final String ROOT = "https://yeastmine.yeastgenome.org:443/yeastmine/service";
 
         @Override
         protected String doInBackground() throws Exception {
 
-            messageText.append("\nAttempting to update SGD_features.tab\nDownloading");
-            FileOutputStream fos = null;
-            BufferedInputStream buf = null;
-            try {
-                URL sgdURL = new URL(SGD_FEATURES_URL);
+            messageText.append("\nUpdating SGD info via YeastMine...");
+            ServiceFactory factory = new ServiceFactory(ROOT);
+            Model model = factory.getModel();
+            PathQuery query = new PathQuery(model);
 
-                buf = new BufferedInputStream(sgdURL.openStream());
-                int size = sgdURL.openConnection().getContentLength();
-                System.out.println("Size of SGD_features.tab: " + size);
+            // Select the output columns:
+            query.addViews("Gene.primaryIdentifier",
+                    "Gene.featureType",
+                    "Gene.qualifier",
+                    "Gene.secondaryIdentifier",
+                    "Gene.symbol",
+                    "Gene.sgdAlias",
+                    "Gene.featAttribute",
+                    "Gene.length",
+                    "Gene.chromosomeLocation.locatedOn.primaryIdentifier",
+                    "Gene.locations.start",
+                    "Gene.chromosomeLocation.end",
+                    "Gene.chromosomeLocation.strand",
+                    "Gene.geneSummary",
+                    "Gene.status",
+                    "Gene.organism.commonName",
+                    "Gene.description");
 
-                final String filename = get_sgdfile_name();
-                fos = new FileOutputStream(filename);
-                int r;
-                int cnt = 0;
-                int done = 0;
-                while ((r = buf.read()) != -1) {
-                    cnt++;
-                    if (cnt == size / 4) {
-                        done += 25;
-                        messageText.append(done).append("%");
-                        cnt = 0;
-                    } else if (cnt % (size / 16) == 0) {
-                        messageText.append(".");
-                    }
-                    fos.write(r);
-                }
+            // Filter the results with the following constraints:
+            query.addConstraint(Constraints.in("Gene", "ALL_Verified_Uncharacterized_Dubious_ORFs"));
 
-                messageText.append("\nSGD_features.tab successfully updated");
-
-            } catch (IOException e) {
-                System.out.println(e.getLocalizedMessage());
-            } finally {
-                if (fos != null) {
-                    fos.close();
-                }
-
-                if (buf != null) {
-                    buf.close();
-                }
+            QueryService service = factory.getQueryService();
+            PrintStream out = System.out;
+            FileWriter fos = new FileWriter(SGD_FEATURES_YM);
+//        String format = "%-17.17s | %-17.17s | %-17.17s | %-17.17s | %-17.17s | %-17.17s\n";
+//        out.printf(format, query.getView().toArray());
+            fos.write(StringUtils.join(query.getView(), "\t").replace("\n", " ").replace("\r", " ") + "\n");
+            Iterator<java.util.List<Object>> rows = service.getRowListIterator(query);
+            while (rows.hasNext()) {
+//            out.printf(format, rows.next().toArray());
+//            System.out.println("Row:");
+                java.util.List<Object> row = rows.next();
+//            System.out.println(row.toString());
+                String s = StringUtils.join(row, "\t") + "\n";
+                fos.write(s);
             }
+            fos.close();
+            messageText.append(" done.");
 
+            out.printf("%d rows\n", service.getCount(query));
+            loadSGDInfo();
+
+//            messageText.append("\nAttempting to update SGD_features.tab\nDownloading");
+//            FileOutputStream fos = null;
+//            BufferedInputStream buf = null;
+//            try {
+//                URL sgdURL = new URL(SGD_FEATURES_URL);
+//
+//                buf = new BufferedInputStream(sgdURL.openStream());
+//                int size = sgdURL.openConnection().getContentLength();
+//                System.out.println("Size of SGD_features.tab: " + size);
+//
+//                final String filename = get_sgdfile_name();
+//                fos = new FileOutputStream(filename);
+//                int r;
+//                int cnt = 0;
+//                int done = 0;
+//                while ((r = buf.read()) != -1) {
+//                    cnt++;
+//                    if (cnt == size / 4) {
+//                        done += 25;
+//                        messageText.append(done).append("%");
+//                        cnt = 0;
+//                    } else if (cnt % (size / 16) == 0) {
+//                        messageText.append(".");
+//                    }
+//                    fos.write(r);
+//                }
+//
+//                messageText.append("\nSGD_features.tab successfully updated");
+//
+//            } catch (IOException e) {
+//                System.out.println(e.getLocalizedMessage());
+//            } finally {
+//                if (fos != null) {
+//                    fos.close();
+//                }
+//
+//                if (buf != null) {
+//                    buf.close();
+//                }
+//            }
             return "";
         }
 
@@ -1440,7 +1514,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
         scoreSaveButtonGroup = new javax.swing.ButtonGroup();
@@ -4220,7 +4294,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         tabPane.getAccessibleContext().setAccessibleName("Image");
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>                        
 
     /**
      * Prepare to load the image
@@ -4847,7 +4921,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
     }
 
     // Manual Threshold
-    private void choosefolderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_choosefolderButtonActionPerformed
+    private void choosefolderButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
 
 //        String osn = System.getProperty("os.name").toLowerCase();
 //        if (osn.indexOf("mac") == -1) {
@@ -4921,12 +4995,12 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
 
         loadImageFileList((File[]) vFiles.toArray(new File[vFiles.size()]));
         messageText.append("\nFound ").append(cnt).append(" image files.");
-    }//GEN-LAST:event_choosefolderButtonActionPerformed
+    }                                                  
 
-    private void quantButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantButtonActionPerformed
+    private void quantButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
         qw = new quantWorker();
         qw.execute();
-    }//GEN-LAST:event_quantButtonActionPerformed
+    }                                           
 
     /**
      *
@@ -4939,7 +5013,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             return "";
         }
     }
-    private void zoominButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zoominButtonActionPerformed
+    private void zoominButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         if (loadedIm != null) {
             Zoomer z = new Zoomer();
             ImageCanvas ic1 = loadedIm.getCanvas();
@@ -4952,9 +5026,9 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         }
         messageText.append("\nLeft-click to zoom in, right-click to zoom out.");
 
-    }//GEN-LAST:event_zoominButtonActionPerformed
+    }                                            
 
-    private void definegridButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_definegridButtonActionPerformed
+    private void definegridButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         if (!loaded) {
             return;
         }
@@ -4972,7 +5046,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             drawGrid(ic, Color.green);
         }
 
-    }//GEN-LAST:event_definegridButtonActionPerformed
+    }                                                
 
     /**
      *
@@ -5018,7 +5092,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         qs.QuantScan(oIm.getCanvas());
     }
 
-    private void gridclearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gridclearButtonActionPerformed
+    private void gridclearButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
         minX = 0;
         maxX = 0;
         minY = 0;
@@ -5028,9 +5102,9 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         gridded = false;
         switchToInputImage();
         loadedIm.setOverlay(null);
-    }//GEN-LAST:event_gridclearButtonActionPerformed
+    }                                               
 
-    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
         doSave(true);
     }
 
@@ -5132,7 +5206,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         }
         imageFileJList.repaint();
 
-    }//GEN-LAST:event_saveButtonActionPerformed
+    }                                          
 
     /**
      *
@@ -5192,10 +5266,10 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         return base + "_RAW_set-" + set + "_plate-" + plate + ".txt";
     }
 
-    private void gridChoicejComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_gridChoicejComboBoxItemStateChanged
-    }//GEN-LAST:event_gridChoicejComboBoxItemStateChanged
+    private void gridChoicejComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {                                                     
+    }                                                    
 
-    private void thresholdButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_thresholdButtonActionPerformed
+    private void thresholdButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
         if (loaded == false) {
             return;
         }
@@ -5209,9 +5283,9 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
 //        } else if (loaded == true && threshed == true) {
 //            new imageLoader().execute();
 //        }
-    }//GEN-LAST:event_thresholdButtonActionPerformed
+    }                                               
 
-    private void threshRadioManualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_threshRadioManualActionPerformed
+    private void threshRadioManualActionPerformed(java.awt.event.ActionEvent evt) {                                                  
 
         if (threshRadioAuto.isSelected()) {
             prefs.setProperty(PREFS_IMAGE_THRESHMETHOD, THRESH_AUTO);
@@ -5226,9 +5300,9 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             threshJSlider.setEnabled(true);
         }
 
-    }//GEN-LAST:event_threshRadioManualActionPerformed
+    }                                                 
 
-    private void gridChoicejComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gridChoicejComboBoxActionPerformed
+    private void gridChoicejComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         updateGridType();
     }
 
@@ -5258,7 +5332,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         }
         prefs.setProperty(PREFS_IMAGE_PRESET, gridP.gridnameTextField.getText());
         savePrefs();
-    }//GEN-LAST:event_gridChoicejComboBoxActionPerformed
+    }                                                   
 
     /**
      *
@@ -5273,23 +5347,23 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         }
     }
 
-    private void rotatecorrectorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rotatecorrectorButtonActionPerformed
+    private void rotatecorrectorButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         switchToInputImage();
         RotateCorrector rc = new RotateCorrector();
         rc.RotateCorrector(loadedIm.getCanvas());
 
-    }//GEN-LAST:event_rotatecorrectorButtonActionPerformed
+    }                                                     
 
-    private void manualspotdefineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manualspotdefineButtonActionPerformed
+    private void manualspotdefineButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                       
         if (oIm == null) {
             return;
         }
         switchToOutputImage();
         ManualSpot ms = new ManualSpot();
         ms.ManualSpot(oIm.getCanvas());
-    }//GEN-LAST:event_manualspotdefineButtonActionPerformed
+    }                                                      
 
-    private void zoomoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zoomoutButtonActionPerformed
+    private void zoomoutButtonActionPerformed(java.awt.event.ActionEvent evt) {                                              
         if (loadedIm != null) {
             Zoomer z = new Zoomer();
             ImageCanvas ic1 = loadedIm.getCanvas();
@@ -5301,12 +5375,12 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             z2.Zoomer(ic2, 1);
         }
         messageText.append("\nLeft-click to zoom out, right-click to zoom in.");
-    }//GEN-LAST:event_zoomoutButtonActionPerformed
+    }                                             
 
-    private void tabPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabPaneStateChanged
-    }//GEN-LAST:event_tabPaneStateChanged
+    private void tabPaneStateChanged(javax.swing.event.ChangeEvent evt) {                                     
+    }                                    
 
-    private void scoringtabaPanelComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_scoringtabaPanelComponentShown
+    private void scoringtabaPanelComponentShown(java.awt.event.ComponentEvent evt) {                                                
     }
 
     public void updateScoreTab() {
@@ -5445,14 +5519,14 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         if (!et.isEmpty()) {
             expplateComboBox.setSelectedItem(et);
         }
-    }//GEN-LAST:event_scoringtabaPanelComponentShown
+    }                                               
 
-    private void scoreRCComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scoreRCComboBoxActionPerformed
+    private void scoreRCComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                
         prefs.setProperty(PREFS_SCORE_NORM, scoreRCComboBox.getSelectedItem().toString());
         savePrefs();
-    }//GEN-LAST:event_scoreRCComboBoxActionPerformed
+    }                                               
 
-    private void saveScoreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveScoreButtonActionPerformed
+    private void saveScoreButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
 
         doAddCtrl();
         doAddExp();
@@ -5731,9 +5805,9 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         if (autoAnalyzeJCheckBox.isSelected()) {
             loadAnalysisFiles(f);
         }
-    }//GEN-LAST:event_saveScoreButtonActionPerformed
+    }                                               
 
-    private void ctrldirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctrldirButtonActionPerformed
+    private void ctrldirButtonActionPerformed(java.awt.event.ActionEvent evt) {                                              
         JFileChooser jfc = new JFileChooser();
         String s = null;
 
@@ -5753,8 +5827,8 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         savePrefs();
         ctrldirTextField.setText(s);
         updateScoreTab();
-    }//GEN-LAST:event_ctrldirButtonActionPerformed
-    private void expButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_expButtonActionPerformed
+    }                                             
+    private void expButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
         JFileChooser jfc = new JFileChooser();
         String s = null;
 
@@ -5774,7 +5848,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         savePrefs();
         expdirTextField.setText(s);
         updateScoreTab();
-    }//GEN-LAST:event_expButtonActionPerformed
+    }                                         
 
     /**
      *
@@ -6002,7 +6076,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         }
     }
 
-    private void scanprocessButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanprocessButtonActionPerformed
+    private void scanprocessButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         doScanProcess();
     }
 
@@ -6185,8 +6259,8 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             }
         }
         messageText.append("done.");
-    }//GEN-LAST:event_scanprocessButtonActionPerformed
-    private void scanchoosefolderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanchoosefolderButtonActionPerformed
+    }                                                 
+    private void scanchoosefolderButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                       
         JFileChooser jfc = new JFileChooser();
         String s = null;
 
@@ -6224,31 +6298,31 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             messageText.append("\nFound ").append(cnt).append(" image file").append(cnt > 1 ? "s" : "").append(".");
         }
 
-    }//GEN-LAST:event_scanchoosefolderButtonActionPerformed
+    }                                                      
 
-    private void scanAComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanAComboBoxActionPerformed
+    private void scanAComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                              
         updateScanNames();
         prefs.setProperty(PREFS_SCAN_PLATE_A, scanAComboBox.getSelectedItem().toString());
         savePrefs();
-    }//GEN-LAST:event_scanAComboBoxActionPerformed
-    private void scanBComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanBComboBoxActionPerformed
+    }                                             
+    private void scanBComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                              
         updateScanNames();
         prefs.setProperty(PREFS_SCAN_PLATE_B, scanBComboBox.getSelectedItem().toString());
         savePrefs();
-    }//GEN-LAST:event_scanBComboBoxActionPerformed
-    private void scanCComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanCComboBoxActionPerformed
+    }                                             
+    private void scanCComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                              
         updateScanNames();
         prefs.setProperty(PREFS_SCAN_PLATE_C, scanCComboBox.getSelectedItem().toString());
         savePrefs();
-    }//GEN-LAST:event_scanCComboBoxActionPerformed
-    private void scanDComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanDComboBoxActionPerformed
+    }                                             
+    private void scanDComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                              
         updateScanNames();
         prefs.setProperty(PREFS_SCAN_PLATE_D, scanDComboBox.getSelectedItem().toString());
         savePrefs();
-    }//GEN-LAST:event_scanDComboBoxActionPerformed
-    private void scansetComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scansetComboBoxActionPerformed
+    }                                             
+    private void scansetComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                
         updateScanNames();
-    }//GEN-LAST:event_scansetComboBoxActionPerformed
+    }                                               
 
     /**
      *
@@ -6301,7 +6375,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             pw = null;
         }
     }
-    private void scanprocessallButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanprocessallButtonActionPerformed
+    private void scanprocessallButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                     
         if (pw != null) {
             pw.cancel(true);
             pw = null;
@@ -6309,7 +6383,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         }
         pw = new processWorker();
         pw.execute();
-    }//GEN-LAST:event_scanprocessallButtonActionPerformed
+    }                                                    
 
     /**
      *
@@ -6471,7 +6545,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         }
     }
 
-    private void fullautoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fullautoButtonActionPerformed
+    private void fullautoButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
         if (fullAuto) {
             if (fullAutoWorker != null) {
                 fullAutoWorker.cancel(inverted);
@@ -6498,13 +6572,13 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         fullAutoWorker = new autoWorker();
         fullAutoWorker.execute();
 
-    }//GEN-LAST:event_fullautoButtonActionPerformed
+    }                                              
 
-    private void viewLogButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewLogButtonActionPerformed
+    private void viewLogButtonActionPerformed(java.awt.event.ActionEvent evt) {                                              
         TextWindow t = new TextWindow(currFolder.getAbsolutePath() + File.separator + AUTO_ANALYZE_LOG, 500, 600);
         t.setTitle(currFolder.getAbsolutePath() + File.separator + AUTO_ANALYZE_LOG);
-    }//GEN-LAST:event_viewLogButtonActionPerformed
-    private void autocheckforwardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autocheckforwardButtonActionPerformed
+    }                                             
+    private void autocheckforwardButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                       
         if (autoCheckPos == -1) {
             autoCheckPos = 0;
         } else {
@@ -6537,8 +6611,8 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         autoTmp.show();
         autoTmp.getWindow().setLocation(this.getWidth(), 0);
         autoTmp.getWindow().setTitle(autoTmp.getWindow().getTitle() + " - " + (autoCheckPos + 1) + "/" + jpgfiles2.length);
-    }//GEN-LAST:event_autocheckforwardButtonActionPerformed
-    private void autocheckbackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autocheckbackButtonActionPerformed
+    }                                                      
+    private void autocheckbackButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         if (autoCheckPos == -1) {
             autoCheckPos = 0;
         } else {
@@ -6574,14 +6648,14 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
                 + (autoCheckPos + 1) + "/" + jpgfiles.length);
 
 
-    }//GEN-LAST:event_autocheckbackButtonActionPerformed
-    private void scansaveCCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scansaveCCheckBoxActionPerformed
+    }                                                   
+    private void scansaveCCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         if (scansaveCCheckBox.isSelected()) {
             scanCTextField.setEnabled(true);
         } else {
             scanCTextField.setEnabled(false);
         }
-    }//GEN-LAST:event_scansaveCCheckBoxActionPerformed
+    }                                                 
 
     /**
      *
@@ -6598,7 +6672,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         }
     }
 
-    private void analysisLoadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisLoadButtonActionPerformed
+    private void analysisLoadButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
         MultiFileChooser mfc = new MultiFileChooser();
         mfc.b = this;
         mfc.setIconImage(balloonImage);
@@ -6872,7 +6946,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             wfj.dt = currentDT;
         }
 
-    }//GEN-LAST:event_analysisLoadButtonActionPerformed
+    }                                                  
 
     /**
      *
@@ -6895,13 +6969,13 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         public void compMenu() {
         }
     }
-    private void dataTablesComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dataTablesComboBoxActionPerformed
+    private void dataTablesComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                   
 //        dataTable ob = (dataTable) dataTablesComboBox.getSelectedItem();
 //        if (ob != null) {
 //            ob.setVisible(true);
 //            currentDT = ob;
 //        }
-    }//GEN-LAST:event_dataTablesComboBoxActionPerformed
+    }                                                  
 
     /**
      *
@@ -6968,7 +7042,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         }
     }
 
-    private void analysisArrayComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisArrayComboBoxActionPerformed
+    private void analysisArrayComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         if (analysisArrayComboBox.getSelectedIndex() == 0) {
             try {
                 JFileChooser jfc = new JFileChooser();
@@ -7031,9 +7105,9 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             }
         }
 
-    }//GEN-LAST:event_analysisArrayComboBoxActionPerformed
+    }                                                     
 
-    private void saveScoreAvgButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveScoreAvgButtonActionPerformed
+    private void saveScoreAvgButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
 
         doAddCtrl();
         doAddExp();
@@ -7248,13 +7322,13 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
                 System.out.println(e.getLocalizedMessage());
             }
         }
-    }//GEN-LAST:event_saveScoreAvgButtonActionPerformed
+    }                                                  
 
-    private void scanshrinkComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanshrinkComboBoxActionPerformed
+    private void scanshrinkComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                   
         prefs.setProperty(PREFS_SCAN_SHRINK, scanshrinkComboBox.getSelectedItem().toString());
-    }//GEN-LAST:event_scanshrinkComboBoxActionPerformed
+    }                                                  
 
-    private void gridCentreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gridCentreButtonActionPerformed
+    private void gridCentreButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         doCentreGrid();
         messageText.append("\nUse cursor keys to position grid.");
         loadedIm.getCanvas().requestFocus();
@@ -7275,7 +7349,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         drawGrid(
                 loadedIm.getCanvas(), Color.green);
         gridded = true;
-    }//GEN-LAST:event_gridCentreButtonActionPerformed
+    }                                                
 
     /**
      *
@@ -7349,7 +7423,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         drawGrid(loadedIm.getCanvas(), Color.green);
     }
 
-    private void scanLayoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanLayoutActionPerformed
+    private void scanLayoutActionPerformed(java.awt.event.ActionEvent evt) {                                           
 
         int i = scanLayout.getSelectedIndex();
         switch (i) {
@@ -7426,28 +7500,28 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         prefs.setProperty(PREFS_SCAN_LAYOUT, scanLayout.getSelectedItem().toString());
         savePrefs();
 
-    }//GEN-LAST:event_scanLayoutActionPerformed
+    }                                          
 
-    private void gridPanelKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_gridPanelKeyPressed
+    private void gridPanelKeyPressed(java.awt.event.KeyEvent evt) {                                     
         if (evt.getKeyCode() == KeyEvent.VK_UP) {
             doGridNudgeUp(1);
         }
-    }//GEN-LAST:event_gridPanelKeyPressed
+    }                                    
 
-    private void imagePanelKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_imagePanelKeyPressed
+    private void imagePanelKeyPressed(java.awt.event.KeyEvent evt) {                                      
         if (evt.getKeyCode() == KeyEvent.VK_UP) {
             doGridNudgeUp(1);
         }
-    }//GEN-LAST:event_imagePanelKeyPressed
+    }                                     
 
-    private void scanbaseTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_scanbaseTextFieldKeyPressed
-    }//GEN-LAST:event_scanbaseTextFieldKeyPressed
+    private void scanbaseTextFieldKeyPressed(java.awt.event.KeyEvent evt) {                                             
+    }                                            
 
-    private void scanbaseTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_scanbaseTextFieldKeyReleased
+    private void scanbaseTextFieldKeyReleased(java.awt.event.KeyEvent evt) {                                              
         updateScanNames();
-    }//GEN-LAST:event_scanbaseTextFieldKeyReleased
+    }                                             
 
-    private void scoreKeysComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scoreKeysComboBoxActionPerformed
+    private void scoreKeysComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         Object ok = scoreKeysComboBox.getSelectedItem();
         if (ok == null) {
             return;
@@ -7461,9 +7535,9 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
                 System.out.println(e.getLocalizedMessage());
             }
         }
-    }//GEN-LAST:event_scoreKeysComboBoxActionPerformed
+    }                                                 
 
-    private void keyFileLoadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keyFileLoadButtonActionPerformed
+    private void keyFileLoadButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         JFileChooser jfc = new JFileChooser();
         jfc.setFileFilter(new FileNameExtensionFilter("Balony Key Files (*.key)", "key"));
         jfc.showOpenDialog(this);
@@ -7559,14 +7633,14 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             }
         }
 
-    }//GEN-LAST:event_keyFileLoadButtonActionPerformed
+    }                                                 
 
-    private void downloadSGDInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadSGDInfoButtonActionPerformed
+    private void downloadSGDInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         new sgdUpdater().execute();
-    }//GEN-LAST:event_downloadSGDInfoButtonActionPerformed
+    }                                                     
 
     @SuppressWarnings("unchecked")
-    private void restoreTableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restoreTableButtonActionPerformed
+    private void restoreTableButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
 
         // Refresh filters?
         JFileChooser jfc = new JFileChooser();
@@ -7660,9 +7734,9 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         }
 
 
-    }//GEN-LAST:event_restoreTableButtonActionPerformed
+    }                                                  
 
-    private void autoGridJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoGridJCheckBoxActionPerformed
+    private void autoGridJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                  
 
         prefs.setProperty(PREFS_IMAGE_AUTOGRID, autoGridJCheckBox.isSelected() ? "1" : "0");
         savePrefs();
@@ -7670,29 +7744,29 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             gw = new gridWorker();
             gw.execute();
         }        // TODO add your handling code here:
-    }//GEN-LAST:event_autoGridJCheckBoxActionPerformed
+    }                                                 
 
-    private void autoThreshJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoThreshJCheckBoxActionPerformed
+    private void autoThreshJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         prefs.setProperty(PREFS_IMAGE_AUTOTHRESH,
                 autoThreshJCheckBox.isSelected() ? "1" : "0");
         savePrefs();
-    }//GEN-LAST:event_autoThreshJCheckBoxActionPerformed
+    }                                                   
 
-    private void imageShowPresetsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imageShowPresetsButtonActionPerformed
+    private void imageShowPresetsButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                       
         gridP.setVisible(true);
         // TODO add your handling code here:
-    }//GEN-LAST:event_imageShowPresetsButtonActionPerformed
+    }                                                      
 
-    private void resetrotateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetrotateButtonActionPerformed
+    private void resetrotateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         rotated = false;
         new imageLoader().execute();
-    }//GEN-LAST:event_resetrotateButtonActionPerformed
+    }                                                 
 
-    private void imageShowParamsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imageShowParamsButtonActionPerformed
+    private void imageShowParamsButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         quantP.setVisible(true);
-    }//GEN-LAST:event_imageShowParamsButtonActionPerformed
+    }                                                     
 
-    private void imageFileJListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageFileJListMouseClicked
+    private void imageFileJListMouseClicked(java.awt.event.MouseEvent evt) {                                            
         if (evt.getClickCount() < 2) {
             return;
         }
@@ -7705,9 +7779,9 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         rethresh = 0;
         bestSpots = -1;
         new imageLoader().execute();
-    }//GEN-LAST:event_imageFileJListMouseClicked
+    }                                           
 
-    private void scanFileJListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scanFileJListMouseClicked
+    private void scanFileJListMouseClicked(java.awt.event.MouseEvent evt) {                                           
         if (evt.getClickCount() == 2) {
             new scanLoader().execute();
 //        } else {
@@ -7774,16 +7848,16 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             }
             return "";
         }
-    }//GEN-LAST:event_scanFileJListMouseClicked
+    }                                          
 
-    private void autoGridButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoGridButtonActionPerformed
+    private void autoGridButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
         quant = false;
         switchToInputImage();
         gw = new gridWorker();
         gw.execute();
-    }//GEN-LAST:event_autoGridButtonActionPerformed
+    }                                              
 
-    private void manualspotResetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manualspotResetButtonActionPerformed
+    private void manualspotResetButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                      
 
         if (oIm == null) {
             return;
@@ -7791,33 +7865,33 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         switchToOutputImage();
         ManualSpotRemover msr = new ManualSpotRemover();
         msr.ManualSpot(oIm.getCanvas());
-    }//GEN-LAST:event_manualspotResetButtonActionPerformed
+    }                                                     
 
-    private void threshJSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_threshJSliderStateChanged
+    private void threshJSliderStateChanged(javax.swing.event.ChangeEvent evt) {                                           
 
         imageThreshManualJTextField.setText(Integer.toString(threshJSlider.getValue()));
         imageThreshManualJTextField.setCaretPosition(imageThreshManualJTextField.getText().length());
         prefs.setProperty(PREFS_IMAGE_THRESVALUE, imageThreshManualJTextField.getText());
         savePrefs();
-    }//GEN-LAST:event_threshJSliderStateChanged
+    }                                          
 
-    private void threshJSliderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_threshJSliderMouseClicked
-    }//GEN-LAST:event_threshJSliderMouseClicked
+    private void threshJSliderMouseClicked(java.awt.event.MouseEvent evt) {                                           
+    }                                          
 
-    private void threshJSliderMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_threshJSliderMouseReleased
-    }//GEN-LAST:event_threshJSliderMouseReleased
+    private void threshJSliderMouseReleased(java.awt.event.MouseEvent evt) {                                            
+    }                                           
 
-    private void threshJSliderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_threshJSliderMousePressed
-    }//GEN-LAST:event_threshJSliderMousePressed
+    private void threshJSliderMousePressed(java.awt.event.MouseEvent evt) {                                           
+    }                                          
 
-    private void imageThreshManualJTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_imageThreshManualJTextFieldPropertyChange
+    private void imageThreshManualJTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {                                                           
         updateSlider();
-    }//GEN-LAST:event_imageThreshManualJTextFieldPropertyChange
+    }                                                          
 
-    private void imageThreshManualJTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_imageThreshManualJTextFieldKeyTyped
-    }//GEN-LAST:event_imageThreshManualJTextFieldKeyTyped
+    private void imageThreshManualJTextFieldKeyTyped(java.awt.event.KeyEvent evt) {                                                     
+    }                                                    
 
-    private void imageThreshManualJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_imageThreshManualJTextFieldKeyReleased
+    private void imageThreshManualJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {                                                        
         int i;
 
         try {
@@ -7838,9 +7912,9 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         prefs.setProperty(PREFS_IMAGE_THRESVALUE, Integer.toString(i));
         savePrefs();
         updateSlider();        // TODO add your handling code here:
-    }//GEN-LAST:event_imageThreshManualJTextFieldKeyReleased
+    }                                                       
 
-    private void imageStopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imageStopButtonActionPerformed
+    private void imageStopButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
         if (gw != null) {
             gw.cancel(true);
         }
@@ -7849,9 +7923,9 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             fullAutoWorker.cancel(true);
         }
         stopped = true;
-    }//GEN-LAST:event_imageStopButtonActionPerformed
+    }                                               
 
-    private void toggleInputOutputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleInputOutputButtonActionPerformed
+    private void toggleInputOutputButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                        
         doToggleInputOutput();
     }
 
@@ -7861,13 +7935,13 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         } else if (imWin != null && imWin.getImagePlus() != oIm) {
             switchToOutputImage();
         }
-    }//GEN-LAST:event_toggleInputOutputButtonActionPerformed
+    }                                                       
 
-    private void selectAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllButtonActionPerformed
+    private void selectAllButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
         imageFileJList.setSelectionInterval(0, imageFileJList.getModel().getSize() - 1);
-    }//GEN-LAST:event_selectAllButtonActionPerformed
+    }                                               
 
-    private void showQuantButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showQuantButtonActionPerformed
+    private void showQuantButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
         Object[] o = imageFileJList.getSelectedValuesList().toArray();
         int x = 0;
         int y = 0;
@@ -7941,16 +8015,16 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
                 }
             }
         }
-    }//GEN-LAST:event_showQuantButtonActionPerformed
+    }                                               
 
-    private void imageFileJListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_imageFileJListValueChanged
+    private void imageFileJListValueChanged(javax.swing.event.ListSelectionEvent evt) {                                            
         if (imageFileJList.getSelectedIndices().length > 0) {
             currFolder = ((File) imageFileJList.getSelectedValue()).getParentFile();
             folderJTextField.setText(currFolder.getAbsolutePath());
         }
-    }//GEN-LAST:event_imageFileJListValueChanged
+    }                                           
 
-    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         ArrayList<File> al = new ArrayList<>();
         for (int i = 0; i < imageFileJList.getModel().getSize(); i++) {
             if (!imageFileJList.isSelectedIndex(i)) {
@@ -7959,52 +8033,52 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         }
         imageFileJList.setListData((File[]) al.toArray(new File[al.size()]));
 
-    }//GEN-LAST:event_removeButtonActionPerformed
+    }                                            
 
-    private void scanOffsetJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanOffsetJComboBoxActionPerformed
+    private void scanOffsetJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         updateScanNames();
-    }//GEN-LAST:event_scanOffsetJComboBoxActionPerformed
+    }                                                   
 
-    private void scanFilenameHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanFilenameHelpJButtonActionPerformed
+    private void scanFilenameHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                        
         new filenameHelp(this, false).setVisible(true);
-    }//GEN-LAST:event_scanFilenameHelpJButtonActionPerformed
+    }                                                       
 
-    private void scansaveACheckBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scansaveACheckBoxMouseClicked
-    }//GEN-LAST:event_scansaveACheckBoxMouseClicked
+    private void scansaveACheckBoxMouseClicked(java.awt.event.MouseEvent evt) {                                               
+    }                                              
 
-    private void scansaveBCheckBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scansaveBCheckBoxMouseClicked
-    }//GEN-LAST:event_scansaveBCheckBoxMouseClicked
+    private void scansaveBCheckBoxMouseClicked(java.awt.event.MouseEvent evt) {                                               
+    }                                              
 
-    private void scansaveACheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scansaveACheckBoxActionPerformed
+    private void scansaveACheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         if (scansaveACheckBox.isSelected()) {
             scanaTextField.setEnabled(true);
         } else {
             scanaTextField.setEnabled(false);
         }
-    }//GEN-LAST:event_scansaveACheckBoxActionPerformed
+    }                                                 
 
-    private void scansaveBCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scansaveBCheckBoxActionPerformed
+    private void scansaveBCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         if (scansaveBCheckBox.isSelected()) {
             scanBTextField.setEnabled(true);
         } else {
             scanBTextField.setEnabled(false);
         }
-    }//GEN-LAST:event_scansaveBCheckBoxActionPerformed
+    }                                                 
 
-    private void scansaveDCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scansaveDCheckBoxActionPerformed
+    private void scansaveDCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         if (scansaveDCheckBox.isSelected()) {
             scanDTextField.setEnabled(true);
         } else {
             scanDTextField.setEnabled(false);
         }
-    }//GEN-LAST:event_scansaveDCheckBoxActionPerformed
+    }                                                 
 
-    private void scanSelectAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanSelectAllButtonActionPerformed
+    private void scanSelectAllButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         if (scanFileJList.getModel().getSize() == 0) {
             return;
         }
         scanFileJList.setSelectionInterval(0, scanFileJList.getModel().getSize() - 1);
-    }//GEN-LAST:event_scanSelectAllButtonActionPerformed
+    }                                                   
 
     /**
      *
@@ -8332,45 +8406,45 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         normalizeExperiment();
     }
 
-    private void minSpotSizeJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minSpotSizeJTextFieldKeyReleased
+    private void minSpotSizeJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {                                                  
         prefs.setProperty(PREFS_ANALYSIS_MINSPOTSIZE, minSpotSizeJTextField.getText());
         savePrefs();
-    }//GEN-LAST:event_minSpotSizeJTextFieldKeyReleased
+    }                                                 
 
-    private void maxSpotSizeJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxSpotSizeJTextFieldKeyReleased
+    private void maxSpotSizeJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {                                                  
         prefs.setProperty(PREFS_ANALYSIS_MAXSPOTSIZE, maxSpotSizeJTextField.getText());
         savePrefs();
-    }//GEN-LAST:event_maxSpotSizeJTextFieldKeyReleased
+    }                                                 
 
-    private void lowCutOffJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lowCutOffJTextFieldKeyReleased
+    private void lowCutOffJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {                                                
         prefs.setProperty(PREFS_ANALYSIS_LOWCUTOFF, lowCutOffJTextField.getText());
         savePrefs();
-    }//GEN-LAST:event_lowCutOffJTextFieldKeyReleased
+    }                                               
 
-    private void upperCutOffJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_upperCutOffJTextFieldKeyReleased
+    private void upperCutOffJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {                                                  
         prefs.setProperty(PREFS_ANALYSIS_HIGHCUTOFF, upperCutOffJTextField.getText());
         savePrefs();
-    }//GEN-LAST:event_upperCutOffJTextFieldKeyReleased
+    }                                                 
 
-    private void sickCutOffTextJFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sickCutOffTextJFieldKeyReleased
+    private void sickCutOffTextJFieldKeyReleased(java.awt.event.KeyEvent evt) {                                                 
         prefs.setProperty(PREFS_ANALYSIS_SICKCUTOFF, sickCutOffTextJField.getText());
         savePrefs();
-    }//GEN-LAST:event_sickCutOffTextJFieldKeyReleased
+    }                                                
 
-    private void analysisSickFliterJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisSickFliterJComboBoxActionPerformed
+    private void analysisSickFliterJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                            
         prefs.setProperty(PREFS_ANALYSIS_SICKFILTER, analysisSickFliterJComboBox.getSelectedItem().toString());
         savePrefs();
-    }//GEN-LAST:event_analysisSickFliterJComboBoxActionPerformed
+    }                                                           
 
-    private void analysisSickFliterJComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_analysisSickFliterJComboBoxItemStateChanged
+    private void analysisSickFliterJComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {                                                             
         // TODO add your handling code here:
-    }//GEN-LAST:event_analysisSickFliterJComboBoxItemStateChanged
+    }                                                            
 
-    private void scanbaseTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanbaseTextFieldActionPerformed
+    private void scanbaseTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         // TODO add your handling code here:
-    }//GEN-LAST:event_scanbaseTextFieldActionPerformed
+    }                                                 
 
-    private void threshRadioAutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_threshRadioAutoActionPerformed
+    private void threshRadioAutoActionPerformed(java.awt.event.ActionEvent evt) {                                                
 
         if (threshRadioAuto.isSelected()) {
             prefs.setProperty(PREFS_IMAGE_THRESHMETHOD, THRESH_AUTO);
@@ -8385,9 +8459,9 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             threshJSlider.setEnabled(false);
         }
 
-    }//GEN-LAST:event_threshRadioAutoActionPerformed
+    }                                               
 
-    private void contactJLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contactJLabelMouseClicked
+    private void contactJLabelMouseClicked(java.awt.event.MouseEvent evt) {                                           
         Desktop desktop = Desktop.getDesktop();
         URI mailto = URI.create("mailto:byoung@interchange.ubc.ca?subject=Balony");
         try {
@@ -8396,41 +8470,41 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         } catch (IOException ex) {
             Logger.getLogger(Balony.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_contactJLabelMouseClicked
+    }                                          
 
-    private void updateCheckButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateCheckButtonActionPerformed
+    private void updateCheckButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
 
         updateWorker uwo = new updateWorker();
         uwo.execute();
 
-    }//GEN-LAST:event_updateCheckButtonActionPerformed
+    }                                                 
 
-    private void nimbusLAFJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nimbusLAFJRadioButtonActionPerformed
+    private void nimbusLAFJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         if (nimbusLAFJRadioButton.isSelected()) {
             useOSLaF = true;
             prefs.setProperty(PREFS_OPTIONS_OS_LOOK_AND_FEEL, "2");
             System.out.println("Setting nimbus as default");
             savePrefs();
         }
-    }//GEN-LAST:event_nimbusLAFJRadioButtonActionPerformed
+    }                                                     
 
-    private void osLAFJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_osLAFJRadioButtonActionPerformed
+    private void osLAFJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         if (osLAFJRadioButton.isSelected()) {
             useOSLaF = true;
             prefs.setProperty(PREFS_OPTIONS_OS_LOOK_AND_FEEL, "1");
             savePrefs();
         }
-    }//GEN-LAST:event_osLAFJRadioButtonActionPerformed
+    }                                                 
 
-    private void javaLAFJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_javaLAFJRadioButtonActionPerformed
+    private void javaLAFJRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         if (javaLAFJRadioButton.isSelected()) {
             useOSLaF = true;
             prefs.setProperty(PREFS_OPTIONS_OS_LOOK_AND_FEEL, "0");
             savePrefs();
         }
-    }//GEN-LAST:event_javaLAFJRadioButtonActionPerformed
+    }                                                   
 
-    private void contactJLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contactJLabel1MouseClicked
+    private void contactJLabel1MouseClicked(java.awt.event.MouseEvent evt) {                                            
         Desktop desktop = Desktop.getDesktop();
         URI browseto = URI.create("http://code.google.com/p/balony/wiki/Introduction?tm=6");
         try {
@@ -8439,15 +8513,15 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         } catch (IOException ex) {
             Logger.getLogger(Balony.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_contactJLabel1MouseClicked
+    }                                           
 
-    private void scanFileJListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_scanFileJListValueChanged
+    private void scanFileJListValueChanged(javax.swing.event.ListSelectionEvent evt) {                                           
 
         updateScanJList();
 
-    }//GEN-LAST:event_scanFileJListValueChanged
+    }                                          
 
-    private void scanPreviewJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanPreviewJCheckBoxActionPerformed
+    private void scanPreviewJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                     
         if (!scanPreviewJCheckBox.isSelected()) {
             Graphics g = scanPreviewPanel.getGraphics();
             g.dispose();
@@ -8455,144 +8529,144 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         } else {
             updateScanJList();
         }
-    }//GEN-LAST:event_scanPreviewJCheckBoxActionPerformed
+    }                                                    
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         if (messageFrame == null) {
             messageFrame = new messageJFrame();
         }
 
         messageFrame.setVisible(true);
         messageFrame.setLocation(0, 0);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }                                        
 
-    private void scanrotateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanrotateComboBoxActionPerformed
+    private void scanrotateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                   
         prefs.setProperty(PREFS_SCAN_ROTATE, scanrotateComboBox.getSelectedItem().toString());
         savePrefs();
-    }//GEN-LAST:event_scanrotateComboBoxActionPerformed
+    }                                                  
 
-    private void scangrayCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scangrayCheckBoxActionPerformed
+    private void scangrayCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         prefs.setProperty(PREFS_SCAN_GRAYSCALE, scangrayCheckBox.isSelected() ? "1" : "0");
         savePrefs();
-    }//GEN-LAST:event_scangrayCheckBoxActionPerformed
+    }                                                
 
-    private void scancloseCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scancloseCheckBoxActionPerformed
+    private void scancloseCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         prefs.setProperty(PREFS_SCAN_CLOSE, scancloseCheckBox.isSelected() ? "1" : "0");
-    }//GEN-LAST:event_scancloseCheckBoxActionPerformed
+    }                                                 
 
-    private void scanAutoPlateNameJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanAutoPlateNameJCheckBoxActionPerformed
+    private void scanAutoPlateNameJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                           
         prefs.setProperty(PREFS_SCAN_AUTONAME, scanAutoPlateNameJCheckBox.isSelected() ? "1" : "0");
         savePrefs();
-    }//GEN-LAST:event_scanAutoPlateNameJCheckBoxActionPerformed
+    }                                                          
 
-    private void scansubfolderTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_scansubfolderTextFieldKeyReleased
+    private void scansubfolderTextFieldKeyReleased(java.awt.event.KeyEvent evt) {                                                   
         prefs.setProperty(PREFS_SCAN_SUBFOLDER, scansubfolderTextField.getText());
         savePrefs();
-    }//GEN-LAST:event_scansubfolderTextFieldKeyReleased
+    }                                                  
 
-    private void autoNameJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoNameJCheckBoxActionPerformed
+    private void autoNameJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         prefs.setProperty(PREFS_IMAGE_AUTONAME,
                 autoNameJCheckBox.isSelected() ? "1" : "0");
         savePrefs();
-    }//GEN-LAST:event_autoNameJCheckBoxActionPerformed
+    }                                                 
 
-    private void autoQuantJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoQuantJCheckBoxActionPerformed
+    private void autoQuantJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                   
         prefs.setProperty(PREFS_IMAGE_AUTOQUANT,
                 autoQuantJCheckBox.isSelected() ? "1" : "0");
         savePrefs();
-    }//GEN-LAST:event_autoQuantJCheckBoxActionPerformed
+    }                                                  
 
-    private void autoInvertJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoInvertJCheckBoxActionPerformed
+    private void autoInvertJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         prefs.setProperty(PREFS_IMAGE_AUTOINVERT,
                 autoInvertJCheckBox.isSelected() ? "1" : "0");
         savePrefs();
-    }//GEN-LAST:event_autoInvertJCheckBoxActionPerformed
+    }                                                   
 
-    private void autoSaveJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoSaveJCheckBoxActionPerformed
+    private void autoSaveJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         prefs.setProperty(PREFS_IMAGE_AUTOSAVE,
                 autoSaveJCheckBox.isSelected() ? "1" : "0");
         savePrefs();
-    }//GEN-LAST:event_autoSaveJCheckBoxActionPerformed
+    }                                                 
 
-    private void autoAnalyzeJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoAnalyzeJCheckBoxActionPerformed
+    private void autoAnalyzeJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                     
         prefs.setProperty(PREFS_SCORE_AUTOANALYZE,
                 autoAnalyzeJCheckBox.isSelected() ? "1" : "0");
         savePrefs();
-    }//GEN-LAST:event_autoAnalyzeJCheckBoxActionPerformed
+    }                                                    
 
-    private void scoreByArrayPosRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scoreByArrayPosRadioButtonActionPerformed
+    private void scoreByArrayPosRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                           
         prefs.setProperty(PREFS_SCORE_SCOREBY,
                 scoreByArrayPosRadioButton.isSelected() ? SCORE_BY_ARRAY : SCORE_BY_ORF);
         savePrefs();
-    }//GEN-LAST:event_scoreByArrayPosRadioButtonActionPerformed
+    }                                                          
 
-    private void scoreByOrfRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scoreByOrfRadioButtonActionPerformed
+    private void scoreByOrfRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         prefs.setProperty(PREFS_SCORE_SCOREBY,
                 scoreByArrayPosRadioButton.isSelected() ? SCORE_BY_ARRAY : SCORE_BY_ORF);
         savePrefs();
-    }//GEN-LAST:event_scoreByOrfRadioButtonActionPerformed
+    }                                                     
 
-    private void analysisOpenDataTablesJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisOpenDataTablesJCheckBoxActionPerformed
+    private void analysisOpenDataTablesJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                                
         prefs.setProperty(PREFS_ANALYSIS_OPEN_TABLES,
                 analysisOpenDataTablesJCheckBox.isSelected() ? "1" : "0");
         savePrefs();
-    }//GEN-LAST:event_analysisOpenDataTablesJCheckBoxActionPerformed
+    }                                                               
 
-    private void analysisOverrideKeyFileCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisOverrideKeyFileCheckBoxActionPerformed
+    private void analysisOverrideKeyFileCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                                
         prefs.setProperty(PREFS_ANALYSIS_OVERRIDE_KEYFILE,
                 analysisOverrideKeyFileCheckBox.isSelected() ? "1" : "0");
         savePrefs();
-    }//GEN-LAST:event_analysisOverrideKeyFileCheckBoxActionPerformed
+    }                                                               
 
-    private void updateCheckJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateCheckJCheckBoxActionPerformed
+    private void updateCheckJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                     
         prefs.setProperty(PREFS_OPTIONS_UPDATE_CHECK,
                 updateCheckJCheckBox.isSelected() ? "1" : "0");
         savePrefs();
-    }//GEN-LAST:event_updateCheckJCheckBoxActionPerformed
+    }                                                    
 
-    private void scoringRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scoringRefreshButtonActionPerformed
+    private void scoringRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                     
         updateScoreTab();
-    }//GEN-LAST:event_scoringRefreshButtonActionPerformed
+    }                                                    
 
-    private void scanFileJListKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_scanFileJListKeyReleased
-
-        // TODO add your handling code here:
-    }//GEN-LAST:event_scanFileJListKeyReleased
-
-    private void scanFileJListMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scanFileJListMouseReleased
+    private void scanFileJListKeyReleased(java.awt.event.KeyEvent evt) {                                          
 
         // TODO add your handling code here:
-    }//GEN-LAST:event_scanFileJListMouseReleased
+    }                                         
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void scanFileJListMouseReleased(java.awt.event.MouseEvent evt) {                                            
+
+        // TODO add your handling code here:
+    }                                           
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         updateWorker uwo = new updateWorker();
         uwo.execute();
 
 
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }                                        
 
-    private void wizardModeJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wizardModeJCheckBoxActionPerformed
+    private void wizardModeJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         prefs.setProperty(PREFS_ANALYSIS_WIZARDMODE, wizardModeJCheckBox.isSelected() ? "1" : "0");
         savePrefs();
-    }//GEN-LAST:event_wizardModeJCheckBoxActionPerformed
+    }                                                   
 
-    private void analysisTableRemoveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisTableRemoveButtonActionPerformed
+    private void analysisTableRemoveButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                          
         String scr = dataTablesComboBox.getSelectedItem().toString();
         dataTables.remove(aD.get(scr).getDt());
         dataTablesComboBox.removeItem(aD.get(scr).getDt());
         aD.get(scr).getDt().dispose();
         aD.remove(scr);
-    }//GEN-LAST:event_analysisTableRemoveButtonActionPerformed
+    }                                                         
 
-    private void updateCheckJCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateCheckJCheckBox1ActionPerformed
+    private void updateCheckJCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         prefs.setProperty(PREFS_OPTIONS_UPDATE_BETA_CHECK,
                 updateCheckJCheckBox1.isSelected() ? "1" : "0");
         savePrefs();
-    }//GEN-LAST:event_updateCheckJCheckBox1ActionPerformed
+    }                                                     
 
-    private void ctrlplateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctrlplateComboBoxActionPerformed
+    private void ctrlplateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         updateScoringFileName();
-    }//GEN-LAST:event_ctrlplateComboBoxActionPerformed
+    }                                                 
 
     public void updateScoringFileName() {
 //        if (ctrlplateComboBox.getSelectedItem() != null && expplateComboBox.getSelectedItem() != null) {
@@ -8612,69 +8686,69 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         scorenameTextField.setText(f);
     }
 
-    private void plateCtrlRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plateCtrlRadioButtonActionPerformed
+    private void plateCtrlRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                     
         ctrlTypeChanged();
-    }//GEN-LAST:event_plateCtrlRadioButtonActionPerformed
+    }                                                    
 
-    private void altColRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_altColRadioButtonActionPerformed
+    private void altColRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         ctrlTypeChanged();
-    }//GEN-LAST:event_altColRadioButtonActionPerformed
+    }                                                 
 
-    private void altRowRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_altRowRadioButtonActionPerformed
+    private void altRowRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         ctrlTypeChanged();
-    }//GEN-LAST:event_altRowRadioButtonActionPerformed
+    }                                                 
 
-    private void normPlateMedianButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_normPlateMedianButtonActionPerformed
+    private void normPlateMedianButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         normButtonPressed();
-    }//GEN-LAST:event_normPlateMedianButtonActionPerformed
+    }                                                     
 
-    private void normORFButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_normORFButtonActionPerformed
+    private void normORFButtonActionPerformed(java.awt.event.ActionEvent evt) {                                              
         normButtonPressed();
-    }//GEN-LAST:event_normORFButtonActionPerformed
+    }                                             
 
-    private void expplateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_expplateComboBoxActionPerformed
+    private void expplateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         updateScoringFileName();
-    }//GEN-LAST:event_expplateComboBoxActionPerformed
+    }                                                
 
-    private void altOddRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_altOddRadioButtonActionPerformed
+    private void altOddRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         oddEvenChanged();
-    }//GEN-LAST:event_altOddRadioButtonActionPerformed
+    }                                                 
 
-    private void altEvenRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_altEvenRadioButtonActionPerformed
+    private void altEvenRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
         oddEvenChanged();
-    }//GEN-LAST:event_altEvenRadioButtonActionPerformed
+    }                                                  
 
-    private void scoreSpatialJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scoreSpatialJCheckBoxActionPerformed
+    private void scoreSpatialJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         // TODO add your handling code here:
-    }//GEN-LAST:event_scoreSpatialJCheckBoxActionPerformed
+    }                                                     
 
-    private void scoreRCJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scoreRCJCheckBoxActionPerformed
+    private void scoreRCJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         // TODO add your handling code here:
-    }//GEN-LAST:event_scoreRCJCheckBoxActionPerformed
+    }                                                
 
-    private void normNoneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_normNoneButtonActionPerformed
+    private void normNoneButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
         normButtonPressed();
-    }//GEN-LAST:event_normNoneButtonActionPerformed
+    }                                              
 
-    private void analysisGenerateSummaryTablesHiddenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisGenerateSummaryTablesHiddenButtonActionPerformed
+    private void analysisGenerateSummaryTablesHiddenButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                                          
         dataTables.stream().forEach((dt) -> {
             dt.makeSummaryTable(false);
         });
-    }//GEN-LAST:event_analysisGenerateSummaryTablesHiddenButtonActionPerformed
+    }                                                                         
 
-    private void analysisGenerateSummaryTablesVisibleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisGenerateSummaryTablesVisibleButtonActionPerformed
+    private void analysisGenerateSummaryTablesVisibleButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                                           
         dataTables.stream().forEach((dt) -> {
             dt.makeSummaryTable(true);
         });
-    }//GEN-LAST:event_analysisGenerateSummaryTablesVisibleButtonActionPerformed
+    }                                                                          
 
-    private void analysisShowSummaryTablesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisShowSummaryTablesActionPerformed
+    private void analysisShowSummaryTablesActionPerformed(java.awt.event.ActionEvent evt) {                                                          
         sumTables.stream().forEach((sjf) -> {
             sjf.setVisible(true);
         });
-    }//GEN-LAST:event_analysisShowSummaryTablesActionPerformed
+    }                                                         
 
-    private void analysisSummaryClipboardCopyTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisSummaryClipboardCopyTypeComboBoxActionPerformed
+    private void analysisSummaryClipboardCopyTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                                         
         // Get list of summary frames
         // Create 2-d array [frame][value]
         // For each frame {
@@ -8688,21 +8762,21 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         //                            [frame+1][value] - append +"\t"
         //  Outer loop append + "\n"
         // Add to clipboard
-    }//GEN-LAST:event_analysisSummaryClipboardCopyTypeComboBoxActionPerformed
+    }                                                                        
 
-    private void analysisSummaryMedianCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisSummaryMedianCheckBoxActionPerformed
+    private void analysisSummaryMedianCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                              
         // TODO add your handling code here:
-    }//GEN-LAST:event_analysisSummaryMedianCheckBoxActionPerformed
+    }                                                             
 
-    private void analysisTableShowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisTableShowButtonActionPerformed
+    private void analysisTableShowButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                        
         dataTable ob = (dataTable) dataTablesComboBox.getSelectedItem();
         if (ob != null) {
             ob.setVisible(true);
             currentDT = ob;
         }
-    }//GEN-LAST:event_analysisTableShowButtonActionPerformed
+    }                                                       
 
-    private void analysisSummaryCopyAllClipboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analysisSummaryCopyAllClipboardButtonActionPerformed
+    private void analysisSummaryCopyAllClipboardButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                                      
 
         summarizeJFrame stmp = new summarizeJFrame();
         int myCol = 1;
@@ -8809,9 +8883,9 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         //                            [frame+1][value] - append +"\t"
         //  Outer loop append + "\n"
         // Add to clipboard
-    }//GEN-LAST:event_analysisSummaryCopyAllClipboardButtonActionPerformed
+    }                                                                     
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         JFileChooser jfc = new JFileChooser();
         jfc.setFileFilter(new FileNameExtensionFilter("Array Key Files (*.key)", "key"));
         jfc.showOpenDialog(this);
@@ -8819,7 +8893,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         if (f != null) {
             queryArrayFile = f;
         }
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }                                        
 
     public boolean summaryTableMedian() {
         return analysisSummaryMedianCheckBox.isSelected();
@@ -11070,7 +11144,7 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
         }
 
     }
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     private javax.swing.JPanel advancedPanel;
     private javax.swing.JRadioButton altColRadioButton;
     private javax.swing.JRadioButton altEvenRadioButton;
@@ -11293,5 +11367,5 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
     private javax.swing.JPanel zoomPanel;
     private javax.swing.JButton zoominButton;
     private javax.swing.JButton zoomoutButton;
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration                   
 }
