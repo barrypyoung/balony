@@ -15,7 +15,7 @@
         </jar>
 
         <!--Make copies of the jar file for different versions-->
-        <copy file="C:\Apps\Balony.jar" todir="C:\Users\Barry Young\Documents\NetBeansProjects\Balony\Balony.app\Contents\Resources\Java\" ></copy>
+        <!--<copy file="C:\Apps\Balony.jar" todir="C:\Users\Barry Young\Documents\NetBeansProjects\Balony\Balony.app\Contents\Resources\Java\" ></copy>-->
         <copy file="C:\Apps\Balony.jar" todir="C:\Apps\Balony\_Upload_\"></copy>
         
         <tstamp/>
@@ -25,7 +25,7 @@
         <!--Build macOS app - replace with install4j:-->
         
         
-        <taskdef name="jar-bundler" classpath="lib/jarbundler-core-3.3.0.jar"  classname="com.ultramixer.jarbundler.JarBundler"></taskdef>
+<!--        <taskdef name="jar-bundler" classpath="lib/jarbundler-core-3.3.0.jar"  classname="com.ultramixer.jarbundler.JarBundler"></taskdef>
         <jar-bundler name="Balony"
                      jvmversion="1.8+"
                      dir="${basedir}"
@@ -43,21 +43,25 @@
             <jarfileset dir = "C:\Apps\\">
                 <include name="Balony.jar"></include>
             </jarfileset>            
-        </jar-bundler>
+        </jar-bundler>-->
         
-        <!--This command doesn't do anything on Windows!-->
+<!--        This command doesn't do anything on Windows!
         <chmod file="Balony.app/Contents/MacOS/universalJavaApplicationStub" perm="ugo+rx"></chmod>
         
-        <!--Package the app into a zip file-->
+        Package the app into a zip file
         <zip destfile="C:\Apps\Balony\_Upload_\Balony-MacOSX.zip">
             <zipfileset dir="Balony.app" prefix="Balony.app"></zipfileset>
-            <!--This next line sets the correct permissions for the executable:-->
+            This next line sets the correct permissions for the executable:
             <zipfileset dir="Balony.app/Contents/MacOS" prefix="Balony.app/Contents/MacOS" filemode="555"></zipfileset>
-        </zip>
+        </zip>-->
         
         <!--Make a Windows installer-->
-        <exec executable="C:\Program Files (x86)\Caphyon\Advanced Installer 12.3.1\bin\x86\AdvancedInstaller.com">
+        <exec executable="C:\Program Files (x86)\Caphyon\Advanced Installer 15.5.1\bin\x86\AdvancedInstaller.com">
             <arg line="/build C:\Apps\Balony\Balony-simple.aip"/>
+        </exec>
+        
+        <exec executable="C:\Program Files\install4j7\bin\install4jc.exe" >
+            <arg line="'c:\users\Barry Young\Documents\NetBeansProjects\Balony\MacOSX_resources\Balony-macos.install4j'"/>
         </exec>
 
     </target>  

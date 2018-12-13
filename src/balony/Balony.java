@@ -50,7 +50,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import org.apache.commons.lang.StringUtils;
-
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.math3.analysis.interpolation.LoessInterpolator;
 import org.kohsuke.github.GHAsset;
@@ -1221,7 +1220,13 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
                         sgdInfo sgdi = new sgdInfo();
                         sgdi.sgdID = sg[0];
                         sgdi.qualifier = sg[2];
+                        
+                        
+                        if(sg[4].equals("null")) {
+                            sgdi.gene=sg[3];
+                        } else {
                         sgdi.gene = sg[4];
+                        }
 
                         sgdi.strand = sg[11];
 
@@ -1341,15 +1346,13 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             QueryService service = factory.getQueryService();
             PrintStream out = System.out;
             FileWriter fos = new FileWriter(SGD_FEATURES_YM);
-//        String format = "%-17.17s | %-17.17s | %-17.17s | %-17.17s | %-17.17s | %-17.17s\n";
-//        out.printf(format, query.getView().toArray());
+
             fos.write(StringUtils.join(query.getView(), "\t").replace("\n", " ").replace("\r", " ") + "\n");
             Iterator<java.util.List<Object>> rows = service.getRowListIterator(query);
             while (rows.hasNext()) {
-//            out.printf(format, rows.next().toArray());
-//            System.out.println("Row:");
+
                 java.util.List<Object> row = rows.next();
-//            System.out.println(row.toString());
+
                 String s = StringUtils.join(row, "\t") + "\n";
                 fos.write(s);
                     }
@@ -1359,46 +1362,6 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             out.printf("%d rows\n", service.getCount(query));
             loadSGDInfo();
 
-//            messageText.append("\nAttempting to update SGD_features.tab\nDownloading");
-//            FileOutputStream fos = null;
-//            BufferedInputStream buf = null;
-//            try {
-//                URL sgdURL = new URL(SGD_FEATURES_URL);
-//
-//                buf = new BufferedInputStream(sgdURL.openStream());
-//                int size = sgdURL.openConnection().getContentLength();
-//                System.out.println("Size of SGD_features.tab: " + size);
-//
-//                final String filename = get_sgdfile_name();
-//                fos = new FileOutputStream(filename);
-//                int r;
-//                int cnt = 0;
-//                int done = 0;
-//                while ((r = buf.read()) != -1) {
-//                    cnt++;
-//                    if (cnt == size / 4) {
-//                        done += 25;
-//                        messageText.append(done).append("%");
-//                        cnt = 0;
-//                    } else if (cnt % (size / 16) == 0) {
-//                        messageText.append(".");
-//                    }
-//                    fos.write(r);
-//                }
-//
-//                messageText.append("\nSGD_features.tab successfully updated");
-//
-//            } catch (IOException e) {
-//                System.out.println(e.getLocalizedMessage());
-//            } finally {
-//                if (fos != null) {
-//                    fos.close();
-//                }
-//
-//                if (buf != null) {
-//                    buf.close();
-//                }
-//            }
             return "";
         }
 
@@ -9004,8 +8967,9 @@ public final class Balony extends javax.swing.JFrame implements ClipboardOwner {
             String recenturl = "";
             boolean prereleaseOk = updateCheckJCheckBox1.isSelected();
             try {
-//                System.out.println("Starting update check");
+                System.out.println("Starting update check");
                 GitHub github = GitHub.connectAnonymously();
+                System.out.println("Starting update check");
                 GHRepository repo = github.getRepository("barrypyoung/balony");
                 PagedIterable<GHRelease> releases = repo.listReleases();
                 for (GHRelease release : releases) {
