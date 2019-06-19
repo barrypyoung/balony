@@ -1,5 +1,5 @@
 {
-	"file": "https://raw.githubusercontent.com/barrypyoung/balony/master/upset_pten2.txt",
+	"file": "https://www.dropbox.com/s/zs1f4lse4iaha11/upset_pten2.txt",
 	"name": "PTEN_vars",
 	"header": 0,
 	"separator": "\t",
